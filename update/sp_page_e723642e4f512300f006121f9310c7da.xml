@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update table="sp_page">
     <sp_page action="INSERT_OR_UPDATE">
         <category>kb</category>
-        <css/>
+        <css>/* */</css>
         <draft>false</draft>
         <dynamic_title_structure/>
         <id>utassp01_kbs</id>
         <internal>false</internal>
         <public>true</public>
         <roles/>
-        <short_description/>
+        <short_description>UTASSP Knowledge Bases</short_description>
         <sys_class_name>sp_page</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-10-24 18:53:09</sys_created_on>
         <sys_id>e723642e4f512300f006121f9310c7da</sys_id>
-        <sys_mod_count>6</sys_mod_count>
+        <sys_mod_count>7</sys_mod_count>
         <sys_name>utassp01_kbs</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy/>
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sp_page_e723642e4f512300f006121f9310c7da</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-14 18:04:36</sys_updated_on>
+        <sys_updated_on>2018-11-20 02:13:27</sys_updated_on>
         <title>UTASSP Knowledge Bases</title>
     </sp_page>
     <sys_translated_text action="delete_multiple" query="documentkey=e723642e4f512300f006121f9310c7da"/>
