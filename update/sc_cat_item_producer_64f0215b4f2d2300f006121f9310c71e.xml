@@ -53,11 +53,13 @@
         <sys_class_name>sc_cat_item_producer</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-11-08 17:34:53</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
         <sys_id>64f0215b4f2d2300f006121f9310c71e</sys_id>
         <sys_mod_count>6</sys_mod_count>
         <sys_name>UTASSP INCIDENT: Something Broken</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sc_cat_item_producer_64f0215b4f2d2300f006121f9310c71e</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
@@ -65,6 +67,9 @@
         <table_name>incident</table_name>
         <template display_value="ESS Incident">300acd666f7ca2407a07fee09d3ee485</template>
         <type>item</type>
+        <u_business_service/>
+        <u_category/>
+        <u_owner/>
         <use_sc_layout>true</use_sc_layout>
         <vendor/>
         <view>ess</view>

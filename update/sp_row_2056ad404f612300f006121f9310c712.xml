@@ -7,11 +7,13 @@
         <sys_class_name>sp_row</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-10-29 15:37:23</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
         <sys_id>2056ad404f612300f006121f9310c712</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>2</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sp_row_2056ad404f612300f006121f9310c712</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>

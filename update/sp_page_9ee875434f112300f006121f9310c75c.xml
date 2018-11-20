@@ -18,16 +18,17 @@ section.page, main.body {&#13;
         <sys_class_name>sp_page</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-10-26 14:24:41</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
         <sys_id>9ee875434f112300f006121f9310c75c</sys_id>
         <sys_mod_count>2</sys_mod_count>
         <sys_name>utassp01_test</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sp_page_9ee875434f112300f006121f9310c75c</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
         <sys_updated_on>2018-10-26 14:28:32</sys_updated_on>
         <title>UTASSP Service Portal Test</title>
     </sp_page>
-    <sys_translated_text action="delete_multiple" query="documentkey=9ee875434f112300f006121f9310c75c"/>
 </record_update>

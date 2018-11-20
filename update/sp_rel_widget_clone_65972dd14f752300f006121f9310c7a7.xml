@@ -86,11 +86,13 @@ for (var i = 89; i &gt;= 0; i--) {
         <sys_class_name>sp_rel_widget_clone</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-11-14 23:11:00</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
         <sys_id>65972dd14f752300f006121f9310c7a7</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>e9972dd14f752300f006121f9310c7a4</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sp_rel_widget_clone_65972dd14f752300f006121f9310c7a7</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
