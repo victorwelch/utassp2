@@ -96,7 +96,7 @@ div.panel {&#13;
 .panel-heading {&#13;
   margin-top:10px;&#13;
   margin-left:10px;&#13;
-	background-image: url(utassp_current_status.png);&#13;
+	background-image: url(utassp_current_status_img.png);&#13;
 	background-repeat: no-repeat;&#13;
 	background-size: contain; &#13;
   padding-top:10px;&#13;
@@ -179,14 +179,14 @@ div.sp-outage-details {&#13;
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-10-24 20:29:37</sys_created_on>
         <sys_id>30493c6e4f912300f006121f9310c747</sys_id>
-        <sys_mod_count>12</sys_mod_count>
+        <sys_mod_count>13</sys_mod_count>
         <sys_name>UTASSP Current Status Widget</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy/>
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sp_widget_30493c6e4f912300f006121f9310c747</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-14 21:43:46</sys_updated_on>
+        <sys_updated_on>2018-11-20 15:29:14</sys_updated_on>
         <template><![CDATA[<div ng-if="!data.service || data.outages.length > 0" class="panel panel-{{options.color}} b">
   <div class="panel-heading">
     <h2 class="panel-title">${Current Status}<span ng-if="data.serviceDisplay"> - {{data.serviceDisplay}}</span></h2>

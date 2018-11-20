@@ -42,227 +42,227 @@
  	}
 }]]></client_script>
         <controller_as>c</controller_as>
-        <css>.panel-heading
-{
-	background-image: url(utassp_ticket.png);
-	background-repeat: no-repeat;
-	background-size: contain;  	
-	padding-left: 50px;
-}
-.panel-body {
-  /* background-color:#fff6e5; */
-}
-.panel-primary &gt; .panel-footer {
-	background-color: #428bca;
-	border-color: #428bca;	
-}
-
-/* ********** */
-/* Pagination */
-a.mybtn {
-    padding: 5px 10px;
-    font-size: 12px;
-    line-height: 1.5;
-    border-radius: 3px;
-}
-
-/* ************ */
-/* DivTable  */
-.myDivTable{ 
-  display:table; 
-  width: 100%;
-  table-layout: fixed;  
-}
-.myDivTableRow { display:table-row; }
-.myDivTableHeading { display:table-header-group;}
-.myDivTableCell, .myDivTableHead { display:table-cell;}
-.myDivTableHeading { display:table-header-group;}
-.myDivTableFoot { display:table-footer-group;}
-.myDivTableBody { display:table-row-group;}
-
-div.myGreyGridTable {
-  width:100%;
-  text-align:left;
-  border-collapse:collapse;
-}
-
-/* myDivTableHeading */
-.myDivTable.myGreyGridTable .myDivTableHeading {
-  background:#FFFFFF;
-}
-.myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {
-  border-bottom:1px solid #000000;
-}
-.myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {
-  .myDivTableHead {
-  	font-weight:bold;
-  	color:#000000;
-  	text-align:center;
-  	padding:1px 1px 1px 4px;
-    border-right:1px solid #bbbbbb;     
-  }
-}
-.myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow   {
-  .myDivTableHead.myLeft { text-align:left; }
-}
-
-/* myDivTableBody */
-.myDivTable.myGreyGridTable .myDivTableBody {
-	a.myDivTableRow {
-  	width:100%;
-  	height:100%; 
-    border-bottom:1px solid white;
-    font-size:11px;
-	}
-}
-.myDivTable.myGreyGridTable .myDivTableBody {
-  a.myDivTableRow:hover { 
-	  text-decoration:underline;
-    background-color:#dddddd; 
-  }
-}
-.myDivTable.myGreyGridTable .myDivTableBody {
-	.myDivTableRow:nth-child(odd) { background: #EEEEEE; }
-}
-.myDivTable.myGreyGridTable .myDivTableBody
-{
-	.myDivTableRow:last-child { border-bottom-style:none;  }
-}
-.myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {
-  .myDivTableCell  {
-      border-right:1px solid #bbbbbb; 
-      padding:1px 4px;
-  }
-}
-.myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {
-  .myDivTableCell.myCtr { text-align:center; }
-}
-
-/* Foot Style */
-.myGreyGridTable .myTableFootStyle {
-  font-weight:bold;
-  color:#333333;
-  border-top:1px solid #333333;
-}
-
-/* Link text */
-a.myDivTableRow {
-  color:#3a3f51;
-  &amp;:hover {
-    color:#428bca;
-    text-decoration: underline;
-  }
-}
-
-/* ********** */
-// Medium devices (tablets, 768px and up)
-@media (min-width: 768.01px) 
-{
-  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {
-    .myDivTableHead.myDefLgOnlyShow { display:table-cell; }
-  }
-  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {
-    .myDivTableHead.myDefMedUpShow { display:table-cell; }
-  }
-  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {
-    .myDivTableCell.myDefMedOnlyShow { display:none; }
-  }  
-  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {
-    .myDivTableHead:nth-last-child(1) { border-right-style:none; }
-  } 
-  
-  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {
-    .myDivTableCell.myDefLgOnlyShow { display:table-cell; }
-  }  
-  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {
-    .myDivTableCell.myDefMeUpShow { display:table-cell; }
-  }
-  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {
-    .myDivTableCell.myDefMedOnlyShow { display:none; }
-  }
-  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {
-    .myDivTableCell:nth-last-child(2) { border-right-style:none; }
-  }  
-  
-  .myCol1 { width:10% }
-  .myCol2 { width:43% }
-  .myCol3 { width:20% }
-  .myCol4 { width:12% }
-  .myCol5 { width:18% }  
-}
-
-// Medium devices (tablets, 768px and less)
-@media (max-width: 768px) { 
-  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {
-    .myDivTableHead.myDefLgOnlyShow { display:none; }
-  }
-  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {
-    .myDivTableHead.myDefMedUpShow { display:table-cell; }
-  }  
-  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {
-    .myDivTableHead.myDefMedOnlyShow { display:table-cell; }
-  }  
-  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {
-    .myDivTableHead:nth-last-child(1) { border-right-style:none; }
-  }    
-  
- .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {
-    .myDivTableCell.myDefLgOnlyShow { display:none; }
-  }   
-  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {
-    .myDivTableCell.myDefMedUpShow { display:table-cell; }
-  }    
-  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {
-    .myDivTableCell.myDefMedOnlyShow { display:table-cell; }
-  }   
-  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {
-    .myDivTableCell:nth-last-child(1) { border-right-style:none; }
-  }   
-  
-  .myCol1 { width:15% }
-  .myCol2 { width:34% }
-  .myCol3 { width:25% }
-  .myCol4 { width:12% }
-  .myCol5 { width:14% }     
-}
-
-// Small devices (landscape phones, 576px and less)
-@media (max-width: 575.98px) { 
-  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {
-    .myDivTableHead.myDefLgOnlyShow { display:none; }
-  }
-  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {
-    .myDivTableHead.myDefMedUpShow { display:none; }
-  }  
-  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {
-    .myDivTableHead.myDefMedOnlyShow { display:none; }
-  }  
-  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {
-    .myDivTableHead:nth-last-child(4) { border-right-style:none; }
-  }   
-  
- .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {
-    .myDivTableCell.myDefLgOnlyShow { display:none; }
-  }   
-  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {
-    .myDivTableCell.myDefMedUpShow { display:none; }
-  }    
-  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {
-    .myDivTableCell.myDefMedOnlyShow {display:none; }
-  }   
-  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {
-    .myDivTableCell:nth-last-child(5) { border-right-style:none; }
-  }  
-
-  .myCol1 { width:35% }
-  .myCol2 { width:65% }
-  .myCol3 { width:0% }
-  .myCol4 { width:0% }
-  .myCol5 { width:0% }    
-  
-  
-}
-
+        <css>.panel-heading&#13;
+{&#13;
+	background-image: url(utassp_ticket_img.png);&#13;
+	background-repeat: no-repeat;&#13;
+	background-size: contain;  	&#13;
+	padding-left: 50px;&#13;
+}&#13;
+.panel-body {&#13;
+  /* background-color:#fff6e5; */&#13;
+}&#13;
+.panel-primary &gt; .panel-footer {&#13;
+	background-color: #428bca;&#13;
+	border-color: #428bca;	&#13;
+}&#13;
+&#13;
+/* ********** */&#13;
+/* Pagination */&#13;
+a.mybtn {&#13;
+    padding: 5px 10px;&#13;
+    font-size: 12px;&#13;
+    line-height: 1.5;&#13;
+    border-radius: 3px;&#13;
+}&#13;
+&#13;
+/* ************ */&#13;
+/* DivTable  */&#13;
+.myDivTable{ &#13;
+  display:table; &#13;
+  width: 100%;&#13;
+  table-layout: fixed;  &#13;
+}&#13;
+.myDivTableRow { display:table-row; }&#13;
+.myDivTableHeading { display:table-header-group;}&#13;
+.myDivTableCell, .myDivTableHead { display:table-cell;}&#13;
+.myDivTableHeading { display:table-header-group;}&#13;
+.myDivTableFoot { display:table-footer-group;}&#13;
+.myDivTableBody { display:table-row-group;}&#13;
+&#13;
+div.myGreyGridTable {&#13;
+  width:100%;&#13;
+  text-align:left;&#13;
+  border-collapse:collapse;&#13;
+}&#13;
+&#13;
+/* myDivTableHeading */&#13;
+.myDivTable.myGreyGridTable .myDivTableHeading {&#13;
+  background:#FFFFFF;&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+  border-bottom:1px solid #000000;&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+  .myDivTableHead {&#13;
+  	font-weight:bold;&#13;
+  	color:#000000;&#13;
+  	text-align:center;&#13;
+  	padding:1px 1px 1px 4px;&#13;
+    border-right:1px solid #bbbbbb;     &#13;
+  }&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow   {&#13;
+  .myDivTableHead.myLeft { text-align:left; }&#13;
+}&#13;
+&#13;
+/* myDivTableBody */&#13;
+.myDivTable.myGreyGridTable .myDivTableBody {&#13;
+	a.myDivTableRow {&#13;
+  	width:100%;&#13;
+  	height:100%; &#13;
+    border-bottom:1px solid white;&#13;
+    font-size:11px;&#13;
+	}&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableBody {&#13;
+  a.myDivTableRow:hover { &#13;
+	  text-decoration:underline;&#13;
+    background-color:#dddddd; &#13;
+  }&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableBody {&#13;
+	.myDivTableRow:nth-child(odd) { background: #EEEEEE; }&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableBody&#13;
+{&#13;
+	.myDivTableRow:last-child { border-bottom-style:none;  }&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+  .myDivTableCell  {&#13;
+      border-right:1px solid #bbbbbb; &#13;
+      padding:1px 4px;&#13;
+  }&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+  .myDivTableCell.myCtr { text-align:center; }&#13;
+}&#13;
+&#13;
+/* Foot Style */&#13;
+.myGreyGridTable .myTableFootStyle {&#13;
+  font-weight:bold;&#13;
+  color:#333333;&#13;
+  border-top:1px solid #333333;&#13;
+}&#13;
+&#13;
+/* Link text */&#13;
+a.myDivTableRow {&#13;
+  color:#3a3f51;&#13;
+  &amp;:hover {&#13;
+    color:#428bca;&#13;
+    text-decoration: underline;&#13;
+  }&#13;
+}&#13;
+&#13;
+/* ********** */&#13;
+// Medium devices (tablets, 768px and up)&#13;
+@media (min-width: 768.01px) &#13;
+{&#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefLgOnlyShow { display:table-cell; }&#13;
+  }&#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefMedUpShow { display:table-cell; }&#13;
+  }&#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableCell.myDefMedOnlyShow { display:none; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+    .myDivTableHead:nth-last-child(1) { border-right-style:none; }&#13;
+  } &#13;
+  &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {&#13;
+    .myDivTableCell.myDefLgOnlyShow { display:table-cell; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {&#13;
+    .myDivTableCell.myDefMeUpShow { display:table-cell; }&#13;
+  }&#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {&#13;
+    .myDivTableCell.myDefMedOnlyShow { display:none; }&#13;
+  }&#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell:nth-last-child(2) { border-right-style:none; }&#13;
+  }  &#13;
+  &#13;
+  .myCol1 { width:10% }&#13;
+  .myCol2 { width:43% }&#13;
+  .myCol3 { width:20% }&#13;
+  .myCol4 { width:12% }&#13;
+  .myCol5 { width:18% }  &#13;
+}&#13;
+&#13;
+// Medium devices (tablets, 768px and less)&#13;
+@media (max-width: 768px) { &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefLgOnlyShow { display:none; }&#13;
+  }&#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefMedUpShow { display:table-cell; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+    .myDivTableHead.myDefMedOnlyShow { display:table-cell; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+    .myDivTableHead:nth-last-child(1) { border-right-style:none; }&#13;
+  }    &#13;
+  &#13;
+ .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell.myDefLgOnlyShow { display:none; }&#13;
+  }   &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {&#13;
+    .myDivTableCell.myDefMedUpShow { display:table-cell; }&#13;
+  }    &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell.myDefMedOnlyShow { display:table-cell; }&#13;
+  }   &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell:nth-last-child(1) { border-right-style:none; }&#13;
+  }   &#13;
+  &#13;
+  .myCol1 { width:15% }&#13;
+  .myCol2 { width:34% }&#13;
+  .myCol3 { width:25% }&#13;
+  .myCol4 { width:12% }&#13;
+  .myCol5 { width:14% }     &#13;
+}&#13;
+&#13;
+// Small devices (landscape phones, 576px and less)&#13;
+@media (max-width: 575.98px) { &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefLgOnlyShow { display:none; }&#13;
+  }&#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefMedUpShow { display:none; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+    .myDivTableHead.myDefMedOnlyShow { display:none; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+    .myDivTableHead:nth-last-child(4) { border-right-style:none; }&#13;
+  }   &#13;
+  &#13;
+ .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell.myDefLgOnlyShow { display:none; }&#13;
+  }   &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {&#13;
+    .myDivTableCell.myDefMedUpShow { display:none; }&#13;
+  }    &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell.myDefMedOnlyShow {display:none; }&#13;
+  }   &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell:nth-last-child(5) { border-right-style:none; }&#13;
+  }  &#13;
+&#13;
+  .myCol1 { width:35% }&#13;
+  .myCol2 { width:65% }&#13;
+  .myCol3 { width:0% }&#13;
+  .myCol4 { width:0% }&#13;
+  .myCol5 { width:0% }    &#13;
+  &#13;
+  &#13;
+}&#13;
+&#13;
 </css>
         <data_table>sp_instance</data_table>
         <demo_data/>
@@ -390,14 +390,14 @@ a.myDivTableRow {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-10-24 20:52:06</sys_created_on>
         <sys_id>426e70624fd12300f006121f9310c756</sys_id>
-        <sys_mod_count>35</sys_mod_count>
+        <sys_mod_count>36</sys_mod_count>
         <sys_name>UTASSP My Open Tickets Widget</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy/>
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sp_widget_426e70624fd12300f006121f9310c756</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-12 22:51:18</sys_updated_on>
+        <sys_updated_on>2018-11-20 15:32:09</sys_updated_on>
         <template><![CDATA[<div>
     <div class="panel panel-{{::options.color}} b">
         <div class="panel-heading">
