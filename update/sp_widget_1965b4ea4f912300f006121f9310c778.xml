@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function($scope,$rootScope,$timeout,spUtil) {
+	var c = this;
+	if (c.data.breadcrumbs)
+	{
+		c.breadcrumbs = c.data.breadcrumbs;
+	}
+	else
+	{
+		c.data.breadcrumbs = c.breadcrumbs;
+	}
+    //
+	c.myLabel = function (strArg) {
+		var tmpLabel = strArg;
+		var tmpList = [];
+		//
+		if (tmpLabel.includes('_'))
+		{
+			tmpList = tmpLabel.split('_');
+		}
+		else if (tmpLabel.includes(' '))
+		{
+			tmpList = tmpLabel.split(' ');
+		}
+		else if (tmpLabel.includes('-'))
+		{
+			tmpList = tmpLabel.split('-');
+		}
+		else {
+			return tmpLabel;
+		}
+		//
+		if (tmpList[0].toLowerCase().includes('uta'))
+		{
+			tmpList.shift();
+		}
+		for (var j = 0, jL = tmpList.length; j < jL; j++)
+		{
+			tmpList[j] = tmpList[j].charAt(0).toUpperCase() + tmpList[j].slice(1);
+		}
+		tmpLabel = tmpList.join(' ');
+		return tmpLabel;
+	};
+	//
+	var deregister = $rootScope.$on("sp.update.breadcrumbs", function (e, list) {
+		var myE = e || 'no-e';
+		var myList = list || 'no-list';
+		alert('e,list: '+myE+', '+myList);
+		//
+		var newList = [];
+		var isSearch = false;
+		var thisArtCat = '';
+		//
+		var myParamListObj = {};
+		var myTmpList = this.location.search.split('&');
+		for (var i=0,iL=myTmpList.length;i<iL;i++)
+		{
+				var l_tmpPair=myTmpList[i].split('=');
+				myParamListObj[l_tmpPair[0].replace('?','')] = l_tmpPair[1];
+		}
+		//
+		if (typeof myParamListObj.pageid != typeof myUndefined) {
+			if (myParamListObj.pageid.indexOf('search')>-1) {
+				isSearch = true;
+			}
+		}
+		//
+		if (isSearch) {
+			if (typeof list != typeof myUndefined) {
+				var ix = list.length-1;
+				thisArtCat = list[ix].label;
+			}
+			//	
+			newList = [
+				{label: 'Search',
+				 url: '?id=utassp01_search&q='+((myParamListObj.q)?myParamListObj.q:'')},
+				{label: thisArtCat,
+				 url: '#'}
+			];
+			//
+			list=newList;
+			c.breadcrumbs=list;			
+		}		
+	});
+	//
+	$scope.$on('$destroy', function () {
+		deregister();
+	});
+}
+]]></client_script>
+        <controller_as>c</controller_as>
+        <css>i {&#13;
+margin-top: 10px;&#13;
+}</css>
+        <data_table>sp_instance_link</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list>type,sc_category,url,kb_article,kb_topic,kb_category,sc_cat_item,sp_page</field_list>
+        <has_preview>false</has_preview>
+        <id>utassp01_breadcrumbs_kbsc_widget</id>
+        <internal>false</internal>
+        <link/>
+        <name>UTASSP Breadcrumbs KbSc Widget</name>
+        <option_schema/>
+        <public>true</public>
+        <roles/>
+        <script><![CDATA[(function($sp, input, data, options, gs) {
+	// populate the 'data' object 
+	// e.g., data.table = $sp.getValue('table')	
+	var thisParent={};
+	var thisKbPage={};
+	if (options.type == 'sc_cat_item')
+	{
+		var thisCatItem = {};
+		thisCatItem.url='#';	
+		var mySysId = $sp.getParameter('sys_id');
+		var isIncident=(mySysId=='05f526210f32db00c601419ce1050ee3')?true:false;
+		if (isIncident) {
+			thisCatItem.label = 'INCIDENT: Something Broken';
+			data.thisName = thisCatItem.label;
+			data.breadcrumbs = [				
+				{label: data.thisName, url: thisCatItem.url}
+			];
+		}
+		else 
+		{
+			thisParent.label='Catalog';
+			thisParent.url='?id=utassp01_sc_home';
+			//			
+			var gr = new GlideRecord('sc_cat_item');
+			var thisQuery = 'sys_id='+mySysId;
+			gr.addEncodedQuery(thisQuery);
+			gr.query();		
+			thisCatItem.label = '';
+			thisCatItem.url='';
+			if (gr.next()) {
+				thisCatItem.label = gr.getValue('name');
+			}
+			data.parentName = thisParent.label;
+			data.parentUrl = thisParent.url;		
+			data.thisName = thisCatItem.label;			
+			data.breadcrumbs = [
+				{label: data.parentName, url: data.parentUrl},
+				{label: data.thisName, url: thisCatItem.url}
+			];		
+		}
+	}
+	else if (options.type == 'page') 
+	{
+		thisParent.label = 'Knowledge Bases';
+		thisParent.url = '?id=utassp01_kb_view2';
+		thisKbPage.url = '#';
+		thisKbPage.label = '';
+		data.thisName= '';
+		//
+		if (options.sp_page.indexOf('business_affairs_internal')>-1)					 
+		{						
+			thisKbPage.label = 'Business Affairs Internal';
+		} 
+		else if (options.sp_page.indexOf('business_affairs_knowledge_base')>-1)	
+		{						
+			thisKbPage.label = 'Business Affairs Knolwedge Base';
+		} 
+		else if (options.sp_page.indexOf('oit_internal')>-1) 
+		{
+			thisKbPage.label = 'OIT Internal';
+		} 
+		else if (options.sp_page.indexOf('oit_knowledge_base')>-1) 
+		{
+			thisKbPage.label = 'OIT Knowledge Base';
+		}
+		else if (options.sp_page.indexOf('sc_home')>-1)
+		{
+			thisParent.label = 'Catalog';
+			thisParent.url = '?id=utassp01_sc_home';
+		}
+		//
+		if (thisKbPage.label.length>0)
+		{
+			data.parentName = thisParent.label;
+			data.parentUrl = thisParent.url;
+			data.thisName = thisKbPage.label;
+			data.breadcrumbs = [
+					{label: data.parentName, url: data.parentUrl},
+					{label: data.thisName, url: thisKbPage.url}
+			];			
+		}
+		else
+		{
+			data.parentName = thisParent.label;
+			data.parentUrl = thisParent.url;			
+			data.breadcrumbs = [
+					{label: data.parentName, url: data.parentUrl}
+			];				
+		}
+	}
+	//
+})($sp, input, data, options, gs);]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-10-24 20:12:43</sys_created_on>
+        <sys_id>1965b4ea4f912300f006121f9310c778</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_name>UTASSP Breadcrumbs KbSc Widget</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_widget_1965b4ea4f912300f006121f9310c778</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-09 19:25:25</sys_updated_on>
+        <template><![CDATA[<ul class="nav nav-pills nav-sm" aria-label="${Navigation breadcrumbs}">
+  <li><a ng-href="?id={{portal.homepage_dv}}">${Home}</a></li>
+  <li aria-hidden="true"><i class="fa fa-chevron-right"></i></li>
+  <li ng-if="!c.data.breadcrumbs"><a href>{{c.myLabel(page.title)}}</a></li>
+  <li ng-repeat-start="item in c.breadcrumbs">
+    <a ng-href="{{item.url}}">{{c.myLabel(item.label)}}</a> 
+  </li>
+  <li aria-hidden="true" ng-if="!$last" ng-repeat-end>
+    <i class="fa fa-chevron-right"></i>
+  </li>
+</ul>]]></template>
+    </sp_widget>
+</record_update>

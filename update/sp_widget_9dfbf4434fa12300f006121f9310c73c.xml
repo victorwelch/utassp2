@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function($rootScope,$timeout) {  
+	/* widget controller */  
+	var c = this;
+	// *************************************************************************
+	//*** Fire breadcrumb event
+	//$timeout(function() {
+	//	$rootScope.$broadcast('sp.update.breadcrumbs', $scope.data.breadcrumbs);
+	//});	
+	//	
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>div.myPanel {&#13;
+}&#13;
+&#13;
+a.kbLink {&#13;
+  font: 18px "SourceSansProSemibold", "Helvetica Neue", "Helvetica", Arial, sans-serif; &#13;
+  color: #343d47;&#13;
+  &amp;:hover {&#13;
+    background-color: #f7f7f7;&#13;
+  }&#13;
+}&#13;
+a.kbLink &gt; div.kbCard {&#13;
+  display: block;&#13;
+  width:100%;&#13;
+  height:100%;&#13;
+  box-sizing: border-box;&#13;
+  text-align: center;&#13;
+  padding:15px 20px; &#13;
+  float: left; &#13;
+  border: 1px solid #E7E9EB; &#13;
+  border-radius: 3px;&#13;
+  background-color:inherit;&#13;
+  margin-bottom:15px;&#13;
+}&#13;
+a.kbLink &gt;  div.kbCard-border-left-primary {&#13;
+  border-left:5px solid $brand-primary;&#13;
+}&#13;
+a.kbLink &gt;  div.kbCard-border-left-info {&#13;
+  border-left:5px solid $brand-info;&#13;
+}&#13;
+a.kbLink &gt;  div.kbCard-border-left-success {&#13;
+  border-left:5px solid $brand-success;&#13;
+}&#13;
+a.kbLink &gt;  div.kbCard-border-left-warning {&#13;
+  border-left:5px solid $brand-warning;&#13;
+}&#13;
+a.kbLink &gt;  div.kbCard-border-left-danger {&#13;
+  border-left:5px solid $brand-danger;&#13;
+}&#13;
+a.kbLink &gt;  div.kbCard-border-left-default {&#13;
+  border-left:5px solid $brand-primary;&#13;
+}&#13;
+&#13;
+a.kbLink &gt; div.kbCard &gt; span.kb-title { &#13;
+  text-align: left; &#13;
+  display: block; &#13;
+  color: #343d47; &#13;
+  min-height :28px;&#13;
+}&#13;
+a.kbLink &gt; div.kbCard &gt; span.kbCardOverflow { &#13;
+  white-space: normal; &#13;
+}&#13;
+a.kbLink &gt; div.kbCard &gt; span.kb-card-details {&#13;
+  display:block;&#13;
+}&#13;
+a.kbLink &gt; div.kbCard &gt; span.kb-card-details &gt; span.kb-count { &#13;
+  text-align: left; &#13;
+  font: 13px "SourceSansPro", "Helvetica Neue", "Helvetica", Arial, sans-serif; &#13;
+  color: #81878e; &#13;
+  margin-top: 2px; &#13;
+  float: left; &#13;
+  white-space: wrap; &#13;
+}&#13;
+&#13;
+.text-primary {&#13;
+  color: $brand-primary;&#13;
+  &#13;
+  &amp;:hover {&#13;
+    color: darken($brand-primary, 20%);&#13;
+  }&#13;
+}&#13;
+&#13;
+.text-info {&#13;
+  color: $brand-info;&#13;
+  &#13;
+  &amp;:hover {&#13;
+    color: darken($brand-info, 20%);&#13;
+  }&#13;
+}&#13;
+&#13;
+.text-success {&#13;
+  color: $brand-success;&#13;
+  &#13;
+  &amp;:hover {&#13;
+    color: darken($brand-success, 20%);&#13;
+  }&#13;
+}&#13;
+&#13;
+.text-warning {&#13;
+  color: $brand-warning;&#13;
+  &#13;
+  &amp;:hover {&#13;
+    color: darken($brand-warning, 20%);&#13;
+  }&#13;
+}&#13;
+&#13;
+.text-danger {&#13;
+  color: $brand-danger;&#13;
+  &#13;
+  &amp;:hover {&#13;
+    color: darken($brand-danger, 20%);&#13;
+  }&#13;
+}&#13;
+&#13;
+.text-default {&#13;
+  color: $brand-primary;&#13;
+  &#13;
+  &amp;:hover {&#13;
+    color: darken($brand-primary, 20%);&#13;
+  }&#13;
+}</css>
+        <data_table>sp_instance_link</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list>sp_page,color</field_list>
+        <has_preview>false</has_preview>
+        <id>utassp01_kb_link_widget</id>
+        <internal>false</internal>
+        <link/>
+        <name>UTASSP KB Link Widget</name>
+        <option_schema>[{"name":"knowledge_base","label":"Knowledge Base","type":"choice","choices":[{"label":"Business Affairs Internal","value":"Business Affairs Internal"},{"label":"Business Affairs Knowledge Base","value":"Business Affairs Knowledge Base"},{"label":"OIT Internal","value":"OIT Internal"},{"label":"OIT Knowledge Base","value":"OIT Knowledge Base"}]}]</option_schema>
+        <public>false</public>
+        <roles>admin</roles>
+        <script><![CDATA[(function($sp, input, data, options, gs) {
+	var gr = $sp.getInstanceRecord();
+	data.href = $sp.getMenuHREF(gr);
+	data.target = options.target || "";
+	data.knowledge_base = options.knowledge_base || "";
+	
+	var myGr = new GlideRecord('kb_knowledge_base'); 
+	var thisQuery = 'active=true^title=' + data.knowledge_base;
+	var thisCanRead = {};
+	var thisSysId = {};
+	var thisCount = 0;
+	myGr.addEncodedQuery(thisQuery);
+	myGr.query();
+	if (myGr.next()) {
+		thisCanRead = myGr.canRead();
+		thisSysId = myGr.getValue('sys_id');
+		var myGa = new GlideAggregate('kb_knowledge');
+		var thisQuery2 = 'active=true^workflow_state=published^valid_to>=javascript:gs.beginningOfToday()^kb_knowledge_base='+thisSysId;
+		myGa.addEncodedQuery(thisQuery2);
+		myGa.addAggregate('COUNT');
+		myGa.query();
+		if (myGa.next()) {
+			thisCount=myGa.getAggregate('COUNT');
+		}
+	}
+	data.canRead = thisCanRead;
+	data.count = thisCount;
+})($sp, input, data, options, gs);]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-07 20:14:04</sys_created_on>
+        <sys_id>9dfbf4434fa12300f006121f9310c73c</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>UTASSP KB Link Widget</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_widget_9dfbf4434fa12300f006121f9310c73c</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-13 18:40:38</sys_updated_on>
+        <template><![CDATA[<div ng-if='data.canRead==true' class='myPanel'>
+  <a class="kbLink" ng-href="{{::data.href}}" target="{{::data.target}}">
+    <div class="kbCard kbCard-border-left-{{::options.color}}">
+			<span class="kb-title kbCardOverflow" title="{{::options.knowledge_base}}">{{::options.knowledge_base}}</span>    
+      <span class="kb-card-details">
+        <span class="kb-count">{{data.count}} Articles</span>
+      </span>
+    </div>
+  </a>
+</div>]]></template>
+    </sp_widget>
+</record_update>

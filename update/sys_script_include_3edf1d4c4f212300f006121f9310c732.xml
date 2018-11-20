@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_287765_utassp.u_utassp</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>u_utassp</name>
+        <script><![CDATA[var u_utassp = Class.create();
+u_utassp.prototype = {
+    initialize: function() {
+    },
+	getKbBaseSysId: function(_pKbKnowledgeBase) {
+		var uData = {};
+        var thisCanRead = {};
+        var thisParentSysId = {};
+		var myGr = new GlideRecord('kb_knowledge_base'); 
+        var thisQuery = 'active=true^title=' +_pKbKnowledgeBase;		
+        myGr.addEncodedQuery(thisQuery);
+        myGr.query();       
+        if (myGr.next()) {
+            thisCanRead = myGr.canRead();
+            thisParentSysId  = myGr.getValue('sys_id');
+        }
+        uData.uCanRead = thisCanRead;
+		uData.uKbBaseSysId = thisParentSysId;
+		return uData;
+	},
+	getKbCategorySiblings: function(_pid)
+	{
+		var uData = [];
+		var myGr = new GlideRecord('kb_category');
+		var thisQuery = 'active=true^parent_id='+_pid;
+		myGr.addEncodedQuery(thisQuery);
+		myGr.query();
+		while (myGr.next())
+		{
+			var l_item = {};
+			l_item.value=myGr.getUniqueValue();
+			l_item.label=myGr.getValue('label');
+			l_item.count=this.getKbCategoryArticleCount(l_item.sysid);
+			uData.push(l_item);
+		}
+		return uData;		
+	},
+    getKbCategoriesBase: function(_pKbKnowledgeBase) {
+        var uData = {};
+        uData.uCanRead = {};
+		uData.uKbBaseSysId = {};
+        uData.uCategoryList = [];
+		uData.uFlatCategoryList = [];
+		uData.uDepth=0;
+		var uKb = {};
+		uKb = this.getKbBaseSysId(_pKbKnowledgeBase);
+		uData.uCanRead = uKb.uCanRead;
+		uData.uKbBaseSysId = uKb.uKbBaseSysId;
+
+		var thisCanRead = uData.uCanRead;
+        var thisParentSysId = uData.uKbBaseSysId;
+
+        if (thisCanRead) {                     
+            uData.uCategoryList = this.getKbSubCategories(thisParentSysId);			
+			this.setKbCategoryListDepth(uData.uCategoryList,0);
+			uData.uFlatCategoryList=this.getFlatKbCategoryList(uData.uCategoryList);
+			for (var i=0,iL=uData.uFlatCategoryList.length;i<iL;i++) {
+				if (uData.uDepth<uData.uFlatCategoryList[i].level) { uData.uDepth=uData.uFlatCategoryList[i].level; }
+			}
+        }               
+        return uData;
+    },  
+    getKbSubCategories: function(_pParentId) {
+		var uCategoryList = [];
+        var myGrCat = new GlideRecord('kb_category');
+        var thisQuery = 'active=true'; 
+        thisQuery += '^parent_id='+_pParentId;
+		
+		myGrCat.addEncodedQuery(thisQuery);
+        myGrCat.orderBy('label');
+        myGrCat.query();
+        while (myGrCat.next()) {
+			var l_parentid = _pParentId;
+            var l_id = {};
+            var l_label = {};
+            var l_count = {};
+			var l_artcount = {};
+			var l_level = 0;
+			var l_uCategoryList=[];
+            l_id = myGrCat.getUniqueValue();
+            l_label = myGrCat.getValue('label');
+            var l_myGaCat = new GlideAggregate('kb_category');
+            var l_thisQuery2 = 'active=true';
+            l_thisQuery2 += '^parent_id='+l_id; 
+            l_myGaCat.addEncodedQuery(l_thisQuery2);
+            l_myGaCat.addAggregate('COUNT');
+            l_myGaCat.query();
+            if (l_myGaCat.next()) {
+                l_count=l_myGaCat.getAggregate('COUNT');
+            }
+			l_artcount = this.getKbCategoryArticleCount(l_id);
+			l_uCategoryList=this.getKbSubCategories(l_id);
+            uCategoryList.push({ 
+				label: l_label, 
+				value: l_id, 
+				subcount:l_count, 
+				artcount:l_artcount,
+				level: l_level, 
+				parentid: l_parentid,
+				uCategoryList: l_uCategoryList
+			});
+        }  		
+        return uCategoryList;
+    },
+	getIdSubList: function(uCategoryList) {
+		var uIdSubList=[];
+		if (uCategoryList.length>0) {
+			for (var i=0,iL=uCategoryList;i<iL;i++)
+			{
+				uIdSubList.push(uCategoryList[i].value);
+				if (uCategoryList[i].idsublist.length>0) {
+					uIdSubList.push(uCategoryList[i].idsublist);
+				}
+			}
+		}
+		return uIdSubList;
+	},
+	setKbCategoryListDepth: function (uCategoryList,uLevel) {	
+		var thisULevel = uLevel;
+		if (uCategoryList.length>0) {
+			uLevel += 1;
+			for (var i=0, iL=uCategoryList.length;i<iL;i++) {
+				uCategoryList[i].level = uLevel;				this.setKbCategoryListDepth(uCategoryList[i].uCategoryList,uLevel);
+			}
+		}
+	},	
+	getFlatKbCategoryList: function(uCategoryList){
+		var uFlatCategoryList=[];
+		var tmpFlatCategoryList=[];
+		if (uCategoryList.length>0) {
+			for (var i=0,iL=uCategoryList.length;i<iL;i++) {
+				var myCategoryItem = {};
+				myCategoryItem.label = uCategoryList[i].label;
+				myCategoryItem.value = uCategoryList[i].value;
+				myCategoryItem.subcount = uCategoryList[i].subcount;
+				myCategoryItem.artcount = uCategoryList[i].artcount;
+				myCategoryItem.level = uCategoryList[i].level;
+				myCategoryItem.parentid = uCategoryList[i].parentid;
+				uFlatCategoryList.push(myCategoryItem);
+				tmpFlatCategoryList = this.getFlatKbCategoryList(uCategoryList[i].uCategoryList);
+				for (var j=0,jL=tmpFlatCategoryList.length;j<jL;j++) {	
+					uFlatCategoryList.push(tmpFlatCategoryList[j]);
+				}
+			}					
+		}
+		return uFlatCategoryList;
+	},
+	getKbCategoryTreeTitle: function(_pCatId)
+	{
+		var myCat = this.getKbCategoryTreeStr(_pCatId);
+		if (myCat != '') {
+			return 'Articles: '+myCat;			
+		}
+		return 'Articles (all)...';
+	},
+	getKbCategoryTreeStr: function(_pCatId) {
+		var thisCatStr = ''; 
+		var thisParentId = '';
+		var thisParentTable = '';
+		var isFound = false;
+
+		var myGrCat = new GlideRecord('kb_category');
+		var thisQuery = 'active=true';
+		thisQuery += '^sys_id='+_pCatId;
+		myGrCat.addEncodedQuery(thisQuery);
+		myGrCat.query();
+		if (myGrCat.next()) {
+			thisCatStr = myGrCat.getValue('label');
+			thisParentId = myGrCat.getValue('parent_id');
+			thisParentTable = myGrCat.getValue('parent_table');
+			isFound = true;			
+		}
+		if (isFound) {
+			if (thisParentTable.indexOf('kb_knowledge_base') < 0) {
+				return this.getKbCategoryTreeStr(thisParentId) + ' > ' + thisCatStr;	
+			}
+		} 
+		return thisCatStr;	
+	},
+	getKbCategoryListForArticle: function(_pArtSysId) {
+		var myCatListStr = '';
+		var myGr = new GlideRecord('kb_knowledge');
+		if (myGr.get(_pArtSysId))
+		{
+			var l_title = myGr.getValue('short_description');
+			var l_catSysId = myGr.getValue('kb_category');
+			myCatListStr = this.getKbCategoryTreeStr(l_catSysId);
+			myCatListStr = myCatListStr.replace(/ > /g,'>');
+			myCatListStr = myCatListStr.trim();
+			myCatListStr = (myCatListStr.length>0)?myCatListStr+': '+l_title:l_title;
+		}
+		return myCatListStr;
+	},	
+	getKbCategoryDescendants: function(_pParentId) {
+		var idList = [];
+		var myGrCat = new GlideRecord('kb_category');
+		var thisQuery = 'active=true';
+		thisQuery += '^parent_id='+_pParentId;
+		myGrCat.addEncodedQuery(thisQuery);		
+		myGrCat.query();
+		while (myGrCat.next())
+		{
+			var l_id = {};
+			l_id = myGrCat.getUniqueValue();
+			idList.push(l_id);
+			var l_idList = [];
+			l_idList = this.getKbCategoryDescendants(l_id);
+			if (l_idList.length>0) { 
+				idList = idList.concat(l_idList);
+			}		
+		}
+		return idList;		
+	},
+	getKbCategoryArticleCount: function(_pParentId) {
+		var myIdList = [];
+		myIdList.push(_pParentId);
+		myIdList = myIdList.concat(this.getKbCategoryDescendants(_pParentId));
+		var myArticleCount = 0;
+
+		var myGaArt = new GlideAggregate('kb_knowledge');
+		var thisQuery = 'active=true';			
+		thisQuery += '^workflow_state=published';
+		thisQuery += '^valid_to>=javascript:gs.beginningOfToday()';
+		thisQuery += '^kb_category='+myIdList[0];			
+		if (myIdList.length > 1)
+		{
+			for (var i=1,iL=myIdList.length;i<iL;i++) {
+				thisQuery += '^ORkb_category='+myIdList[i];					
+			}
+		}
+		myGaArt.addEncodedQuery(thisQuery);
+		myGaArt.addAggregate('COUNT');
+		myGaArt.query();
+		if (myGaArt.next()) {
+			myArticleCount=myGaArt.getAggregate('COUNT');
+		}			
+
+		return myArticleCount;		
+	},
+    getKbCategoryArticles: function(_pCatSysId,_pFirstRow,_LastRow) {
+		var myUdata = {};
+		var myArticleList = [];
+		var myRowCount = 0;
+		var myIdList = [];
+		myIdList.push(_pCatSysId);
+		myIdList = myIdList.concat(this.getKbCategoryDescendants(_pCatSysId));
+		
+		var myGrArt = new GlideRecord('kb_knowledge');
+		myGrArt.chooseWindow(_pFirstRow,_LastRow);		
+		var thisQuery = 'active=true';			
+		thisQuery += '^workflow_state=published';
+		thisQuery += '^valid_to>=javascript:gs.beginningOfToday()';
+		thisQuery += '^kb_category='+myIdList[0];			
+		if (myIdList.length > 1)
+		{
+			for (var i=1,iL=myIdList.length;i<iL;i++) {
+				thisQuery += '^ORkb_category='+myIdList[i];					
+			}
+		}
+		myGrArt.orderByDesc('rating');
+		myGrArt.orderByDesc('published');		
+		myGrArt.addEncodedQuery(thisQuery);
+		
+		myGrArt.query();
+		myRowCount = myGrArt.getRowCount();
+		while (myGrArt.next()) {
+			var l_item = {
+				sys_id: myGrArt.getUniqueValue(),
+				short_description: myGrArt.short_description.toString(),
+				rating: myGrArt.getValue('rating'),
+				published: myGrArt.getDisplayValue('published'),
+				author: myGrArt.getDisplayValue('author')
+			};
+			myArticleList.push(l_item);
+		}		
+		myUdata.articles = myArticleList;
+		myUdata.rowCount = myRowCount;
+        return myUdata;
+    },
+    getKbCategorySearchArticles: function(_pCatSysId,_pSearch,_pFirstRow,_LastRow) {
+		var myUdata = {};
+		var myArticleList = [];
+		var myRowCount = 0;
+		var myIdList = [];
+		myIdList.push(_pCatSysId);
+		myIdList = myIdList.concat(this.getKbCategoryDescendants(_pCatSysId));
+		
+		var myGrArt = new GlideRecord('kb_knowledge');
+		myGrArt.chooseWindow(_pFirstRow,_LastRow);		
+		var thisQuery = 'active=true';			
+		thisQuery += '^workflow_state=published';
+		thisQuery += '^valid_to>=javascript:gs.beginningOfToday()';
+		thisQuery += '^IR_AND_OR_QUERY='+_pSearch;
+		thisQuery += '^kb_category='+myIdList[0];	
+		if (myIdList.length > 1)
+		{
+			for (var i=1,iL=myIdList.length;i<iL;i++) {
+				thisQuery += '^ORkb_category='+myIdList[i];					
+			}
+		}
+		myGrArt.orderByDesc('ir_query_score');
+		myGrArt.orderByDesc('rating');
+		myGrArt.orderByDesc('published');		
+		myGrArt.addEncodedQuery(thisQuery);
+		
+		myGrArt.query();
+		myRowCount = myGrArt.getRowCount();
+		while (myGrArt.next()) {
+			var l_item = {
+				sys_id: myGrArt.getUniqueValue(),
+				short_description: myGrArt.short_description.toString(),
+				rating: myGrArt.getValue('rating'),
+				published: myGrArt.getDisplayValue('published'),
+				author: myGrArt.getDisplayValue('author')
+			};
+			myArticleList.push(l_item);
+		}		
+		myUdata.articles = myArticleList;
+		myUdata.rowCount = myRowCount;
+        return myUdata;
+    },	
+	isIncident: function(_p) {
+		var myGr = new GlideRecord('sc_cat_item');
+		myGr.get(_p);
+		var myName = (myGr.name.toString()).toLowerCase();
+		return (myName.indexOf('incident')!=-1);
+	},
+    type: 'u_utassp'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-10-29 15:10:11</sys_created_on>
+        <sys_id>3edf1d4c4f212300f006121f9310c732</sys_id>
+        <sys_mod_count>8</sys_mod_count>
+        <sys_name>u_utassp</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sys_script_include_3edf1d4c4f212300f006121f9310c732</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-14 18:27:35</sys_updated_on>
+    </sys_script_include>
+</record_update>

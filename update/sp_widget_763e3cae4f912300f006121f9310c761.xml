@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function ($scope, $rootScope, $element, spUtil, $timeout) {
+  /* widget controller */
+	/* widget controller */
+	var c = this;
+	if (typeof c.data == typeof myUndefined) { c.data = {}; }
+	if (typeof c.data.tickets == typeof myUndefined ) { c.data.tickets = []; }	
+	
+	//*** Init
+	$scope.hideOnInit = function(rowArg) {
+		rowArg.hide();
+	};
+	
+	//*** pagination 
+  function get() {
+    spUtil.update($scope);
+  }
+	
+	$scope.previousPage = function() {
+		$scope.data.ishidden = false;		
+		$scope.data.action='prev';
+		if ($scope.data.pagination.currentPage > 1)
+			$scope.data.pagination.currentPage = $scope.data.pagination.currentPage - 1;
+		else 
+			$scope.data.pagination.currentPage = 0;
+		get();
+	};
+
+	$scope.nextPage = function() {
+		$scope.data.ishidden = false;		
+		$scope.data.action='next';
+		$scope.data.pagination.currentPage = $scope.data.pagination.currentPage+1;
+		get();
+	};	
+
+	//*** Now, hide on init	
+	if ($scope.data.ishidden && $scope.data.ishidden != 'false') {
+		var myRowDiv=$element.closest('div.sp-row-content');
+		var myRow=myRowDiv.parent();	
+		$scope.hideOnInit(myRow);		
+	}
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.panel-heading&#13;
+{&#13;
+	background-image: url(utassp_ticket.png);&#13;
+	background-repeat: no-repeat;&#13;
+	background-size: contain;  	&#13;
+	padding-left: 50px;&#13;
+}&#13;
+.panel-body {&#13;
+  /* background-color:#fff6e5; */&#13;
+}&#13;
+.panel-primary &gt; .panel-footer {&#13;
+	background-color: #428bca;&#13;
+	border-color: #428bca;	&#13;
+}&#13;
+&#13;
+/* ********** */&#13;
+/* Pagination */&#13;
+a.mybtn {&#13;
+    padding: 5px 10px;&#13;
+    font-size: 12px;&#13;
+    line-height: 1.5;&#13;
+    border-radius: 3px;&#13;
+}&#13;
+&#13;
+/* ************ */&#13;
+/* DivTable  */&#13;
+.myDivTable{ &#13;
+  display:table; &#13;
+  width: 100%;&#13;
+  table-layout: fixed;&#13;
+}&#13;
+.myDivTableRow { display:table-row; }&#13;
+.myDivTableHeading { display:table-header-group;}&#13;
+.myDivTableCell, .myDivTableHead { display:table-cell;}&#13;
+.myDivTableHeading { display:table-header-group;}&#13;
+.myDivTableFoot { display:table-footer-group;}&#13;
+.myDivTableBody { display:table-row-group;}&#13;
+&#13;
+div.myGreyGridTable {&#13;
+  width:100%;&#13;
+  text-align:left;&#13;
+  border-collapse:collapse;&#13;
+}&#13;
+&#13;
+/* myDivTableHeading */&#13;
+.myDivTable.myGreyGridTable .myDivTableHeading {&#13;
+  background:#FFFFFF;&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+  border-bottom:1px solid #000000;&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+  .myDivTableHead {&#13;
+  	font-weight:bold;&#13;
+  	color:#000000;&#13;
+  	text-align:center;&#13;
+  	padding:1px 1px 1px 4px;&#13;
+    border-right:1px solid #bbbbbb;     &#13;
+  }&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow   {&#13;
+  .myDivTableHead.myLeft { text-align:left; }&#13;
+}&#13;
+&#13;
+/* myDivTableBody */&#13;
+.myDivTable.myGreyGridTable .myDivTableBody {&#13;
+	a.myDivTableRow {&#13;
+  	width:100%;&#13;
+  	height:100%; &#13;
+    font-size: 11px; &#13;
+    border-bottom:1px solid white;&#13;
+	}&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableBody {&#13;
+  a.myDivTableRow:hover { &#13;
+	  text-decoration:underline;&#13;
+    background-color:#dddddd; &#13;
+  }&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableBody {&#13;
+	.myDivTableRow:nth-child(odd) { background: #EEEEEE; }&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableBody&#13;
+{&#13;
+	.myDivTableRow:last-child { border-bottom-style:none;  }&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+  .myDivTableCell  {&#13;
+      border-right:1px solid #bbbbbb; &#13;
+      padding:1px 4px;&#13;
+  }&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+  .myDivTableCell.myCtr { text-align:center; }&#13;
+}&#13;
+&#13;
+/* Foot Style */&#13;
+.myGreyGridTable .myTableFootStyle {&#13;
+  font-weight:bold;&#13;
+  color:#333333;&#13;
+  border-top:1px solid #333333;&#13;
+}&#13;
+&#13;
+/* Link text */&#13;
+a.myDivTableRow {&#13;
+  color:#3a3f51;&#13;
+  &amp;:hover {&#13;
+    color:#428bca;&#13;
+    text-decoration: underline;&#13;
+  }&#13;
+}&#13;
+&#13;
+/* ********** */&#13;
+// Above Medium devices (tablets, 768px and up)&#13;
+@media (min-width: 768.01px) &#13;
+{&#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefLgOnlyShow { display:table-cell; }&#13;
+  }&#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefMedUpShow { display:table-cell; }&#13;
+  }&#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableCell.myDefMedOnlyShow { display:none; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+    .myDivTableHead:nth-last-child(1) { border-right-style:none; }&#13;
+  } &#13;
+  &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {&#13;
+    .myDivTableCell.myDefLgOnlyShow { display:table-cell; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {&#13;
+    .myDivTableCell.myDefMeUpShow { display:table-cell; }&#13;
+  }&#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {&#13;
+    .myDivTableCell.myDefMedOnlyShow { display:none; }&#13;
+  }&#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell:nth-last-child(2) { border-right-style:none; }&#13;
+  } &#13;
+  &#13;
+  .myCol1 { width:10% }&#13;
+  .myCol2 { width:43% }&#13;
+  .myCol3 { width:20% }&#13;
+  .myCol4 { width:12% }&#13;
+  .myCol5 { width:18% } &#13;
+}&#13;
+&#13;
+// Medium devices (tablets, 768px and less)&#13;
+@media (max-width: 768px) { &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefLgOnlyShow { display:none; }&#13;
+  }&#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefMedUpShow { display:table-cell; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+    .myDivTableHead.myDefMedOnlyShow { display:table-cell; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+    .myDivTableHead:nth-last-child(1) { border-right-style:none; }&#13;
+  }    &#13;
+  &#13;
+ .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell.myDefLgOnlyShow { display:none; }&#13;
+  }   &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {&#13;
+    .myDivTableCell.myDefMedUpShow { display:table-cell; }&#13;
+  }    &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell.myDefMedOnlyShow { display:table-cell; }&#13;
+  }   &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell:nth-last-child(1) { border-right-style:none; }&#13;
+  }   &#13;
+  &#13;
+  .myCol1 { width:15% }&#13;
+  .myCol2 { width:34% }&#13;
+  .myCol3 { width:25% }&#13;
+  .myCol4 { width:12% }&#13;
+  .myCol5 { width:14% }   &#13;
+}&#13;
+&#13;
+// Small devices (landscape phones, 576px and less)&#13;
+@media (max-width: 576px) { &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefLgOnlyShow { display:none; }&#13;
+  }&#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefMedUpShow { display:none; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+    .myDivTableHead.myDefMedOnlyShow { display:none; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+    .myDivTableHead:nth-last-child(4) { border-right-style:none; }&#13;
+  }   &#13;
+  &#13;
+ .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell.myDefLgOnlyShow { display:none; }&#13;
+  }   &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {&#13;
+    .myDivTableCell.myDefMedUpShow { display:none; }&#13;
+  }    &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell.myDefMedOnlyShow {display:none; }&#13;
+  }   &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell:nth-last-child(5) { border-right-style:none; }&#13;
+  }  &#13;
+  .myCol1 { width:35% }&#13;
+  .myCol2 { width:65% }&#13;
+  .myCol3 { width:0% }&#13;
+  .myCol4 { width:0% }&#13;
+  .myCol5 { width:0% }  &#13;
+}&#13;
+&#13;
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list>color,title</field_list>
+        <has_preview>false</has_preview>
+        <id>utassp01_my_closed_tickets_widget</id>
+        <internal>false</internal>
+        <link/>
+        <name>UTASSP My Closed Tickets Widget</name>
+        <option_schema>[&#13;
+   {&#13;
+      "hint": "If false, buttons are stacked on the right; if true, they are side-by-side",&#13;
+      "name": "portal",&#13;
+      "label": "Buttons stacked side by side",&#13;
+      "type": "boolean"&#13;
+   },&#13;
+   {&#13;
+      "hint": "Maximum number of elements that are shown in the list of approvals",&#13;
+      "name": "maxitems",&#13;
+      "default_value": "10",&#13;
+      "label": "Max number of elements shown in the list (only positive numbers &gt; 0, 10 otherwise)",&#13;
+      "type": "integer"&#13;
+   },&#13;
+   {&#13;
+      "hint": "Is Hidden on Init?",&#13;
+      "name": "ishidden",&#13;
+      "default_value": "true",&#13;
+      "label": "Is Hidden on Init",&#13;
+      "type": "boolean"&#13;
+   },&#13;
+   {&#13;
+      "name": "pageid",&#13;
+      "label": "pageid",&#13;
+      "type": "choice",&#13;
+      "choices": [&#13;
+         {&#13;
+            "label": "index",&#13;
+            "value": "utassp01_index"&#13;
+         },&#13;
+         {&#13;
+            "label": "tickets",&#13;
+            "value": "utassp01_view_tickets"&#13;
+         }&#13;
+      ]&#13;
+   }&#13;
+]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function ($sp, input, data, options, gs) {
+	data.pageid=options.pageid || '';
+	if (typeof data.tickets == typeof myUndefined) { data.tickets = []; }
+	//we get only a max number of elements to avoid to have a big list of it
+	var myMaxItems = options.maxitems || 0;
+	//set 10 if maxnumber is undefined, empty or negative value
+  myMaxItems = myMaxItems>0 ? myMaxItems : 10; 
+	var myFirstRow = 0;
+	var myLastRow =  parseInt(myMaxItems);
+	var myCurrentPage = 0;    
+    
+	//
+	if (typeof data.pagination == typeof myUndefined) 
+	{
+		data.pagination = {};
+		data.pagination.currentPage = myCurrentPage;
+		data.pagination.hasNext = false;
+		data.pagination.hasPrevious = false;
+		data.showPagination = false;
+	}    
+
+	if (typeof data.ishidden == typeof myUndefined)
+	{
+		data.ishidden = options.ishidden;
+	}
+	
+	if (typeof input != typeof myUndefined) {
+		myCurrentPage = parseInt(input.pagination.currentPage);
+		myFirstRow = (myCurrentPage * parseInt(myMaxItems));
+		myLastRow =  parseInt(myFirstRow) +  parseInt(myMaxItems);	
+	} 
+
+    var myTicketsList = [];
+	var thisUser = gs.getUserID(); 
+    var isItil = gs.getUser().hasRole('itil');
+	var myGr = new GlideRecord('task');     
+	var thisQuery = 'sys_class_name=incident'; 
+	thisQuery = thisQuery + '^active=false'; 
+	thisQuery = thisQuery + '^ref_incident.caller_id='+thisUser; 
+	thisQuery = thisQuery + '^NQsys_class_name=sc_request'; 
+	thisQuery = thisQuery + '^ref_sc_request.requested_for='+thisUser; 
+	thisQuery = thisQuery + '^active=false';	
+	myGr.chooseWindow(myFirstRow, myLastRow);
+	myGr.addEncodedQuery(thisQuery);
+	myGr.orderByDesc('sys_created_on');
+	myGr.query();
+	var rowCount = myGr.getRowCount();
+	while (myGr.next()) {
+		var l_task = {
+            number: myGr.getDisplayValue(),
+            short_description: myGr.short_description.toString(),
+            business_service: myGr.getDisplayValue('u_business_service'),
+            state: myGr.getDisplayValue('state'),
+            view: ((isItil) ? 'portal' : 'ess'),
+            created: myGr.getDisplayValue('sys_created_on'),
+            createddo:  myGr.getDisplayValue('sys_created_on').split(' ')[0]        
+        };
+		var l_ticket = {
+            sys_id: myGr.getUniqueValue(),
+            table: myGr.getRecordClassName(),
+            task: l_task            
+        };
+		myTicketsList.push(l_ticket);
+	}
+	data.tickets = myTicketsList;
+
+	// for pagination
+	data.pagination.hasNext = (myTicketsList.length == (parseInt(myLastRow) - parseInt(myFirstRow)) && parseInt(myLastRow) < parseInt(rowCount));
+	data.pagination.hasPrevious = parseInt(myFirstRow) > 0;
+	data.pagination.showPagination = data.pagination.hasPrevious || data.pagination.hasNext;
+	data.pagination.currentPage = myCurrentPage;
+})($sp, input, data, options, gs);]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-10-24 20:51:19</sys_created_on>
+        <sys_id>763e3cae4f912300f006121f9310c761</sys_id>
+        <sys_mod_count>19</sys_mod_count>
+        <sys_name>UTASSP My Closed Tickets Widget</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_widget_763e3cae4f912300f006121f9310c761</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-13 20:11:51</sys_updated_on>
+        <template><![CDATA[<div>
+    <div class="panel panel-{{::options.color}} b">
+        <div class="panel-heading">
+            <h2 class="h4 panel-title">{{options.title}}</h2>
+        </div>
+        <div class="panel-body">
+            <div ng-if="(data.tickets.length > 0)">
+                <div class="myDivTable myGreyGridTable">
+                    <div class="myDivTableHeading">
+                        <div class="myDivTableRow">
+                            <div class="myDivTableHead myCol1">Number</div>
+                            <div class="myDivTableHead myLeft myCol2">Description</div>
+                            <div class="myDivTableHead myDefMedUpShow myCol3">Service</div>
+                            <div class="myDivTableHead myDefMedUpShow myCol4">State</div>
+                            <div class="myDivTableHead myDefMedUpShow myCol5">Created</div>
+                        </div>
+                    </div>
+                    <div class="myDivTableBody">
+                        <a ng-repeat="ticket in data.tickets" ng-href="?id=utassp02_form&table={{ticket.table}}&sys_id={{ticket.sys_id}}&view={{ticket.view}}&pageid={{data.pageid}}"
+                            class="myDivTableRow">
+                            <div class="myDivTableCell myCtr myCol1">{{ticket.task.number}}</div>
+                            <div class="myDivTableCell myCol2">{{ticket.task.short_description}}</div>
+                            <div class="myDivTableCell myDefMedUpShow myCol3">{{ticket.task.business_service}}</div>
+                            <div class="myDivTableCell myCtr myDefMedUpShow myCol4">{{ticket.task.state}}</div>
+                            <div class="myDivTableCell myCtr myDefLgOnlyShow myCol5">{{ticket.task.created}}</div>
+                            <div class="myDivTableCell myCtr myDefMedOnlyShow myCol5">{{ticket.task.createddo}}</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="!(data.tickets.length > 0)">
+            ${You have no closed tickets}
+        </div>
+        <div class="panel-{{::options.color}} panel-footer clearfix" ng-if="data.pagination.showPagination">
+            <a id="previous-btn" href="javascript:void(0)" ng-click="previousPage()" ng-show="data.pagination.hasPrevious"
+                class="pull-left btn btn-sm btn-default mybtn" aria-label="${Pagination button Previous}">
+                <i class="fa fa-arrow-left m-r-sm" aria-hidden="true"></i>${&nbsp;Previous}</a>
+            <a id="next_btn" href="javascript:void(0)" ng-click="nextPage()" ng-show="data.pagination.hasNext" class="pull-right btn btn-sm btn-default mybtn"
+                aria-label="${Pagination button Next}">
+                ${Next&nbsp;}<i class="fa fa-arrow-right m-r-sm col-md-offset-3" aria-hidden="true"></i></a>
+        </div>
+    </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

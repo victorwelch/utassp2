@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function ($scope, $rootScope, $element, spUtil, $window) {
+	var c = this;
+	if (typeof c.data == typeof myUndefined) { c.data = {}; }
+	if (typeof c.data.articles == typeof myUndefined ) { c.data.articles = []; }
+	if (typeof c.data.title == typeof myUndefined ) { c.data.title = 'Articles...'; }
+	
+	$rootScope.$on('myCatSelectEvent', function (event, obj) {
+		//$window.location.href = '/ssp';
+		$('#searchInput').removeClass('ng-hide');
+		$('#searchText').addClass('ng-hide');
+		$scope.data.categoryId = obj.selectionId;
+		$scope.data.action = 'new';
+		$scope.data.pagination.currentPage = 0;
+		get();
+	});
+	
+	//*** pagination 
+  function get() {
+    spUtil.update($scope);
+  }
+	
+	$scope.previousPage = function() {
+		$scope.data.action='page';
+		if ($scope.data.pagination.currentPage > 1)
+			$scope.data.pagination.currentPage = $scope.data.pagination.currentPage - 1;
+		else 
+			$scope.data.pagination.currentPage = 0;
+		get();
+	};
+
+	$scope.nextPage = function() {
+		$scope.data.action='page';
+		$scope.data.pagination.currentPage = $scope.data.pagination.currentPage+1;
+		get();
+	};	
+	
+	$scope.artSearch = function(e) {
+		//alert('btn');
+		var myBtn=$(e.currentTarget);
+		var myRoot=myBtn.closest('div.input-group');
+		var myInput=myRoot.find('input');
+		$scope.data.action = 'search';
+		$scope.data.q = myInput.val();	
+		myInput.val('');
+		get();
+		$('#searchInput').addClass('ng-hide');
+		$('#searchText').removeClass('ng-hide');		
+	}
+	
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>mark {&#13;
+  background:#ff0;&#13;
+  padding:.2em;&#13;
+}&#13;
+&#13;
+h2.panel-title {&#13;
+	color: #ffffff;&#13;
+  text-shadow: 3px 3px 5px #000000;&#13;
+}&#13;
+&#13;
+.panel-body {&#13;
+  padding:0px 0px 0px 0px;&#13;
+}&#13;
+&#13;
+.panel-primary  {&#13;
+	background-color: $brand-primary;&#13;
+}&#13;
+&#13;
+.panel-info {&#13;
+  background-color: $brand-info;&#13;
+}&#13;
+&#13;
+.panel-success {&#13;
+  background-color: $brand-success;&#13;
+}&#13;
+&#13;
+.panel-warning {&#13;
+  background-color: $brand-warning;&#13;
+}&#13;
+&#13;
+.panel-danger {&#13;
+  background-color: $brand-danger;&#13;
+}&#13;
+&#13;
+.myShadow {&#13;
+-webkit-box-shadow: 0px 0px 10px 4px rgba(158,158,158,0.6);&#13;
+-moz-box-shadow: 0px 0px 10px 4px rgba(158,158,158,0.6);&#13;
+box-shadow: 0px 0px 10px 4px rgba(158,158,158,0.6);&#13;
+}&#13;
+&#13;
+/* ********** */&#13;
+/* Pagination */&#13;
+a.mybtn {&#13;
+    padding: 5px 10px;&#13;
+    font-size: 12px;&#13;
+    line-height: 1.5;&#13;
+    border-radius: 3px;&#13;
+}&#13;
+&#13;
+/* ************ */&#13;
+/* DivTable  */&#13;
+.myDivTable{ &#13;
+  display:table; &#13;
+  width: 100%;&#13;
+  table-layout: fixed;&#13;
+  font-size: 12px;&#13;
+}&#13;
+.myDivTableRow { display:table-row; }&#13;
+.myDivTableHeading { display:table-header-group;}&#13;
+.myDivTableCell, .myDivTableHead { display:table-cell;}&#13;
+.myDivTableHeading { display:table-header-group;}&#13;
+.myDivTableFoot { display:table-footer-group;}&#13;
+.myDivTableBody { display:table-row-group;}&#13;
+&#13;
+div.myGreyGridTable {&#13;
+  width:100%;&#13;
+  text-align:left;&#13;
+  border-collapse:collapse;&#13;
+}&#13;
+&#13;
+/* myDivTableHeading */&#13;
+.myDivTable.myGreyGridTable .myDivTableHeading {&#13;
+  background:#eeeeee;&#13;
+}&#13;
+&#13;
+.myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+  .myDivTableHead {&#13;
+    font-size:10px;&#13;
+  	font-weight:bold;&#13;
+  	color:#000000;&#13;
+  	text-align:center;&#13;
+    vertical-align: middle;&#13;
+  	padding:1px 1px 1px 4px;&#13;
+    border-right:1px solid #bbbbbb;&#13;
+  	border-bottom:1px solid #000000;    &#13;
+    word-wrap: break-word;    &#13;
+  }&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow   {&#13;
+  .myDivTableHead.myLeft { text-align:left; }&#13;
+}&#13;
+&#13;
+/* myDivTableBody */&#13;
+.myDivTable.myGreyGridTable .myDivTableBody {&#13;
+	a.myDivTableRow {&#13;
+    color:#000000;&#13;
+  	width:100%;&#13;
+  	height:100%; &#13;
+    border-bottom:1px solid #aaaaaa;&#13;
+	}&#13;
+}&#13;
+&#13;
+.myDivTable.myGreyGridTable .myDivTableBody {&#13;
+  a.myDivTableRow:hover { &#13;
+    color: #1565C0;&#13;
+	  text-decoration:underline;&#13;
+    font-weight: bold;&#13;
+    background-color:#e6e8ea; &#13;
+  }&#13;
+}&#13;
+&#13;
+.myDivTable.myGreyGridTable .myDivTableBody {&#13;
+	.myDivTableRow:nth-child(odd) { background: #ffffff; }&#13;
+	.myDivTableRow:nth-child(even) { background: #f5f5f5; }&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableBody&#13;
+{&#13;
+	.myDivTableRow:last-child { border-bottom-style:none;  }&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+  .myDivTableCell  {&#13;
+      border-right:1px solid #bbbbbb; &#13;
+      padding:1px 4px;&#13;
+  }&#13;
+}&#13;
+.myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+  .myDivTableCell.myCtr { text-align:center; }&#13;
+}&#13;
+&#13;
+.myColSpanAll { &#13;
+  display:table;&#13;
+  width:100%;&#13;
+	background: #EEEEEE;&#13;
+  color: #444444;&#13;
+}&#13;
+&#13;
+/* Foot Style */&#13;
+.myGreyGridTable .myTableFootStyle {&#13;
+  font-weight:bold;&#13;
+  color:#333333;&#13;
+  border-top:1px solid #333333;&#13;
+}&#13;
+&#13;
+// Above Medium devices (tablets, 768px and up)&#13;
+@media (min-width: 768.01px) &#13;
+{&#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefLgOnlyShow { display:table-cell; }&#13;
+  }&#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefMedUpShow { display:table-cell; }&#13;
+  }&#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableCell.myDefMedOnlyShow { display:none; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+    .myDivTableHead:nth-last-child(1) { border-right-style:none; }&#13;
+  } &#13;
+  &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {&#13;
+    .myDivTableCell.myDefLgOnlyShow { display:table-cell; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {&#13;
+    .myDivTableCell.myDefMeUpShow { display:table-cell; }&#13;
+  }&#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {&#13;
+    .myDivTableCell.myDefMedOnlyShow { display:none; }&#13;
+  }&#13;
+  &#13;
+  .myCol1 { width:46% }&#13;
+  .myCol2 { width:10% }&#13;
+  .myCol3 { width:14% }&#13;
+  .myCol4 { &#13;
+    width:18%;&#13;
+  	font-size: 10px;&#13;
+  } &#13;
+  &#13;
+}&#13;
+&#13;
+// Medium devices (tablets, 768px and less)&#13;
+@media (max-width: 768px) { &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefLgOnlyShow { display:none; }&#13;
+  }&#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefMedUpShow { display:table-cell; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+    .myDivTableHead.myDefMedOnlyShow { display:table-cell; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+    .myDivTableHead:nth-last-child(1) { border-right-style:none; }&#13;
+  }    &#13;
+  &#13;
+ .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell.myDefLgOnlyShow { display:none; }&#13;
+  }   &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {&#13;
+    .myDivTableCell.myDefMedUpShow { display:table-cell; }&#13;
+  }    &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell.myDefMedOnlyShow { display:table-cell; }&#13;
+  }     &#13;
+  &#13;
+  .myCol1 { width:48% }&#13;
+  .myCol2 { width:10% }&#13;
+  .myCol3 { width:12% }&#13;
+  .myCol4 { &#13;
+    width:14%;&#13;
+  	font-size: 10px;&#13;
+  } &#13;
+}&#13;
+&#13;
+// Small devices (landscape phones, 576px and less)&#13;
+@media (max-width: 576px) { &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefLgOnlyShow { display:none; }&#13;
+  }&#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow  {&#13;
+    .myDivTableHead.myDefMedUpShow { display:none; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+    .myDivTableHead.myDefMedOnlyShow { display:none; }&#13;
+  }  &#13;
+  .myDivTable.myGreyGridTable .myDivTableHeading .myDivTableRow {&#13;
+    .myDivTableHead:nth-last-child(2) { border-right-style:none; }&#13;
+  }   &#13;
+  &#13;
+ .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell.myDefLgOnlyShow { display:none; }&#13;
+  }   &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow  {&#13;
+    .myDivTableCell.myDefMedUpShow { display:none; }&#13;
+  }    &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell.myDefMedOnlyShow {display:none; }&#13;
+  }   &#13;
+  .myDivTable.myGreyGridTable .myDivTableBody .myDivTableRow {&#13;
+    .myDivTableCell:nth-last-child(2) { border-right-style:none; }&#13;
+  }  &#13;
+  .myCol1 { width:66% }&#13;
+  .myCol2 { width:22% }&#13;
+  .myCol3 { &#13;
+    width:22%; &#13;
+  	font-size: 10px;&#13;
+  }&#13;
+  .myCol4 { width:0% }&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list>color</field_list>
+        <has_preview>false</has_preview>
+        <id>utassp01_kb_category_page_widget</id>
+        <internal>false</internal>
+        <link/>
+        <name>UTASSP KB Category Page  Widget</name>
+        <option_schema>[&#13;
+  {&#13;
+    "name": "knowledge_base",&#13;
+    "label": "Knowledge Base",&#13;
+    "type": "choice",&#13;
+    "choices": [&#13;
+      {&#13;
+        "label": "Business Affairs Internal",&#13;
+        "value": "Business Affairs Internal"&#13;
+      },&#13;
+      {&#13;
+        "label": "Business Affairs Knowledge Base",&#13;
+        "value": "Business Affairs Knowledge Base"&#13;
+      },&#13;
+      {&#13;
+        "label": "OIT Internal",&#13;
+        "value": "OIT Internal"&#13;
+      },&#13;
+      {&#13;
+        "label": "OIT Knowledge Base",&#13;
+        "value": "OIT Knowledge Base"&#13;
+      }&#13;
+    ]&#13;
+  },&#13;
+  {&#13;
+    "hint": "Maximum number of elements that are shown",&#13;
+    "name": "maxitems",&#13;
+    "default_value": "20",&#13;
+    "label": "Max number of elements shown in the list (only positive numbers &gt; 0, 20 otherwise)",&#13;
+    "type": "integer"&#13;
+  }&#13;
+]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function ($sp, input, data, options, gs) {
+	// get page id
+	var myPageId = $sp.getParameter('id');
+	data.pageId = myPageId;
+	
+	// populate the 'data' variable
+	if (typeof data.articles == typeof myUndefined) { data.articles = []; } 
+	if (typeof data.title == typeof myUndefined) { data.title = {}; }
+
+	var myUtassp = new u_utassp();
+	var myCategoryId = '';
+	var myTitle = 'Articles (all)...';
+	data.articles = [];
+	var myMaxItems = options.maxitems;
+	myMaxItems = myMaxItems>0 ? myMaxItems : 20; 
+	var myFirstRow = 0;
+	var myLastRow =  parseInt(myMaxItems);
+	var myCurrentPage = 0;		
+
+	if (typeof data.pagination == typeof myUndefined) {
+		data.pagination = {};
+		data.pagination.currentPage = myCurrentPage;
+		data.pagination.hasNext = false;
+		data.pagination.hasPrevious = false;
+		data.showPagination = false;
+	}
+	
+	var isData = false;
+	var isPage = false;
+	var isSearch = false;
+	if (typeof input == typeof myUndefined) {
+		isData = false;
+		isPage = false;
+		isSearch = false;
+	} else {
+		if (typeof input.action == typeof myUndefined) {
+			isData = true;
+			isPage = false;
+			isSearch = false;
+		} else if (input.action == 'new') {
+			isData = true;
+			isPage = false;
+			isSearch = false;
+		} else if (input.action == 'page') {
+			isData = false;
+			isPage = true;
+			isSearch = false;
+		} else if (input.action == 'search') {
+			if (typeof input.categoryId != typeof myUndefined && (input.categoryId)) { 
+				isData = true;
+			} else {
+				isData = false;				
+			} 
+			isPage = false;
+			if (typeof input.q != typeof myUndefined && (input.q)) {
+				isSearch = true;			
+			} else {
+				isSearch = false;
+			}
+		}
+	}
+	
+	data.isSearch=false;
+	if (isData) {
+		myCategoryId=input.categoryId;
+		var l_title = myUtassp.getKbCategoryTreeTitle(myCategoryId);
+		if (l_title != '') { myTitle = l_title; }
+	} else if (isPage) {
+		myTitle = input.title;
+		myCategoryId=input.categoryId;
+		if (input.pagination) {
+			myCurrentPage = parseInt(input.pagination.currentPage);
+			myFirstRow = (myCurrentPage *  parseInt(myMaxItems));
+			myLastRow =  parseInt(myFirstRow) +  parseInt(myMaxItems); 
+		}		
+	} else {
+		var l_uData = {};
+		var l_KbBase = '';
+		if (myPageId.indexOf('business_affairs_internal')>-1)
+		{
+			l_KbBase = 'Business Affairs Internal';
+		}			
+		else if (myPageId.indexOf('business_affairs_knowledge_base')>-1)
+		{
+			l_KbBase = 'Business Affairs Knowledge Base';
+		}		
+		else if (myPageId.indexOf('oit_internal')>-1)
+		{
+			l_KbBase = 'OIT Internal';
+		}
+		else if (myPageId.indexOf('oit_knowledge_base')>-1)
+		{
+			l_KbBase = 'OIT Knowledge Base';
+		} else {
+			l_KbBase = options.knowledge_base;
+		}
+		//
+		if (l_KbBase.length > 0)
+		{
+			l_uData = myUtassp.getKbBaseSysId(l_KbBase);
+			if (l_uData.uCanRead) {
+				myCategoryId = l_uData.uKbBaseSysId;		
+			}
+		}
+	}
+	
+	data.title = myTitle;
+	if (myCategoryId.length>0) {
+		data.categoryId = myCategoryId;
+		var myData = {};
+		if (isSearch) {
+			data.isSearch=true;
+			var mySearch = input.q;			
+			myData = myUtassp.getKbCategorySearchArticles(data.categoryId,mySearch,myFirstRow,myLastRow);
+			var mySearchWordList = mySearch.split(' ');
+			for (var x=0,Lx=mySearchWordList.length;x<Lx;x++) 
+			{
+				var myRegEx = new RegExp(mySearchWordList[x],'ig');
+				for (var y=0,Ly=myData.articles.length;y<Ly;y++)
+				{
+					var myResult = myData.articles[y].short_description.match(myRegEx);
+					if (myResult) {
+						for (var z=0,Lz=myResult.length;z<Lz;z++) {
+							myData.articles[y].short_description=myData.articles[y].short_description.replace(myResult[z],'<mark>'+myResult[z]+'</mark>');
+						}
+					}	
+				}				
+			}
+		} else {
+			myData = myUtassp.getKbCategoryArticles(data.categoryId,myFirstRow,myLastRow);						
+		}
+		var myArticles = myData.articles;
+		var myRowCount = myData.rowCount;
+		data.articles = myArticles;
+		data.pagination.hasNext = (myArticles.length == (parseInt(myLastRow) - parseInt(myFirstRow)) && parseInt(myLastRow) < parseInt(myRowCount));
+		data.pagination.hasPrevious = parseInt(myFirstRow) > 0;
+		data.pagination.showPagination = data.pagination.hasPrevious || data.pagination.hasNext;
+		data.pagination.currentPage = myCurrentPage;	
+	}
+
+})($sp, input, data, options, gs);]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-07 20:08:59</sys_created_on>
+        <sys_id>facabc834fa12300f006121f9310c7c6</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>UTASSP KB Category Page  Widget</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_widget_facabc834fa12300f006121f9310c7c6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-13 19:29:30</sys_updated_on>
+        <template><![CDATA[<div>
+  <div class="panel panel-{{::options.color}} b myShadow">
+    <div class="panel-heading">
+      <div style="margin-bottom:10px;">
+        <h2 class="panel-title">{{data.title}}</h2>
+      </div>
+      <div id="searchInput" class="input-group input-group-sm mb-3">
+            <input 
+            	class="form-control" 
+              type="text"
+              placeholder="Search selected articles below..." aria-label="Search selected articles" aria-describedby="basic-addon1">       
+            <span class="input-group-btn">
+              <button 
+                 name="search" 
+                 type="submit" class="btn btn-outline-secondary"
+                 title="Search"
+                 aria-label="Search"
+                 ng-click="artSearch($event)">
+	              <i class="fa fa-search"></i>
+              </button>
+            </span>	        
+      </div>
+      <div id="searchText" class="ng-hide">
+       	<h2 class="panel-title">Search: {{data.q}}</h2>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div ng-if="(data.articles.length > 0)">
+        <div class="myDivTable myGreyGridTable">
+          <div class="myDivTableHeading">
+            <div class="myDivTableRow">
+              <div class="myDivTableHead myCol1">Description</div>
+              <div class="myDivTableHead myCol2">Rating</div>
+              <div class="myDivTableHead myCol3">Published</div>
+              <div class="myDivTableHead myDefMedUpShow myCol4">Author</div>
+            </div>
+          </div>
+          <div class="myDivTableBody">
+            <a  ng-repeat="article in data.articles" ng-href="?id=utassp01_kb_article&sys_id={{article.sys_id}}&catid={{data.categoryId}}&pageid={{data.pageId}}" class="myDivTableRow">
+              <div class="myDivTableCell myCol1" ng-bind-html="article.short_description"></div>
+              <div class="myDivTableCell myCtr myCol2">
+                {{article.rating}}                
+              </div>
+              <div class="myDivTableCell myCtr myCol3">{{article.published}}</div>
+              <div class="myDivTableCell myDefMedUpShow myCol4">{{article.author}}</div>
+            </a>
+          </div>
+        </div>
+      </div>      
+      <div ng-if="!(data.articles.length > 0)">
+        <div class="myDivTable myGreyGridTable">
+          <div class="myDivTableHeading">
+            <div class="myDivTableRow">
+              <div class="myDivTableHead myCol1">Description</div>
+              <div class="myDivTableHead myCol2">Rating</div>
+              <div class="myDivTableHead myCtr myCol3">Published</div>
+              <div class="myDivTableHead myDefMedUpShow myCol4">Author</div>
+            </div>
+          </div>
+        </div>
+        <div class="myColSpanAll">
+          No articles in selected category
+        </div>
+      </div>      
+    </div> 
+    <div class="panel-{{::options.color}} panel-footer clearfix" ng-if="data.pagination.showPagination">
+      <a id="previous-btn" href="javascript:void(0)" ng-click="previousPage()" ng-show="data.pagination.hasPrevious" class="pull-left btn btn-sm btn-default mybtn" aria-label="${Pagination button Previous}">
+        <i class="fa fa-arrow-left m-r-sm" aria-hidden="true"></i>${&nbsp;Previous}</a>
+      <a id="next_btn" href="javascript:void(0)" ng-click="nextPage()" ng-show="data.pagination.hasNext" class="pull-right btn btn-sm btn-default mybtn" aria-label="${Pagination button Next}">
+        ${Next&nbsp;}<i class="fa fa-arrow-right m-r-sm col-md-offset-3" aria-hidden="true"></i></a>
+    </div>
+    <div class="panel-{{::options.color}} panel-footer clearfix" ng-if="!data.pagination.showPagination">
+      <a id="previous-btn" href="javascript:void(0)" ng-click="previousPage()" ng-show="data.pagination.hasPrevious" class="pull-left btn btn-sm btn-default mybtn" aria-label="${Pagination button Previous}">
+        <i class="fa fa-arrow-left m-r-sm" aria-hidden="true"></i>${&nbsp;Previous}</a>
+      <a id="next_btn" href="javascript:void(0)" ng-click="nextPage()" ng-show="data.pagination.hasNext" class="pull-right btn btn-sm btn-default mybtn" aria-label="${Pagination button Next}">
+        ${Next&nbsp;}<i class="fa fa-arrow-right m-r-sm col-md-offset-3" aria-hidden="true"></i></a>
+    </div>    
+  </div>
+</div>
+
+
+
+]]></template>
+    </sp_widget>
+</record_update>

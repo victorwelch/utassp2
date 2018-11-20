@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_rel_widget_clone">
+    <sp_rel_widget_clone action="INSERT_OR_UPDATE">
+        <child display_value="UTASSP Service Status History Widget">e9972dd14f752300f006121f9310c7a4</child>
+        <cloned>2018-11-14 23:11:00</cloned>
+        <last_validated>2018-11-14 23:11:00</last_validated>
+        <parent display_value="Service Status">0d76f656d7330200a9addd173e24d450</parent>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;sp_widget&gt;&lt;category&gt;other&lt;/category&gt;&lt;client_script&gt;&lt;![CDATA[function ($rootScope, $timeout) {	
+	var c = this;		
+	var bc = [{label: c.data.systemStatusBreadcrumb, url: '?id=services_status'}];
+	if (c.data.serviceDisplay) 
+		bc[bc.length] = {label: c.data.serviceDisplay, url: '#'};
+		
+	$timeout(function() {
+		$rootScope.$broadcast('sp.update.breadcrumbs', bc);
+	});	
+}]]&gt;&lt;/client_script&gt;&lt;controller_as&gt;c&lt;/controller_as&gt;&lt;css&gt;.description {
+  padding-bottom: 15px;  
+}
+
+.day {
+  float: left;
+  margin: 0px 1px 0px 1px; 
+  width: 9.984px; 
+  max-width: 9.984px; 
+  min-width: 9.984px; 
+  height: 30px; 
+  border-radius: 3px; 
+}
+
+.multiple-issues {
+  position: relative;
+  top: -5px;
+}&lt;/css&gt;&lt;data_table&gt;sp_instance&lt;/data_table&gt;&lt;demo_data/&gt;&lt;description/&gt;&lt;docs/&gt;&lt;field_list/&gt;&lt;has_preview&gt;false&lt;/has_preview&gt;&lt;id/&gt;&lt;internal&gt;false&lt;/internal&gt;&lt;link/&gt;&lt;name&gt;Service Status&lt;/name&gt;&lt;option_schema/&gt;&lt;public&gt;true&lt;/public&gt;&lt;roles/&gt;&lt;script&gt;&lt;![CDATA[// populate the 'data' object
+// e.g., data.table = $sp.getValue('table');
+data.systemStatusBreadcrumb = gs.getMessage("System Status");
+data.service = $sp.getParameter("service");
+var service = new GlideRecord("cmdb_ci_service");
+if (service.get(data.service))
+  data.serviceDisplay = service.getDisplayValue();
+else
+	(data.service = null);
+data.days = [];
+for (var i = 89; i &gt;= 0; i--) {
+  var day = {};
+  day.date = new GlideDateTime(gs.daysAgo(i)).getLocalDate().getDisplayValue();
+  var out = new GlideAggregate("cmdb_ci_outage");
+  out.addQuery("cmdb_ci", service.getUniqueValue());
+  out.addQuery("end", "&gt;=", gs.daysAgoStart(i));
+  out.addQuery("begin", "&lt;=", gs.daysAgoEnd(i));
+  out.addAggregate('COUNT', 'type');
+  out.query();
+  day.count = 0;
+
+  while (out.next()) {
+    var type = out.type;
+    var typeCount = out.getAggregate('COUNT', 'type');
+    day[type] = typeCount;
+    day.count += typeCount;
+  }
+  day.msg = gs.getMessage("No issues");
+  day.color = "#5cb85c";
+  if (day.count &gt; 1) {
+    day.msg = gs.getMessage("Multiple issues");
+    day.color = "#6E4CDD";
+  } else if (day.outage &gt; 0) {
+    day.msg = gs.getMessage("Outage");
+    day.color = "#BB0000";
+  } else if (day.degradation &gt; 0) {
+    day.msg = gs.getMessage("Service degradation");
+    day.color = "#f0ad4e";
+  } else if (day.planned &gt; 0) {
+    day.msg = gs.getMessage("Planned maintenance");
+    day.color = "#5bc0de";
+  }
+  data.days.push(day);
+}]]&gt;&lt;/script&gt;&lt;servicenow&gt;true&lt;/servicenow&gt;&lt;sys_class_name&gt;sp_widget&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2015-11-20 16:28:18&lt;/sys_created_on&gt;&lt;sys_id&gt;0d76f656d7330200a9addd173e24d450&lt;/sys_id&gt;&lt;sys_mod_count&gt;76&lt;/sys_mod_count&gt;&lt;sys_name&gt;Service Status&lt;/sys_name&gt;&lt;sys_package display_value="Service Portal - Service Status" source="com.glide.service-portal.service-status"&gt;c866736181d31300aadba4a47c598ecf&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_scope display_value="Global"&gt;global&lt;/sys_scope&gt;&lt;sys_update_name&gt;sp_widget_0d76f656d7330200a9addd173e24d450&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2017-08-24 19:12:06&lt;/sys_updated_on&gt;&lt;template&gt;&lt;![CDATA[&lt;div ng-if="data.service" class="panel panel-{{::c.options.color}} b"&gt;
+  &lt;div class="panel-heading"&gt;
+    &lt;h4 class="panel-title"&gt;{{::c.data.serviceDisplay}} &lt;span class="text-muted"&gt;(${last 90 days})&lt;/span&gt;&lt;/h4&gt;    
+  &lt;/div&gt;
+  &lt;div class="panel-body"&gt;
+    &lt;div class="description"&gt;${Color bar indicators flow left to right, from oldest to most recent status}&lt;/div&gt;
+    &lt;div ng-repeat="day in ::c.data.days" class="day" ng-class="{'multiple-issues': (day.count &gt; 0)}" ng-style="::{'background-color': day.color}" tooltips tooltip-template="{{::day.msg}} {{::day.date}}"&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;]]&gt;&lt;/template&gt;&lt;/sp_widget&gt;</payload>
+        <sys_class_name>sp_rel_widget_clone</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-14 23:11:00</sys_created_on>
+        <sys_id>65972dd14f752300f006121f9310c7a7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>e9972dd14f752300f006121f9310c7a4</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_rel_widget_clone_65972dd14f752300f006121f9310c7a7</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-14 23:11:00</sys_updated_on>
+    </sp_rel_widget_clone>
+</record_update>

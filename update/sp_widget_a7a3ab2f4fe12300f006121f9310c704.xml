@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function($scope,$rootScope,$timeout) {
+	/* widget controller */
+	var c = this;
+	// *************************************************************************
+	// *** Make sure we fire 'sp.update.breadcrumbs' event
+	$timeout(function() {
+		$rootScope.$broadcast('sp.update.breadcrumbs', $scope.data.breadcrumbs);
+	});
+	//		
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css/>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>utassp01_cat_item_bread_data_widget</id>
+        <internal>false</internal>
+        <link/>
+        <name>UTASSP Cat Item Bread Data Widget</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function($sp, input, data, options, gs) {
+	/* populate the 'data' object */
+	/* e.g., data.table = $sp.getValue('table'); */	
+	/* ***************************************** */
+	//	
+	var myU = new u_utassp();	
+	var thisParent = {};
+	var thisCatItem = {};
+	thisCatItem.url='#';	
+	var mySysId = $sp.getParameter('sys_id');	
+	if (myU.isIncident(mySysId)) {
+		thisCatItem.label = 'INCIDENT: Something Broken';
+		data.thisName = thisCatItem.label;
+		data.breadcrumbs = [				
+			{label: data.thisName, url: thisCatItem.url}
+		];
+	}
+	else 
+	{
+		thisParent.label='Service Catalog';
+		thisParent.url='?id=utassp01_sc_home';
+		//			
+		var gr = new GlideRecord('sc_cat_item');
+		var thisQuery = 'sys_id='+mySysId;
+		gr.addEncodedQuery(thisQuery);
+		gr.query();		
+		thisCatItem.label = '';
+		thisCatItem.url='';
+		if (gr.next()) {
+			thisCatItem.label = gr.getValue('name');
+		}
+		data.parentName = thisParent.label;
+		data.parentUrl = thisParent.url;		
+		data.thisName = thisCatItem.label;			
+		data.breadcrumbs = [
+			{label: data.parentName, url: data.parentUrl},
+			{label: data.thisName, url: thisCatItem.url}
+		];		
+	}			
+})($sp, input, data, options, gs);]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-09 21:45:46</sys_created_on>
+        <sys_id>a7a3ab2f4fe12300f006121f9310c704</sys_id>
+        <sys_mod_count>10</sys_mod_count>
+        <sys_name>UTASSP Cat Item Bread Data Widget</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_widget_a7a3ab2f4fe12300f006121f9310c704</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-15 16:32:03</sys_updated_on>
+        <template><![CDATA[<!-- dummy widget template
+<div>
+</div>
+ -->]]></template>
+    </sp_widget>
+</record_update>

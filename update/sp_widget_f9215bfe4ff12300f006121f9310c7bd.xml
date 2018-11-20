@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function ($scope, spUtil, $sce, $rootScope, $timeout) 
+{
+	spUtil.setSearchPage($scope.data.t);
+	$scope.showScore = $scope.options.show_score == 'true' || $scope.options.show_score == true;
+	
+	$scope.getBGImage = function(item) 
+	{
+		return {"background-image": "url('" + item.picture + "')"};
+	};
+		
+	$scope.highlight = function(haystack, needle) 
+	{
+		if (!haystack)
+			return "";
+			
+		if (!needle)
+			return $sce.trustAsHtml(haystack);
+			
+		return $sce.trustAsHtml(haystack.replace(new RegExp(needle.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), "gi"), function(match) {
+			return '<span class="highlight mark">' + match + '</span>';
+		}));
+	};
+		
+	//*** breadcrumbs
+	//alert('mysearchbc');
+	//debugger;
+	spUtil.setSearchPage('kb');
+	$scope.data.text = $sce.trustAsHtml($scope.data.text);
+	$timeout(function() {
+		$rootScope.$broadcast('sp.update.breadcrumbs', $scope.data.breadcrumbs);
+	});			
+		
+	//*** pagination
+	function get() {
+		spUtil.update($scope);
+	}
+		
+	$scope.previousPage = function() {
+		//alert('prev')
+		$scope.data.action='page';
+		if ($scope.data.pagination.currentPage > 1)
+			$scope.data.pagination.currentPage = $scope.data.pagination.currentPage - 1;
+		else
+			$scope.data.pagination.currentPage = 0;
+		get();
+	};
+		
+	$scope.nextPage = function() {
+		//alert('next')
+		$scope.data.action='page';
+		$scope.data.pagination.currentPage = $scope.data.pagination.currentPage+1;
+		get();
+	};
+		
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>span.text-muted.ng-binding {&#13;
+  padding-left: 10px;&#13;
+}&#13;
+&#13;
+span.text-muted {&#13;
+  color: #000000;&#13;
+  font-size: 13px;&#13;
+}&#13;
+&#13;
+&#13;
+p {&#13;
+    margin: 0 0 5px 10px;&#13;
+    color: #000000;&#13;
+    font-size: 12px;&#13;
+}&#13;
+&#13;
+div.myContainer {&#13;
+	div.panel-body:nth-child(odd)  { background: #fff; }  &#13;
+	div.panel-body:nth-child(even) { background: #eee; }    &#13;
+}&#13;
+&#13;
+div.panel-body {&#13;
+	padding:1px 1px 1px 10px;&#13;
+}&#13;
+&#13;
+a:hover {&#13;
+   font-weight:bold;&#13;
+   color:#ffffff;&#13;
+   background:#428bca;;&#13;
+}&#13;
+&#13;
+a.m-b-sm {&#13;
+  margin:2px 0px 2px 0px !important;&#13;
+  border-bottom:1px solid #428bca;&#13;
+}&#13;
+&#13;
+i.fa {&#13;
+  color:#428bca;&#13;
+  font-size: 14px;&#13;
+}&#13;
+&#13;
+a.h4 {&#13;
+ font-weight:bold;  &#13;
+ color:#428bca;&#13;
+ font-size: 14px;&#13;
+ &amp;:hover {&#13;
+   font-weight:bold;&#13;
+   color:#ffffff;&#13;
+   background:#428bca;&#13;
+   i.fa {&#13;
+      color:#ffffff;&#13;
+      font-size: 14px;&#13;
+  	} &#13;
+ }&#13;
+} &#13;
+&#13;
+a.question-tag {&#13;
+    color: #39739d;&#13;
+    background-color: #e1ecf4;&#13;
+    border: 1px solid #e1ecf4;&#13;
+    display: inline-block;&#13;
+    margin: 4px 4px 4px 0;&#13;
+    border-radius: 0;&#13;
+    text-align: center;&#13;
+    line-height: 1;&#13;
+    padding: .4em .5em;&#13;
+}&#13;
+&#13;
+.panel-primary &gt; .panel-footer {&#13;
+    color: #fff;&#13;
+    background-color: #428bca;&#13;
+    border-color: #428bca;&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>utassp01_search_page_widget</id>
+        <internal>false</internal>
+        <link><![CDATA[function(scope) {
+	var lazyLoader = $injector.get("lazyLoader");
+	lazyLoader.putTemplates(scope.data.resultTemplates);
+}]]></link>
+        <name>UTASSP Search Page Widget</name>
+        <option_schema>[{"hint":"Show search result relative ranking","name":"show_score","label":"Show score","type":"boolean"},{"hint":"Maximum number of search results","name":"maxitems","label":"Max results for search","type":"integer"}]</option_schema>
+        <public>true</public>
+        <roles/>
+        <script><![CDATA[(function ($sp, input, data, options, gs) {
+	//gs.info('+--- aaaaaaaaa');
+	var myGlobal = new global.u_utaglobalapi();
+	// populate the 'data' variable
+	data.showPrices = $sp.showCatalogPrices();
+	if ((typeof input != typeof myUndefined) && (input.q)) {
+			data.q = input.q;
+	} else {
+			data.q = $sp.getParameter('q');
+	}
+	
+	if ((typeof input != typeof myUndefined) && (input.t)) {
+			data.t = input.t;
+	} else {
+			data.t = $sp.getParameter('t');
+	}
+	
+	data.results = [];
+
+	// *** Remove data limit	
+	// data.limit = options.max_all || 30;
+	data.limit = -1;	
+
+	//gs.info('+--- bbbbbbbb');
+	var myMaxItems = options.maxitems;
+	myMaxItems = myMaxItems>0 ? myMaxItems : 20; 
+	var myFirstRow = 0;
+	var myLastRow =  parseInt(myMaxItems);
+	var myCurrentPage = 0;		
+
+	if (typeof data.pagination == typeof myUndefined) {
+		//gs.info('+--- cccccc');
+		data.pagination = {};
+		data.pagination.currentPage = myCurrentPage;
+		data.pagination.hasNext = false;
+		data.pagination.hasPrevious = false;
+		data.showPagination = false;
+	}
+
+	// *** Determine state of query/page combination
+	var isThisANewQuery = true;
+	var isThisAPageCmd = false;
+	if (typeof input == typeof myUndefined) {
+		//gs.info('+--- dddddd');
+		isThisANewQuery = true;
+		isThisAPageCmd = false;
+	} else {
+		//gs.info('+--- eeeeee');
+		if (typeof input.action == typeof myUndefined) {
+			//gs.info('+--- ffffff');
+			isThisANewQuery = true;
+			isThisAPageCmd = false;
+		} else if (input.action == 'new') {
+			//gs.info('+--- gggggg');
+			isThisANewQuery = true;
+			isThisAPageCmd = false;
+		} else if (input.action == 'page') {
+			//gs.info('+--- hhhhhh');
+			if (
+					(typeof input.queryresults != typeof myUndefined) && 
+					(Array.isArray(input.queryresults)) &&
+					(input.queryresults.length>0)
+			) {					
+					//gs.info('+--- iiiiii');
+					isThisANewQuery = false;
+					data.queryresults = input.queryresults;
+			} else {
+					//gs.info('+--- jjjjjj');
+					isThisANewQuery = true;					
+			}
+			isThisAPageCmd = true;
+		}
+	}
+
+	if (isThisAPageCmd) {
+		//gs.info('+--- kkkkkk');
+		if (input.pagination) {
+			//gs.info('+--- llllll');
+			myCurrentPage = parseInt(input.pagination.currentPage);
+			myFirstRow = (myCurrentPage *  parseInt(myMaxItems));
+			myLastRow =  parseInt(myFirstRow) +  parseInt(myMaxItems); 
+		}		
+	}	
+
+	// *** Query the data sources
+	if (isThisANewQuery)
+	{
+		//gs.info('+--- mmmmmm');
+		data.queryresults = [];
+		//Gotta decide if we want to use the portal's sources, or use the defaults declared by
+		//the sys property
+		var useDefaultPortals;
+		if (!$sp.getPortalRecord()) {
+			//gs.info('+--- nnnnnn');
+			useDefaultPortals = true;
+		} else {
+			//gs.info('+--- oooooo');
+			var searchSourcesForPortalGR = new GlideRecord("m2m_sp_portal_search_source");
+			searchSourcesForPortalGR.addQuery("sp_portal", $sp.getPortalRecord().getUniqueValue());
+			searchSourcesForPortalGR.query();
+			useDefaultPortals = searchSourcesForPortalGR.getRowCount() == 0;
+		}
+
+		data.resultTemplates = {};
+
+		if (useDefaultPortals) {
+			//gs.info('+--- pppppp');
+			var defaultSearchSourceGR = new GlideRecord("sp_search_source");
+			var defaultSearchSourceIDList = gs.getProperty("glide.service_portal.default_search_sources", "");
+			defaultSearchSourceGR.addQuery("sys_id", "IN", defaultSearchSourceIDList);
+			if (data.t) {
+				//gs.info('+--- qqqqqq');
+				defaultSearchSourceGR.addQuery("id", data.t);		
+			}
+			defaultSearchSourceGR.query();
+			while(defaultSearchSourceGR.next()) {
+				//gs.info('+--- rrrrrr');
+				data.resultTemplates["sp-search-source-" + defaultSearchSourceGR.getValue("id") + ".html"] = $sp.translateTemplate(defaultSearchSourceGR.getValue("search_page_template"));
+				getResults(defaultSearchSourceGR);
+			}
+		} else {
+			//gs.info('+--- sssssss');
+			var m2mSearchSourceGR = new GlideRecord("m2m_sp_portal_search_source");
+			if (data.t) {
+				//gs.info('+--- tttttt');
+				m2mSearchSourceGR.addQuery("sp_search_source.id", data.t);		
+			}
+			m2mSearchSourceGR.addQuery("sp_portal", $sp.getPortalRecord().getUniqueValue());					
+			m2mSearchSourceGR.query();
+			while(m2mSearchSourceGR.next()) {
+				//gs.info('+--- uuuuuuu');
+				var searchSourceGR = m2mSearchSourceGR.getElement("sp_search_source").getRefRecord();
+				data.resultTemplates["sp-search-source-" + searchSourceGR.getValue("id") + ".html"] = $sp.translateTemplate(searchSourceGR.getValue("search_page_template"));
+				getResults(searchSourceGR);
+			}
+		}	
+	}
+	
+	// Arrange pagination results
+	var myRowCount = data.queryresults.length;
+	//gs.info('+---- zzzzMyRowCount: '+myRowCount+','+myFirstRow+','+myLastRow);
+	data.results = data.queryresults.slice(myFirstRow,myLastRow);
+	//gs.info('+---- zzzzData.results: '+data.results.length);
+	data.pagination.hasNext = (data.results.length == (parseInt(myLastRow) - parseInt(myFirstRow)) && parseInt(myLastRow) < parseInt(myRowCount));
+	data.pagination.hasPrevious = parseInt(myFirstRow) > 0;
+	data.pagination.showPagination = data.pagination.hasPrevious || data.pagination.hasNext;
+	data.pagination.currentPage = myCurrentPage;	
+
+	function getResults(gr) {
+		// *** Plugin inactive
+		//Check if the user is allowed to see this source.
+		//var userCriteria = new GlideSPUserCriteria();
+		//if (userCriteria.isEnabled()) {
+		//	if (!userCriteria.userCanSeeSearchSource(gr.getUniqueValue()))
+		//		return;
+		//} else {
+		//	var gs = GlideSession.get();
+		//	var thisUser = gs.getUserID();
+		//	var searchSourceRoles = gr.getValue("roles");
+		//	if (searchSourceRoles && !gs.hasRole(searchSourceRoles))
+		//		return;
+		//}
+		// ***
+		function myCanReadSource(_pGr)
+		{
+			var thisResult = false;
+			var thisSourceLabel = _pGr.getValue('name');
+			gs.info('++++ zvcwvcwz ++++ myCanReadSource2 : '+thisSourceLabel);
+			if (thisSourceLabel != 'Service Catalog') {
+				var l_myGr = new GlideRecord('kb_knowledge_base');
+				var l_thisQuery = 'title=' + thisSourceLabel;
+				l_myGr.addEncodedQuery(l_thisQuery);
+				l_myGr.query();
+				if (l_myGr.next()) {
+					if (l_myGr.canRead()) thisResult = true;
+				}						
+			} else {
+				thisResult = true;
+			}
+			return thisResult;
+		}
+		// ***
+		if (!myCanReadSource(gr)) return;
+
+		//gs.info('+--- vvvvvv');		
+		if (gr.is_scripted_source) {		
+			//gs.info('+--- wwwwww');		
+			var input = {};
+            input.query = data.q;
+            input.facets = {};
+			gs.info('+---- zzzzzInput.query: '+input.query);
+			//var evaluator = new GlideScopedEvaluator();
+			//gs.info('+---- 2zzzzzIevaluator: '+evaluator);
+			//var results = evaluator.evaluateScript(gr, "data_fetch_script", input);
+			var results = myGlobal.u_GlideScopedEvaulatorEvluateScript(gr,"data_fetch_script",input);
+            if (results) {
+				gs.info('+---- zzzzzResults: '+results.length);
+				results.forEach(function(item) {
+						item.templateID = "sp-search-source-" + gr.getValue("id") + ".html";
+						data.queryresults.push(item);
+					});	   
+            }
+			//gs.info('+---- zzzzzData.queryresults: '+data.queryresults.length);
+		} else {
+			//gs.info('+--- xxxxxx');		
+			var primaryField = gr.getValue("primary_display_field");
+			var displayFields = gr.getValue("display_fields");
+
+			var resultGR = new GlideRecordSecure(gr.getValue("source_table"));
+			var condition = gr.getValue("condition");
+			if (condition)
+				resultGR.addEncodedQuery(condition);
+			if (data.q)
+				resultGR.addQuery('123TEXTQUERY321', data.q);
+			resultGR.query();
+
+			var searchTableCount = 0;
+			// *** Remove data limit
+			// while (resultGR.next() && searchTableCount < data.limit) {
+			while (resultGR.next() && searchTableCount) {
+							if (!resultGR.canRead())
+					continue;
+
+				var secondaryValues = {};
+
+				if (displayFields)
+					displayFields.split(",").forEach(function(field) {
+						var obj = getField(resultGR, field);
+						secondaryValues[field] = obj;
+					});
+
+				data.queryresults.push({
+					primary: (primaryField) ? resultGR.getValue(primaryField) : resultGR.getDisplayValue(),
+					sys_id: resultGR.getUniqueValue(),
+					table: resultGR.getTableName(),
+					templateID: "sp-search-source-" + gr.getValue("id") + ".html",
+					fields: secondaryValues
+				});
+				searchTableCount++;
+			}
+		}
+	}
+
+	function getField(gr, name) {
+		var f = {};
+		f.display_value = gr.getDisplayValue(name);
+		f.value = gr.getValue(name);
+		var ge = gr.getElement(name);
+		if (ge == null)
+			return f;
+
+		f.type = ge.getED().getInternalType();
+		f.label = ge.getLabel();
+		return f;
+	}
+})($sp, input, data, options, gs);
+]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-19 22:43:07</sys_created_on>
+        <sys_id>f9215bfe4ff12300f006121f9310c7bd</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_name>UTASSP Search Page Widget</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_widget_f9215bfe4ff12300f006121f9310c7bd</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-20 01:15:21</sys_updated_on>
+        <template><![CDATA[<div>
+  <div class="panel panel-primary">
+    
+    <div ng-if="data.results.length==0">
+      <div class="panel-heading"><h4 class="panel-title">${No results}</h4></div>
+      <div class="panel-body wrapper break-word">
+        <p>${Your search - <b>{{data.q}}</b> - did not match any documents}</p>
+        <p>${Suggestions}:</p>
+        <ul>
+          <li>${Make sure all words are spelled correctly}</li>
+          <li>${Try different, more general, or fewer keywords}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div ng-if="data.results.length>0" class="panel-heading break-word">
+      <h2 class="h4 panel-title">${Search results for '{{data.q}}'}</h2>
+    </div>
+
+    <div role="list" class="myContainer">
+      <div role="listitem" ng-repeat="item in data.results | orderBy:'score':true" class="panel-body b-b ">
+        <div ng-include="item.templateID"></div>
+      </div>
+    </div>
+    
+  <div class="panel-footer clearfix" ng-if="data.pagination.showPagination">
+  	<a id="previous-btn" href="javascript:void(0)" ng-click="previousPage()" ng-show="data.pagination.hasPrevious" class="pull-left btn btn-sm btn-default mybtn" aria-label="${Pagination button Previous}">
+      <i class="fa fa-arrow-left m-r-sm" aria-hidden="true"></i>${&nbsp;Previous}</a>
+    <a id="next_btn" href="javascript:void(0)" ng-click="nextPage()" ng-show="data.pagination.hasNext" class="pull-right btn btn-sm btn-default mybtn" aria-label="${Pagination button Next}">
+      ${Next&nbsp;}<i class="fa fa-arrow-right m-r-sm col-md-offset-3" aria-hidden="true"></i></a>
+  </div>
+
+  </div>  
+</div>]]></template>
+    </sp_widget>
+</record_update>

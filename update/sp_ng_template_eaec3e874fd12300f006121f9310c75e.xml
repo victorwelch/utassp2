@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_ng_template">
+    <sp_ng_template action="INSERT_OR_UPDATE">
+        <id>utassp01_item-added-tooltip.html</id>
+        <sp_widget display_value="UTASSP Header Menu Widget">eb0560624f912300f006121f9310c7a5</sp_widget>
+        <sys_class_name>sp_ng_template</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-10-26 19:22:12</sys_created_on>
+        <sys_id>eaec3e874fd12300f006121f9310c75e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>utassp01_item-added-tooltip.html</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_ng_template_eaec3e874fd12300f006121f9310c75e</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-10-26 19:22:12</sys_updated_on>
+        <template><![CDATA[<div ng-click="toggleCart()" class="item-added-tooltip">${Item has been added to your cart.}</div>]]></template>
+    </sp_ng_template>
+</record_update>

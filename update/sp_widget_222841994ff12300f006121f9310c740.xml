@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>other</category>
+        <client_script><![CDATA[function($scope) {
+	var c=this;
+	//
+	for (var x in $scope.data.dates) {
+		var dateStr = moment($scope.data.dates[x]).format('ll').split(',')[0];
+		//Now we need to parse the date number into a real number so the screen reader reads it correctly
+		var dateObj = {
+			month: $scope.data.monthTranslations[dateStr.split(" ")[0]],
+			day: parseInt(dateStr.split(" ")[1])
+		};
+		$scope.data.dates[x] = dateObj;
+	}
+}
+
+]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.title {
+  font-size: 1.5rem;
+  color: $gray-darker;
+  font-weight: 500;
+  width: 58.33333%;
+  margin: 0px;
+}
+
+.category {
+padding-top:15px;
+}
+
+.subscribed {
+  color: $text-mutted;
+  white-space: nowrap;
+}
+
+/* Status Icons */
+.fa-check-circle {
+  color: $brand-success;
+}
+
+.fa-plus-circle {
+  color: $brand-primary;
+}
+
+.fa-exclamation-circle {
+  color: $brand-danger;
+}
+
+.fa-minus-circle{
+  color: $brand-warning;
+}
+
+.fa-info-circle {
+  color: $brand-info;
+}
+
+.tb {
+  margin-top: -45px;
+  width: 100%;
+}
+
+.tb th {
+padding-bottom: 4px;
+}
+
+.outage-row {
+  text-align: center;
+	padding: 5px;
+}
+
+.fa {
+  cursor: pointer;
+font-size: 18px;
+}
+
+.date-column {
+  width: 8.3333%;
+  white-space: nowrap;
+	text-align: center;
+  font-size: 13px;
+  color: $gray-darker;
+  font-weight: 500;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list>title,glyph</field_list>
+        <has_preview>false</has_preview>
+        <id>utassp01_status_history_widget</id>
+        <internal>false</internal>
+        <link/>
+        <name>UTASSP Status History Widget</name>
+        <option_schema>[{"hint":"Number of Services shown (use this to optimize performance)","name":"number_of_services","default_value":"250","section":"Presentation","label":"Number of Services","type":"integer"}]</option_schema>
+        <public>true</public>
+        <roles/>
+        <script><![CDATA[(function($sp, input, data, options, gs) {	
+// ***
+// ***  Note: Within our instance of ServiceNow, we are using Cmdb_Ci Items for outage tracking;
+// ***        and these do not map directly to Cmdbi_Ci_Service Services.  
+// ***
+// ***        Thus, we do not handle cmdb_ci Items & cmdb_ci_service Services the way "out of the box"
+// ***        service portal widgets do.
+// ***
+// ***        However, in order to avoid introducing typographical programming errors and other
+// ***        headaches into existing code/widgets some of the the code still contains the terms 
+// ***        "service" where (at least for us) "item" or "configuration_item" or "cmdb_item" 
+// ***        would be more appropriate.
+// ***	
+	data.monthTranslations = {
+		'Jan': gs.getMessage("Jan"),
+		'Feb': gs.getMessage("Feb"),
+		'Mar': gs.getMessage("Mar"),
+		'Apr': gs.getMessage("Apr"),
+		'May': gs.getMessage("May"),
+		'Jun': gs.getMessage("Jun"),
+		'Jul': gs.getMessage("Jul"),
+		'Aug': gs.getMessage("Aug"),
+		'Sep': gs.getMessage("Sep"),
+		'Oct': gs.getMessage("Oct"),
+		'Nov': gs.getMessage("Nov"),
+		'Dec': gs.getMessage("Dec")
+	};
+
+	data.services = [];
+	var myGlobal = new global.u_utaglobalapi();
+	var ga_CmdbCi = new GlideAggregate('cmdb_ci_outage');
+	ga_CmdbCi.addQuery('end', '>=', myGlobal.u_gs.daysAgoStart(5));
+	ga_CmdbCi.addQuery('begin', '<=', myGlobal.u_gs.daysAgoEnd(0));
+	ga_CmdbCi.groupBy('cmdb_ci');
+	ga_CmdbCi.query();	
+	var currentCmdbCiIndex = -1;	
+	while (ga_CmdbCi.next()) {
+		var l_CmdbCiSysId = ga_CmdbCi.getValue('cmdb_ci');
+		var l_CmdbCiName = ga_CmdbCi.getDisplayValue('cmdb_ci');
+		currentCmdbCiIndex++;
+		data.services[currentCmdbCiIndex] = {};
+		data.services[currentCmdbCiIndex].name = l_CmdbCiName;
+		data.services[currentCmdbCiIndex].safeName = myGlobal.u_GlideStringUtil.escapeHTML(l_CmdbCiName);	
+		data.services[currentCmdbCiIndex].sys_id = l_CmdbCiSysId;
+		data.services[currentCmdbCiIndex].outages = [];
+		var l_outs = [];	
+		for (var i=0;i<=4;i++) {
+			var llga_CmdbCi = new GlideAggregate('cmdb_ci_outage'); 
+			llga_CmdbCi.addQuery('cmdb_ci', l_CmdbCiSysId);
+			llga_CmdbCi.addQuery('end', '>=', myGlobal.u_gs.daysAgoStart(i));
+			llga_CmdbCi.addQuery('begin', '<=', myGlobal.u_gs.daysAgoEnd(i));
+			llga_CmdbCi.addAggregate('COUNT', 'type');	
+			var ll_svcOutageDay = {};
+			ll_svcOutageDay.count = 0;
+			llga_CmdbCi.query();
+			while (llga_CmdbCi.next()) {
+				var lll_type = llga_CmdbCi.getValue('type');
+				var lll_typeCount = llga_CmdbCi.getAggregate('COUNT', 'type');
+				ll_svcOutageDay[lll_type] = lll_typeCount;
+				ll_svcOutageDay.count += lll_typeCount;
+			}
+			ll_svcOutageDay.icon = "fa-check-circle";
+			ll_svcOutageDay.msg = gs.getMessage("{0} - no outage", data.services[currentCmdbCiIndex].safeName);	
+			if (ll_svcOutageDay.count > 1) {
+				ll_svcOutageDay.icon = "fa-plus-circle";
+				ll_svcOutageDay.msg = gs.getMessage("{0} - multiple issues",data.services[currentCmdbCiIndex].safeName);
+			} else if (ll_svcOutageDay.outage > 0) {
+				ll_svcOutageDay.icon = "fa-exclamation-circle";
+				ll_svcOutageDay.msg = gs.getMessage("{0} - outage", data.services[currentCmdbCiIndex].safeNamee);
+			} else if (ll_svcOutageDay.degradation > 0) {
+				ll_svcOutageDay.icon = "fa-minus-circle";
+				ll_svcOutageDay.msg = gs.getMessage("{0} - degradation of service", data.services[currentCmdbCiIndex].safeName);
+			} else if (ll_svcOutageDay.planned > 0) {
+				ll_svcOutageDay.icon = "fa-info-circle";
+				ll_svcOutageDay.msg = gs.getMessage("{0} - planned maintenance", data.services[currentCmdbCiIndex].safeName);
+			}
+			l_outs.push(ll_svcOutageDay);
+		}
+		data.services[currentCmdbCiIndex].outages=l_outs;				
+	}
+	
+	data.dates = [];
+	for (var j = 5; j > 0; j--) {
+		var d = new GlideDate();
+		d.subtract(1000 * 3600 * 24 * (j - 1));
+		data.dates.push(d.getDisplayValueInternal());
+	}
+
+})($sp, input, data, options, gs);
+]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-14 20:53:43</sys_created_on>
+        <sys_id>222841994ff12300f006121f9310c740</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_name>UTASSP Status History Widget</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_widget_222841994ff12300f006121f9310c740</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-15 23:21:37</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-default">
+  <div class="panel-heading">&nbsp;</div>
+  <div class="panel-body">
+    <table class="tb">
+      <thead>
+        <th scope="col">
+          <h2 class="panel-title title">
+          ${Status History}
+          </h2></th>
+        <th scope="col" ng-repeat="date in ::data.dates" class="date-column">{{::date.month}} {{::date.day}}</th>
+      </thead>
+      <tbody>
+        <tr><td scope="row">&nbsp;</td></tr>	  
+        <tr ng-repeat-end ng-repeat="service in ::data.services">
+          <td scope="row">
+            <small ng-if="::service.subscribed" class="subscribed" title="${Subscribed to updates}" aria-label="${Subscribed to updates}"><i class="fa fa-envelope"></i></small>
+            <a ng-href="?id=utassp01_item_status_history&service={{::service.sys_id}}" ng-bind-html="::service.name"></a>
+          </td>
+          <td ng-repeat="n in [0,1,2,3,4] track by $index" class="outage-row">
+            <span class="fa" ng-class="::service.outages[4-$index].icon" sp-tooltip
+                aria-label="{{::data.dates[$index].month + ' ' + data.dates[$index].day + ' - ' + service.outages[4-$index].msg}}"
+				role="application" tooltip-smart="true"
+                tooltip-template="{{::service.outages[4-$index].msg + ' - ' + data.dates[$index].month + ' ' + data.dates[$index].day}}">
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_rel_widget_clone">
+    <sp_rel_widget_clone action="INSERT_OR_UPDATE">
+        <child display_value="UTASSP Status Legend Widget">1ad9cd994ff12300f006121f9310c72f</child>
+        <cloned>2018-11-14 21:01:05</cloned>
+        <last_validated>2018-11-14 21:01:05</last_validated>
+        <parent display_value="Service Status Legend">f9bda712d7330200a9addd173e24d4c8</parent>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;sp_widget&gt;&lt;category&gt;other&lt;/category&gt;&lt;client_script/&gt;&lt;controller_as/&gt;&lt;css&gt;.panel-body {
+	margin: 0px -20px 0px -20px;
+}
+
+.fa {
+font-size: 18px;
+}
+
+/* Status Icons */
+.fa-check-circle {
+  color: $brand-success;
+}
+
+.fa-plus-circle {
+  color: $brand-primary;
+}
+
+.fa-exclamation-circle {
+  color: $brand-danger;
+}
+
+.fa-minus-circle{
+  color: $brand-warning;
+}
+
+.fa-info-circle {
+  color: $brand-info;
+}&lt;/css&gt;&lt;data_table&gt;sp_instance&lt;/data_table&gt;&lt;demo_data/&gt;&lt;description/&gt;&lt;docs/&gt;&lt;field_list/&gt;&lt;has_preview&gt;false&lt;/has_preview&gt;&lt;id/&gt;&lt;internal&gt;false&lt;/internal&gt;&lt;link/&gt;&lt;name&gt;Service Status Legend&lt;/name&gt;&lt;option_schema/&gt;&lt;public&gt;false&lt;/public&gt;&lt;roles/&gt;&lt;script&gt;&lt;![CDATA[data.multipleMsg = gs.getMessage("Multiple issues");
+data.outageMsg = gs.getMessage("Outage");
+data.degradationMsg = gs.getMessage("Service degradation");
+data.maintenanceMsg = gs.getMessage("Planned maintenance");
+data.noIssuesMsg = gs.getMessage("No issues");]]&gt;&lt;/script&gt;&lt;servicenow&gt;true&lt;/servicenow&gt;&lt;sys_class_name&gt;sp_widget&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2015-11-20 20:29:52&lt;/sys_created_on&gt;&lt;sys_id&gt;f9bda712d7330200a9addd173e24d4c8&lt;/sys_id&gt;&lt;sys_mod_count&gt;45&lt;/sys_mod_count&gt;&lt;sys_name&gt;Service Status Legend&lt;/sys_name&gt;&lt;sys_package display_value="Service Portal - Service Status" source="com.glide.service-portal.service-status"&gt;c866736181d31300aadba4a47c598ecf&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_scope display_value="Global"&gt;global&lt;/sys_scope&gt;&lt;sys_update_name&gt;sp_widget_f9bda712d7330200a9addd173e24d4c8&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2017-08-24 19:12:06&lt;/sys_updated_on&gt;&lt;template&gt;&lt;![CDATA[&lt;div class="panel panel-{{::options.color}} b" aria-hidden="true"&gt;
+  &lt;div class="panel-heading"&gt;
+    &lt;label class="panel-title"&gt;${Legend}&lt;/label&gt;
+  &lt;/div&gt;
+  &lt;div class="panel-body"&gt;
+    &lt;div class="col-xs-12"&gt;
+      &lt;div class="col-xs-2"&gt;&lt;i class="fa fa-check-circle" tooltips tooltip-template="{{::data.noIssuesMsg}}"&gt;&lt;/i&gt;&lt;/div&gt;
+      &lt;div class="col-xs-10"&gt;{{::data.noIssuesMsg}}&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="col-xs-12"&gt;
+      &lt;div class="col-xs-2"&gt;&lt;i class="fa fa-info-circle" tooltips tooltip-template="{{::data.maintenanceMsg}}"&gt;&lt;/i&gt;&lt;/div&gt;
+      &lt;div class="col-xs-10"&gt;{{::data.maintenanceMsg}}&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="col-xs-12"&gt;
+      &lt;div class="col-xs-2"&gt;&lt;i class="fa fa-minus-circle" tooltips tooltip-template="{{::data.degradationMsg}}"&gt;&lt;/i&gt;&lt;/div&gt;
+      &lt;div class="col-xs-10"&gt;{{::data.degradationMsg}}&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="col-xs-12"&gt;
+      &lt;div class="col-xs-2"&gt;&lt;i class="fa fa-exclamation-circle" tooltips tooltip-template="{{::data.outageMsg}}"&gt;&lt;/i&gt;&lt;/div&gt;
+      &lt;div class="col-xs-10"&gt;{{::data.outageMsg}}&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="col-xs-12"&gt;
+      &lt;div class="col-xs-2"&gt;&lt;i class="fa fa-plus-circle" tooltips tooltip-template="{{::data.multipleMsg}}"&gt;&lt;/i&gt;&lt;/div&gt;
+      &lt;div class="col-xs-10"&gt;{{::data.multipleMsg}}&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;]]&gt;&lt;/template&gt;&lt;/sp_widget&gt;</payload>
+        <sys_class_name>sp_rel_widget_clone</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-14 21:01:05</sys_created_on>
+        <sys_id>5ed9cd994ff12300f006121f9310c731</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>1ad9cd994ff12300f006121f9310c72f</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_rel_widget_clone_5ed9cd994ff12300f006121f9310c731</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-14 21:01:05</sys_updated_on>
+    </sp_rel_widget_clone>
+</record_update>

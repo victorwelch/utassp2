@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_header_footer">
+    <sp_header_footer action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function() {
+  // widget controller
+  var c = this;
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>footer {&#13;
+  	font-family: 'Open Sans', sans-serif;&#13;
+    width: 100%;&#13;
+    height: 100px;&#13;
+    color: #fff;&#13;
+    background: #0064b1;&#13;
+    box-shadow: inset 0 5px 5px rgba(0,0,0,0.1);&#13;
+    border-top: 1px solid rgba(0,0,0,0.2);&#13;
+}&#13;
+&#13;
+&#13;
+footer .row {&#13;
+	text-align: center;&#13;
+	padding: 15px;&#13;
+}&#13;
+&#13;
+&#13;
+footer a {&#13;
+	text-decoration: underline;&#13;
+  	color: #ffffff;&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>utassp01_footer_widget</id>
+        <internal>false</internal>
+        <link/>
+        <name>UTASSP Footer Widget</name>
+        <option_schema/>
+        <public>true</public>
+        <roles/>
+        <script><![CDATA[(function() {
+ data.time = new GlideDateTime().getDisplayValue();
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_header_footer</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-10-24 18:01:38</sys_created_on>
+        <sys_id>41679c2a4f512300f006121f9310c7c9</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>UTASSP Footer Widget</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_header_footer_41679c2a4f512300f006121f9310c7c9</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-10-24 19:12:18</sys_updated_on>
+        <template><![CDATA[<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <span>University of Texas at Arlington / Office of Information Technology&nbsp;&middot;&nbsp;Box 19318, Arlington, Texas 76019-0318&nbsp;·&nbsp;</span>
+        <a href="tel:1-817-272-2208">817-272-2208</a>&nbsp;&middot;&nbsp;<a href="mailto:helpdesk@uta.edu">helpdesk@uta.edu</a>
+      </div>
+    </div>
+  </div>
+</footer>]]></template>
+    </sp_header_footer>
+</record_update>

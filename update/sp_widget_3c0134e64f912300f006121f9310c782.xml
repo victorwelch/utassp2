@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function($scope, $rootScope)
+{
+	var c = this;
+	var deregister = $rootScope.$on("sp.update.breadcrumbs", function(e, list)
+	{
+		alert('hw');
+		debugger;
+		// ***
+		var myParamListObj = {};
+		var myTmpList = this.location.search.split('&');
+		for (var i=0,iL=myTmpList.length;i<iL;i++)
+		{
+			var l_tmpPair=myTmpList[i].split('=');
+			myParamListObj[l_tmpPair[0].replace('?','')] = l_tmpPair[1];
+		}
+		// ***
+
+		var newList=[];
+		if (typeof list != typeof myUndefined)
+		{
+			for (i=0,il=list.length;i<iL;i++) {
+				var item={};
+				item.label = list[i].label;
+				item.url = list[i].url;
+				if (item.label.indexOf('UTASSP')>-1)
+				{
+					item.label = item.label.replace('UTASSP','');
+					item.label.trim();
+				}
+				newList.push(item);
+			}			
+		}
+		else
+		{
+			if (typeof myParamListObj.pageid != typeof myUndefined)
+			{
+				if (myParamListObj.pageid.indexOf('ticket')>-1) {
+					newList.push(
+						{
+							label: 'View Tickets',
+							url: '?id='+myParamListObj.pageid
+						}
+					);
+				}
+			}
+			newList.push(
+				{
+					label: 'Form',
+					url: '#'
+				}
+			);
+		}
+				
+		list=newList;
+		c.breadcrumbs=list;
+	});
+			
+	$scope.$on('$destroy', function()
+	{
+		deregister();
+	});
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>i {&#13;
+margin-top: 10px;&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>utassp01_breadcrumbs_form_widget</id>
+        <internal>false</internal>
+        <link/>
+        <name>UTASSP Breadcrumbs Form Widget</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-10-24 19:54:59</sys_created_on>
+        <sys_id>3c0134e64f912300f006121f9310c782</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>UTASSP Breadcrumbs Form Widget</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_widget_3c0134e64f912300f006121f9310c782</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-10-30 14:56:35</sys_updated_on>
+        <template><![CDATA[<ul class="nav nav-pills nav-sm" aria-label="${Navigation breadcrumbs}">
+  <li><a ng-href="?id={{portal.homepage_dv}}">${Home}</a></li>
+  <li aria-hidden="true"><i class="fa fa-chevron-right"></i></li>
+  <li ng-if="!c.breadcrumbs"><a href>{{page.title}}</a></li>
+  <li ng-repeat-start="item in c.breadcrumbs">
+    <a ng-href="{{item.url}}">{{item.label}}</a>
+  </li>
+  <li aria-hidden="true" ng-if="!$last" ng-repeat-end>
+    <i class="fa fa-chevron-right"></i>
+  </li>
+</ul>]]></template>
+    </sp_widget>
+</record_update>

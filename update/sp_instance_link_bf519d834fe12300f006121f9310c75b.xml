@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_instance_link">
+    <sp_instance_link action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <class_name/>
+        <color>primary</color>
+        <css/>
+        <glyph/>
+        <id/>
+        <kb_article/>
+        <kb_category/>
+        <kb_topic/>
+        <order>1</order>
+        <roles/>
+        <sc_cat_item/>
+        <sc_category/>
+        <short_description/>
+        <size>md</size>
+        <sp_column display_value="1">bb23a0224f912300f006121f9310c7ef</sp_column>
+        <sp_page display_value="utassp01_kb_business_affairs_internal">09b7a7bc4fb12300f006121f9310c79b</sp_page>
+        <sp_widget display_value="UTASSP KB Link Widget">9dfbf4434fa12300f006121f9310c73c</sp_widget>
+        <sys_class_name>sp_instance_link</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-07 21:47:38</sys_created_on>
+        <sys_id>bf519d834fe12300f006121f9310c75b</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_instance_link_bf519d834fe12300f006121f9310c75b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-13 20:27:20</sys_updated_on>
+        <title/>
+        <type>page</type>
+        <u_image/>
+        <url/>
+        <widget_parameters><![CDATA[{
+	"knowledge_base": {
+		"value": "Business Affairs Internal",
+		"displayValue": "Business Affairs Internal"
+	}
+}]]></widget_parameters>
+    </sp_instance_link>
+    <sys_translated_text action="delete_multiple" query="documentkey=bf519d834fe12300f006121f9310c75b"/>
+</record_update>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>other</category>
+        <client_script><![CDATA[function() {  /* widget controller */  var c = this;}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.panel-body {
+	margin: 0px -20px 0px -20px;
+}
+
+.fa {
+font-size: 18px;
+}
+
+/* Status Icons */
+.fa-check-circle {
+  color: $brand-success;
+}
+
+.fa-plus-circle {
+  color: $brand-primary;
+}
+
+.fa-exclamation-circle {
+  color: $brand-danger;
+}
+
+.fa-minus-circle{
+  color: $brand-warning;
+}
+
+.fa-info-circle {
+  color: $brand-info;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>utassp01_status_legend_widget</id>
+        <internal>false</internal>
+        <link/>
+        <name>UTASSP Status Legend Widget</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function($sp, input, data, options, gs) {
+	
+	data.multipleMsg = gs.getMessage("Multiple issues");
+	data.outageMsg = gs.getMessage("Outage");
+	data.degradationMsg = gs.getMessage("Service degradation");
+	data.maintenanceMsg = gs.getMessage("Planned maintenance");
+	data.noIssuesMsg = gs.getMessage("No issues");
+	
+})($sp, input, data, options, gs);
+
+]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-14 21:01:05</sys_created_on>
+        <sys_id>1ad9cd994ff12300f006121f9310c72f</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>UTASSP Status Legend Widget</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_widget_1ad9cd994ff12300f006121f9310c72f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-14 21:07:41</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-{{::options.color}} b" aria-hidden="true">
+  <div class="panel-heading">
+    <label class="panel-title">${Legend}</label>
+  </div>
+  <div class="panel-body">
+    <div class="col-xs-12">
+      <div class="col-xs-2"><i class="fa fa-check-circle" tooltips tooltip-template="{{::data.noIssuesMsg}}"></i></div>
+      <div class="col-xs-10">{{::data.noIssuesMsg}}</div>
+    </div>
+    <div class="col-xs-12">
+      <div class="col-xs-2"><i class="fa fa-info-circle" tooltips tooltip-template="{{::data.maintenanceMsg}}"></i></div>
+      <div class="col-xs-10">{{::data.maintenanceMsg}}</div>
+    </div>
+    <div class="col-xs-12">
+      <div class="col-xs-2"><i class="fa fa-minus-circle" tooltips tooltip-template="{{::data.degradationMsg}}"></i></div>
+      <div class="col-xs-10">{{::data.degradationMsg}}</div>
+    </div>
+    <div class="col-xs-12">
+      <div class="col-xs-2"><i class="fa fa-exclamation-circle" tooltips tooltip-template="{{::data.outageMsg}}"></i></div>
+      <div class="col-xs-10">{{::data.outageMsg}}</div>
+    </div>
+    <div class="col-xs-12">
+      <div class="col-xs-2"><i class="fa fa-plus-circle" tooltips tooltip-template="{{::data.multipleMsg}}"></i></div>
+      <div class="col-xs-10">{{::data.multipleMsg}}</div>
+    </div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

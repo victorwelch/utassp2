@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_angular_provider">
+    <sp_angular_provider action="INSERT_OR_UPDATE">
+        <name>u_cutassp</name>
+        <script><![CDATA[function u_cutassp() {
+	// ***
+	this.getParamList = function(_p)
+	{
+		var myParamListObj = {};
+		var myTmpList = (_p.toString()).split('&');
+		for (var i=0,iL=myTmpList.length;i<iL;i++)
+		{
+			var l_tmpPair=myTmpList[i].split('=');
+			myParamListObj[l_tmpPair[0].replace('?','')] = l_tmpPair[1];
+		}
+		return myParamListObj;
+	};
+	// ***
+	this.fmtLabel = function(_p) {
+		var tmpLabel = _p.toString();
+		var tmpList = [];
+		//
+		if (tmpLabel.includes('_'))
+		{		
+			tmpList = tmpLabel.split('_');
+		}
+		else if (tmpLabel.includes(' '))
+		{
+			tmpList = tmpLabel.split(' ');
+		}
+		else if (tmpLabel.includes('-'))
+		{
+			tmpList = tmpLabel.split('-');
+		}
+		else {
+			return tmpLabel;
+		}
+		//
+		if (tmpList[0].toLowerCase().includes('uta'))
+		{
+			tmpList.shift();
+		}
+		for (var j = 0, jL = tmpList.length; j < jL; j++)
+		{
+			tmpList[j] = tmpList[j].charAt(0).toUpperCase() + tmpList[j].slice(1);
+		}
+		tmpLabel = tmpList.join(' ');
+		return tmpLabel;
+	};
+	// ***
+	this.fmtArticleCategory = function(_p) {
+		var _listlength = _p.length;
+		var myArtCat = _p[0].label || '';
+		if (_listlength>1) {
+			myArtCat = _p[1].label;
+			if (_listlength>2) {
+				for (var j=2;j<_listlength;j++) {
+					myArtCat += '.'+_p[j].label;
+				}
+			}
+		}
+		return myArtCat;
+	};
+	// ***
+	this.fmtBreadcrumbList = function(_p) {
+		var list = _p || [];
+		var newList = [];
+		for (i=0,il=list.length;i<iL;i++) {
+			var item={};
+			item.label = list[i].label;
+			item.url = list[i].url;
+			if (item.label.indexOf('UTASSP')>-1)
+			{
+				item.label = item.label.replace('UTASSP','');
+				item.label.trim();
+			}
+			newList.push(item);
+		}		
+		return newList;
+	};
+	// ***
+}]]></script>
+        <sys_class_name>sp_angular_provider</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-07 20:51:46</sys_created_on>
+        <sys_id>7552858b4fa12300f006121f9310c7ba</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>u_cutassp</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_angular_provider_7552858b4fa12300f006121f9310c7ba</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-08 16:24:54</sys_updated_on>
+        <type>service</type>
+    </sp_angular_provider>
+</record_update>

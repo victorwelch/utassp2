@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_rel_widget_clone">
+    <sp_rel_widget_clone action="INSERT_OR_UPDATE">
+        <child display_value="UTASSP Search Page Widget 2">f615bbfe4f752300f006121f9310c797</child>
+        <cloned>2018-11-20 01:20:12</cloned>
+        <last_validated>2018-11-20 01:20:12</last_validated>
+        <parent display_value="Search Page">b8c57073cb10020000f8d856634c9cfc</parent>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;sp_widget&gt;&lt;category&gt;standard&lt;/category&gt;&lt;client_script&gt;&lt;![CDATA[function ($scope, $location, spUtil, $rootScope) {
+	spUtil.setSearchPage($scope.data.t);
+	$scope.showScore = $scope.options.show_score == 'true' || $scope.options.show_score == true;
+
+	$scope.getBGImage = function(item) {
+		return {"background-image": "url('" + item.picture + "')"};
+	}
+
+	$scope.search = function(searchTerm) {
+		$location.search('q', searchTerm);
+	}
+
+	$scope.highlight = function(haystack, needle) {
+		if (!haystack)
+			return "";
+
+		if (!needle)
+			return haystack;
+
+		return haystack.replace(new RegExp(needle.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), "gi"), function(match) {
+			return '&lt;span class="highlight mark"&gt;' + match + '&lt;/span&gt;';
+		});
+	}
+}]]&gt;&lt;/client_script&gt;&lt;controller_as/&gt;&lt;css&gt;a.question-tag {
+    color: #39739d;
+    background-color: #e1ecf4;
+    border: 1px solid #e1ecf4;
+    display: inline-block;
+    margin: 4px 4px 4px 0;
+    border-radius: 0;
+    text-align: center;
+    line-height: 1;
+    padding: .4em .5em;
+}&lt;/css&gt;&lt;data_table&gt;sp_instance&lt;/data_table&gt;&lt;demo_data/&gt;&lt;description/&gt;&lt;docs/&gt;&lt;field_list/&gt;&lt;has_preview&gt;false&lt;/has_preview&gt;&lt;id/&gt;&lt;internal&gt;false&lt;/internal&gt;&lt;link&gt;&lt;![CDATA[function(scope) {
+	var lazyLoader = $injector.get("lazyLoader");
+	lazyLoader.putTemplates(scope.data.resultTemplates);
+}]]&gt;&lt;/link&gt;&lt;name&gt;Search Page&lt;/name&gt;&lt;option_schema&gt;[{"hint":"Show search result relative ranking","name":"show_score","section":"other","label":"Show score","type":"boolean"},{"hint":"Maximum number of search results when not specifying a search group (default 30)","name":"max_all","section":"Behavior","label":"Max results for All search","type":"integer"},{"hint":"Maximum number of search results when specifying a search group (default 15)","name":"max_group","section":"Behavior","label":"Max results for single search source","type":"integer"},{"name":"show_did_you_mean","default_value":"false","section":"Behavior","label":"Show Did You Mean","type":"boolean"}]&lt;/option_schema&gt;&lt;public&gt;true&lt;/public&gt;&lt;roles/&gt;&lt;script&gt;&lt;![CDATA[// populate the 'data' variable
+data.showPrices = $sp.showCatalogPrices();
+data.q = $sp.getParameter('q');
+data.t = $sp.getParameter('t');
+data.results = [];
+
+if (data.t)
+	data.limit = options.max_group || 15;
+else
+	data.limit = options.max_all || 30;
+
+//Gotta decide if we want to use the portal's sources, or use the defaults declared by
+//the sys property
+var useDefaultPortals;
+if (!$sp.getPortalRecord()) {
+	useDefaultPortals = true;
+} else {
+	var searchSourcesForPortalGR = new GlideRecord("m2m_sp_portal_search_source");
+	searchSourcesForPortalGR.addQuery("sp_portal", $sp.getPortalRecord().getUniqueValue());
+	searchSourcesForPortalGR.query();
+	useDefaultPortals = searchSourcesForPortalGR.getRowCount() == 0;
+}
+
+data.resultTemplates = {};
+
+if (useDefaultPortals) {
+	var defaultSearchSourceGR = new GlideRecord("sp_search_source");
+	var defaultSearchSourceIDList = gs.getProperty("glide.service_portal.default_search_sources", "");
+	defaultSearchSourceGR.addQuery("sys_id", "IN", defaultSearchSourceIDList);
+	if (data.t)
+		defaultSearchSourceGR.addQuery("id", data.t);
+	defaultSearchSourceGR.query();
+	while(defaultSearchSourceGR.next()) {
+		data.resultTemplates["sp-search-source-" + defaultSearchSourceGR.getValue("id") + ".html"] = $sp.translateTemplate(defaultSearchSourceGR.getValue("search_page_template"));
+		getResults(defaultSearchSourceGR);
+	}
+} else {
+	var m2mSearchSourceGR = new GlideRecord("m2m_sp_portal_search_source");
+	if (data.t)
+		m2mSearchSourceGR.addQuery("sp_search_source.id", data.t);
+	m2mSearchSourceGR.addQuery("sp_portal", $sp.getPortalRecord().getUniqueValue());
+	m2mSearchSourceGR.query();
+	while(m2mSearchSourceGR.next()) {
+		var searchSourceGR = m2mSearchSourceGR.getElement("sp_search_source").getRefRecord();
+		data.resultTemplates["sp-search-source-" + searchSourceGR.getValue("id") + ".html"] = $sp.translateTemplate(searchSourceGR.getValue("search_page_template"));
+		getResults(searchSourceGR);
+	}
+}
+
+function getResults(gr) {
+	//Check if the user is allowed to see this source.
+	var userCriteria = new GlideSPUserCriteria();
+	if (userCriteria.isEnabled()) {
+		if (!userCriteria.userCanSeeSearchSource(gr.getUniqueValue()))
+			return;
+	} else {
+		var gs = GlideSession.get();
+		var searchSourceRoles = gr.getValue("roles");
+		if (searchSourceRoles &amp;&amp; !gs.hasRole(searchSourceRoles))
+			return;
+	}
+
+	if (gr.is_scripted_source) {
+		var input = {};
+		input.query = data.q;
+		input.facets = {};
+		var evaluator = new GlideScopedEvaluator();
+		var results = evaluator.evaluateScript(gr, "data_fetch_script", input);
+		if(results) {
+			results.forEach(function(item) {
+				item.templateID = "sp-search-source-" + gr.getValue("id") + ".html";
+				data.results.push(item);
+			});			
+		}
+	} else {
+		var primaryField = gr.getValue("primary_display_field");
+		var displayFields = gr.getValue("display_fields");
+
+		var resultGR = new GlideRecordSecure(gr.getValue("source_table"));
+		var condition = gr.getValue("condition");
+		if (condition)
+			resultGR.addEncodedQuery(condition);
+		if (data.q)
+			resultGR.addQuery('123TEXTQUERY321', data.q);
+		resultGR.query();
+
+		var searchTableCount = 0;
+		while (resultGR.next() &amp;&amp; searchTableCount &lt; data.limit) {
+			if (!resultGR.canRead())
+				continue;
+
+			var secondaryValues = {};
+
+			if (displayFields)
+				displayFields.split(",").forEach(function(field) {
+					var obj = getField(resultGR, field);
+					secondaryValues[field] = obj;
+				});
+
+			data.results.push({
+				primary: (primaryField) ? resultGR.getValue(primaryField) : resultGR.getDisplayValue(),
+				sys_id: resultGR.getUniqueValue(),
+				table: resultGR.getTableName(),
+				templateID: "sp-search-source-" + gr.getValue("id") + ".html",
+				fields: secondaryValues
+			});
+			searchTableCount++;
+		}
+	}
+
+	if (data.results.length == 0 &amp;&amp; options.show_did_you_mean) {
+		var didYouMean = new GlideTSDidYouMean();
+		var suggestions = [];
+		data.suggestions = [];
+		if (data.t == 'kb')
+			suggestions = didYouMean.getAlternatePhrases(data.q, 'kb_knowledge');
+		else if (data.t == 'sc')
+			suggestions = didYouMean.getAlternatePhrases(data.q, 'sc_cat_item');
+		else
+			suggestions = didYouMean.getAlternatePhrases(data.q, gr.getValue("source_table"));
+
+		for(var i=0; i&lt;suggestions.size(); i++) {
+			 if(data.suggestions.indexOf(suggestions.get(i) + '') == -1)
+					data.suggestions.push(suggestions.get(i) + '');
+		}
+	}
+}
+
+function getField(gr, name) {
+	var f = {};
+	f.display_value = gr.getDisplayValue(name);
+	f.value = gr.getValue(name);
+	var ge = gr.getElement(name);
+	if (ge == null)
+		return f;
+
+	f.type = ge.getED().getInternalType()
+	f.label = ge.getLabel();
+	return f;
+}
+]]&gt;&lt;/script&gt;&lt;servicenow&gt;true&lt;/servicenow&gt;&lt;sys_class_name&gt;sp_widget&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2015-06-03 23:17:49&lt;/sys_created_on&gt;&lt;sys_id&gt;b8c57073cb10020000f8d856634c9cfc&lt;/sys_id&gt;&lt;sys_mod_count&gt;428&lt;/sys_mod_count&gt;&lt;sys_name&gt;Search Page&lt;/sys_name&gt;&lt;sys_package display_value="Service Portal - Core" source="com.glide.service-portal"&gt;3846f32181d31300aadba4a47c598ef7&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_scope display_value="Global"&gt;global&lt;/sys_scope&gt;&lt;sys_update_name&gt;sp_widget_b8c57073cb10020000f8d856634c9cfc&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2018-03-15 21:13:45&lt;/sys_updated_on&gt;&lt;template&gt;&lt;![CDATA[&lt;div&gt;
+  &lt;div class="panel panel-default"&gt;
+    &lt;div ng-if="data.results.length==0"&gt;
+      &lt;div class="panel-heading"&gt;&lt;h2 class="h4 panel-title"&gt;${No results}&lt;/h2&gt;&lt;/div&gt;
+      &lt;div class="panel-body wrapper break-word"&gt;
+        &lt;p&gt;${Your search - &lt;b&gt;{{data.q}}&lt;/b&gt; - did not match any documents}&lt;/p&gt;
+        &lt;div ng-if="options.show_did_you_mean &amp;&amp; data.suggestions.length &gt; 0"&gt;
+          ${Did you mean:}
+          &lt;ul&gt;
+            &lt;li ng-repeat="term in ::data.suggestions track by $index"&gt;
+              &lt;a ng-click="search(term)"&gt;{{::term}}&lt;/a&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;p ng-if="options.show_did_you_mean &amp;&amp; data.suggestions.length &gt; 0"&gt;${Other suggestions}:&lt;/p&gt;
+        &lt;p ng-if="!options.show_did_you_mean || data.suggestions.length == 0"&gt;${Suggestions}:&lt;/p&gt;
+        &lt;ul&gt;
+          &lt;li&gt;${Make sure all words are spelled correctly}&lt;/li&gt;
+          &lt;li&gt;${Try different, more general, or fewer keywords}&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div ng-if="data.results.length&gt;0" class="panel-heading break-word"&gt;
+      &lt;h2 class="h4 panel-title"&gt;${Search results for '{{data.q}}'}&lt;/h2&gt;
+    &lt;/div&gt;
+
+    &lt;div role="list" &gt;
+      &lt;div role="listitem" ng-repeat="item in data.results | orderBy:'score':true | limitTo:data.limit" class="panel-body b-b "&gt;
+        &lt;div ng-include="item.templateID"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;]]&gt;&lt;/template&gt;&lt;/sp_widget&gt;</payload>
+        <sys_class_name>sp_rel_widget_clone</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-20 01:20:12</sys_created_on>
+        <sys_id>b215bbfe4f752300f006121f9310c79a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>f615bbfe4f752300f006121f9310c797</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_rel_widget_clone_b215bbfe4f752300f006121f9310c79a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-20 01:20:12</sys_updated_on>
+    </sp_rel_widget_clone>
+</record_update>

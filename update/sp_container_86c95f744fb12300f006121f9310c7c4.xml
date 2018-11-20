@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_container">
+    <sp_container action="INSERT_OR_UPDATE">
+        <background_color>#0064b1</background_color>
+        <background_image/>
+        <background_style>default</background_style>
+        <bootstrap_alt>false</bootstrap_alt>
+        <class_name>kb-featured-rated-etc</class_name>
+        <container_class_name/>
+        <name>UTASSP Knowledge Bases - Container 4</name>
+        <order>4</order>
+        <sp_page display_value="utassp01_kbs">e723642e4f512300f006121f9310c7da</sp_page>
+        <subheader>false</subheader>
+        <sys_class_name>sp_container</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-13 18:12:59</sys_created_on>
+        <sys_id>86c95f744fb12300f006121f9310c7c4</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>UTASSP Knowledge Bases - Container 4</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_container_86c95f744fb12300f006121f9310c7c4</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-13 18:19:23</sys_updated_on>
+        <title>Articles</title>
+        <width>container</width>
+    </sp_container>
+</record_update>

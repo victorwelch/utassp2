@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>other</category>
+        <client_script><![CDATA[function ($scope, spUtil, snRecordWatcher, $rootScope) {
+	$scope.standalone = $scope.options.standalone == 'true' || $scope.options.standalone == true;
+  var q = "cmdb_ci.sys_class_name=cmdb_ci_service";
+  if ($scope.data.outageIDs != "")
+    q += "^NQ" + $scope.data.outageIDs;
+
+  snRecordWatcher.initList("cmdb_ci_outage", q);
+
+  function get() {
+		$rootScope.$broadcast("sp.outage.updated");
+    spUtil.update($scope);
+  }
+
+  $scope.$on('record.updated', get);
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.bs-callout {
+  margin: 10px 0 !important;
+  padding: 20px !important;
+  border-left-style: solid;
+  border-left-width: 10px;
+  color: $gray-dark;
+}
+
+.bs-callout-outage {
+  background-color: lighten($danger, 40%);
+  border-color: $danger;
+}
+
+.bs-callout-degradation {
+  background-color: lighten($warning, 35%);
+  border-color: $warning;
+}
+
+.bs-callout-planned {
+  background-color: lighten($info, 35%);
+  border-color: $info;
+}
+
+.bs-callout-success {
+  background-color: lighten($success, 40%);
+  border-color: $success;
+}
+
+.tooltip-inner {
+    width: 150px;
+}
+
+div.sp-outage-details {
+  margin-bottom: -10px;
+}
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>utassp01_item_outage_history_widget</id>
+        <internal>false</internal>
+        <link/>
+        <name>UTASSP Item Outage History Widget</name>
+        <option_schema>[{"hint":"Display details from the cmdb_ci_outage record","name":"show_outage_details","section":"Presentation","label":"Show outage details","type":"boolean"},{"hint":"Omit explanatory information","name":"standalone","section":"Presentation","label":"Standalone","type":"boolean"}]</option_schema>
+        <public>true</public>
+        <roles/>
+        <script><![CDATA[(function($sp, input, data, options, gs) {
+	var myGlobal=new global.u_utaglobalapi();
+	// populate the 'data' object
+	// e.g., data.table = $sp.getValue('table');
+//
+// ***
+// ***  Note: Within our instance of ServiceNow, we are using Cmdb_Ci Items for outage tracking;
+// ***        and these do not map directly to Cmdbi_Ci_Service Services.  Thus, we do not use  
+// ***        cmdb_ci Items & cmdb_ci_service Services the way initial servivce now widgets do.
+// ***        However, we also do not want to introduce typographical programming errors and other
+// ***        headaches into existing code/widgets.  Thus, the code still contains the terms "service" where
+// ***        (at least for us) "item" or "conigurtion_item" or "cmdb_item" would be more appropriate.
+// ***
+// ***        For instance, in the following line, we are passing in a "cmdb_ci" table sysid.  
+// ***        But, in the code below we are calling it "service".
+// ***
+	var mySysId = $sp.getParameter('service');
+	data.service = mySysId;
+	var gr = new GlideRecord("cmdb_ci");
+	if (gr.get(mySysId)) {
+		data.serviceDisplay = gr.getDisplayValue('name');
+	}
+	//
+	data.outages = [];
+	data.outageIDs = "";
+	//	
+	var outage = new GlideRecord("cmdb_ci_outage");
+	outage.orderByDesc("begin");	
+	outage.addQuery("cmdb_ci", data.service);
+	outage.addQuery("begin", "<=", myGlobal.u_gs.nowNoTZ());
+	outage.query();
+
+	while (outage.next()) {
+		var l_out = {};
+		l_out.typeDisplay = outage.type.getDisplayValue();
+		l_out.type = outage.getValue("type");
+		l_out.details = outage.getValue("details");
+		l_out.ci = outage.cmdb_ci.getDisplayValue();
+		l_out.serviceID = outage.getValue("cmdb_ci");
+		l_out.begin = outage.begin.getDisplayValue();
+		data.outages.push(l_out);
+		data.outageIDs += "," + outage.getUniqueValue();
+	}	
+})($sp, input, data, options, gs);]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-15 22:15:03</sys_created_on>
+        <sys_id>ab542a294ff12300f006121f9310c702</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_name>UTASSP Item Outage History Widget</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_widget_ab542a294ff12300f006121f9310c702</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-16 16:44:54</sys_updated_on>
+        <template><![CDATA[<div ng-if="data.outages.length > 0" class="panel panel-{{options.color}} b">
+  <div class="panel-heading">
+    <h2 class="panel-title">${OUTAGE HISTORY: }<span ng-if="data.serviceDisplay">{{data.serviceDisplay}}</span></h2>
+  </div>
+
+  <div class="panel-body">
+    <div class="ng-scope">
+      <p>
+      ${From most recent to oldest, this list shows all outages, degradations and planned maintenance for this service} 
+      </p>
+    </div>
+
+    <div ng-if="data.outages.length == 0" class="col-xs-12 bs-callout bs-callout-success">
+      <div ng-if="!data.service">${No system is reporting an issue}</div>
+    </div>
+    <div ng-repeat="outage in data.outages" class="col-xs-12 bs-callout bs-callout-{{outage.type}}">
+      <span  style="color:inherit">{{outage.typeDisplay}} - {{outage.ci}} (${started {{outage.begin}}})
+        <div ng-bind-html="outage.details" class="sp-outage-details"></div>
+      </span>
+    </div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

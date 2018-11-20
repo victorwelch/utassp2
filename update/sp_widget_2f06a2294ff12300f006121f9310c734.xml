@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function ($rootScope, $timeout) {	
+	var c = this;		
+	//
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.description {&#13;
+  padding-bottom: 15px;  &#13;
+}&#13;
+&#13;
+.day {&#13;
+  float: left;&#13;
+  margin: 0px 1px 0px 1px; &#13;
+  width: 9.984px; &#13;
+  max-width: 9.984px; &#13;
+  min-width: 9.984px; &#13;
+  height: 30px; &#13;
+  border-radius: 3px; &#13;
+}&#13;
+&#13;
+.multiple-issues {&#13;
+  position: relative;&#13;
+  top: -5px;&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>utassp01_item_status_history_widget</id>
+        <internal>false</internal>
+        <link/>
+        <name>UTASSP Item Status History Widget</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function($sp, input, data, options, gs) {
+	var myGlobal = new global.u_utaglobalapi();
+	// populate the 'data' object
+	// e.g., data.table = $sp.getValue('table');
+// ***
+// ***  Note: Within our instance of ServiceNow, we are using Cmdb_Ci Items for outage tracking;
+// ***        and these do not map directly to Cmdbi_Ci_Service Services.  Thus, we do not use
+// ***        cmdb_ci Items & cmdb_ci_service Services the way initial servivce now widgets do.
+// ***        However, we also do not want to introduce typographical programming errors and other
+// ***        headaches into existing code/widgets.  Thus, the code still contains the terms "service" where
+// ***        (at least for us) "item" or "conigurtion_item" or "cmdb_item" would be more appropriate.
+// ***
+// ***        For instance, in the following line, we are passing in a "cmdb_ci" table sysid.
+// ***        But, in the code below we are calling it "service".
+	var mySysId = $sp.getParameter('service');
+	data.service = mySysId;
+	var gr = new GlideRecord("cmdb_ci");
+	if (gr.get(mySysId)) {
+		data.serviceDisplay = gr.getDisplayValue('name');
+	}
+
+	data.days = [];
+	for (var i = 89; i >= 0; i--) {
+		var day = {};
+		day.date = new GlideDateTime(myGlobal.u_gs.daysAgo(i)).getLocalDate().getDisplayValue();
+		var out = new GlideAggregate("cmdb_ci_outage");
+		out.addQuery("cmdb_ci", mySysId);
+		out.addQuery("end", ">=", myGlobal.u_gs.daysAgoStart(i));
+		out.addQuery("begin", "<=", myGlobal.u_gs.daysAgoEnd(i));
+		out.addAggregate('COUNT', 'type');
+		out.query();
+		day.count = 0;
+		
+		while (out.next()) {
+			var type = out.type;
+			var typeCount = out.getAggregate('COUNT', 'type');
+			day[type] = typeCount;
+			day.count += typeCount;
+		}
+		day.msg = gs.getMessage("No issues");
+		day.color = "#5cb85c";
+		if (day.count > 1) {
+			day.msg = gs.getMessage("Multiple issues");
+			day.color = "#6E4CDD";
+		} else if (day.outage > 0) {
+			day.msg = gs.getMessage("Outage");
+			day.color = "#BB0000";
+		} else if (day.degradation > 0) {
+			day.msg = gs.getMessage("Service degradation");
+			day.color = "#f0ad4e";
+		} else if (day.planned > 0) {
+			day.msg = gs.getMessage("Planned maintenance");
+			day.color = "#5bc0de";
+		}
+		data.days.push(day);
+	}
+})($sp, input, data, options, gs);]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-15 22:22:25</sys_created_on>
+        <sys_id>2f06a2294ff12300f006121f9310c734</sys_id>
+        <sys_mod_count>10</sys_mod_count>
+        <sys_name>UTASSP Item Status History Widget</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_widget_2f06a2294ff12300f006121f9310c734</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-16 15:51:55</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-{{::c.options.color}} b">
+  <div class="panel-heading">
+    <h4 class="panel-title">${STATUS: }{{::c.data.serviceDisplay}} <span class="text-muted">(${last 90 days})</span></h4>    
+  </div>
+  <div class="panel-body">
+    <div class="description">${Color bar indicators flow left to right, from oldest to most recent status}</div>
+    <div ng-repeat="day in ::c.data.days" class="day" ng-class="{'multiple-issues': (day.count > 0)}" ng-style="::{'background-color': day.color}" tooltips tooltip-template="{{::day.msg}} {{::day.date}}">
+    </div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

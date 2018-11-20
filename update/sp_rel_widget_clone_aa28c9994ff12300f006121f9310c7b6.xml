@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_rel_widget_clone">
+    <sp_rel_widget_clone action="INSERT_OR_UPDATE">
+        <child display_value="UTASSP Status History Widget">222841994ff12300f006121f9310c740</child>
+        <cloned>2018-11-14 20:53:43</cloned>
+        <last_validated>2018-11-14 20:53:43</last_validated>
+        <parent display_value="Business Services Status">d37aaa42d7330200a9addd173e24d460</parent>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;sp_widget&gt;&lt;category&gt;other&lt;/category&gt;&lt;client_script&gt;&lt;![CDATA[function($scope) {
+	for (var x in $scope.data.dates) {
+		var dateStr = moment($scope.data.dates[x]).format('ll').split(',')[0];
+		//Now we need to parse the date number into a real number so the screen reader reads it correctly
+		var dateObj = {
+			month: $scope.data.monthTranslations[dateStr.split(" ")[0]],
+			day: parseInt(dateStr.split(" ")[1])
+		}
+		$scope.data.dates[x] = dateObj;
+	}
+}
+
+]]&gt;&lt;/client_script&gt;&lt;controller_as&gt;c&lt;/controller_as&gt;&lt;css&gt;.title {
+  font-size: 1.5rem;
+  color: $gray-darker;
+  font-weight: 500;
+  width: 58.33333%;
+  margin: 0px;
+}
+
+.category {
+padding-top:15px;
+}
+
+.subscribed {
+  color: $text-mutted;
+  white-space: nowrap;
+}
+
+/* Status Icons */
+.fa-check-circle {
+  color: $brand-success;
+}
+
+.fa-plus-circle {
+  color: $brand-primary;
+}
+
+.fa-exclamation-circle {
+  color: $brand-danger;
+}
+
+.fa-minus-circle{
+  color: $brand-warning;
+}
+
+.fa-info-circle {
+  color: $brand-info;
+}
+
+.tb {
+  margin-top: -45px;
+  width: 100%;
+}
+
+.tb th {
+padding-bottom: 4px;
+}
+
+.outage-row {
+  text-align: center;
+	padding: 5px;
+}
+
+.fa {
+  cursor: pointer;
+font-size: 18px;
+}
+
+.date-column {
+  width: 8.3333%;
+  white-space: nowrap;
+	text-align: center;
+  font-size: 13px;
+  color: $gray-darker;
+  font-weight: 500;
+}&lt;/css&gt;&lt;data_table&gt;sp_instance&lt;/data_table&gt;&lt;demo_data/&gt;&lt;description/&gt;&lt;docs/&gt;&lt;field_list&gt;title,glyph&lt;/field_list&gt;&lt;has_preview&gt;false&lt;/has_preview&gt;&lt;id/&gt;&lt;internal&gt;false&lt;/internal&gt;&lt;link/&gt;&lt;name&gt;Business Services Status&lt;/name&gt;&lt;option_schema&gt;[{"hint":"Number of Services shown (use this to optimize performance)","name":"number_of_services","default_value":"250","section":"Presentation","label":"Number of Services","type":"integer"}]&lt;/option_schema&gt;&lt;public&gt;true&lt;/public&gt;&lt;roles/&gt;&lt;script&gt;&lt;![CDATA[(function() {
+	data.monthTranslations = {
+		'Jan': gs.getMessage("Jan"),
+		'Feb': gs.getMessage("Feb"),
+		'Mar': gs.getMessage("Mar"),
+		'Apr': gs.getMessage("Apr"),
+		'May': gs.getMessage("May"),
+		'Jun': gs.getMessage("Jun"),
+		'Jul': gs.getMessage("Jul"),
+		'Aug': gs.getMessage("Aug"),
+		'Sep': gs.getMessage("Sep"),
+		'Oct': gs.getMessage("Oct"),
+		'Nov': gs.getMessage("Nov"),
+		'Dec': gs.getMessage("Dec")
+	};
+
+	data.categories = [];
+	var svs = new GlideRecord("cmdb_ci_service");
+	svs.addQuery("sys_class_name", "cmdb_ci_service");
+	svs.setLimit(options.number_of_services || 250);
+	svs.orderBy("category");
+	svs.orderBy("name");
+	svs.query();
+	var currentCategory = "-";
+	var catIndex = -1;
+	while (svs.next()) {
+		var cat = svs.getValue("category");
+		if (cat != currentCategory) {
+			catIndex++;
+			currentCategory = cat;
+			data.categories[catIndex] = {};
+			data.categories[catIndex].name = cat;
+			data.categories[catIndex].label = svs.getDisplayValue("category");
+			if (data.categories[catIndex].label == "")
+				data.categories[catIndex].label = gs.getMessage("Service");
+			data.categories[catIndex].services = [];
+		}
+		var svc = {};
+		svc.sys_id = svs.getUniqueValue();
+		svc.name = svs.getDisplayValue();
+		svc.safeName = GlideStringUtil.escapeHTML(svc.name);
+		svc.subscribed = isSubscribed(svc.sys_id);
+		var outs = [];
+		for (var i = 0; i &lt;= 4; i++) {
+			var out = new GlideAggregate("cmdb_ci_outage");
+			out.addQuery("cmdb_ci", svs.getUniqueValue());
+			out.addQuery("end", "&gt;=", gs.daysAgoStart(i));
+			out.addQuery("begin", "&lt;=", gs.daysAgoEnd(i));
+			out.addAggregate('COUNT', 'type');
+			out.query();
+			var svcOutageDay = {};
+			svcOutageDay.count = 0;
+
+			while (out.next()) {
+				var type = out.type;
+				var typeCount = out.getAggregate('COUNT', 'type');
+				svcOutageDay[type] = typeCount;
+				svcOutageDay.count += typeCount;
+			}
+			svcOutageDay.icon = "fa-check-circle";
+			svcOutageDay.msg = gs.getMessage("{0} - no outage", svc.safeName);
+			if (svcOutageDay.count &gt; 1) {
+				svcOutageDay.icon = "fa-plus-circle";
+				svcOutageDay.msg = gs.getMessage("{0} - multiple issues", svc.safeName);
+			} else if (svcOutageDay.outage &gt; 0) {
+				svcOutageDay.icon = "fa-exclamation-circle";
+				svcOutageDay.msg = gs.getMessage("{0} - outage", svc.safeName);
+			} else if (svcOutageDay.degradation &gt; 0) {
+				svcOutageDay.icon = "fa-minus-circle";
+				svcOutageDay.msg = gs.getMessage("{0} - degradation of service", svc.safeName);
+			} else if (svcOutageDay.planned &gt; 0) {
+				svcOutageDay.icon = "fa-info-circle";
+				svcOutageDay.msg = gs.getMessage("{0} - planned maintenance", svc.safeName);
+			}
+			outs.push(svcOutageDay);
+		}
+		svc.outages = outs;
+		data.categories[catIndex].services.push(svc);
+	}
+	data.dates = [];
+	for (var i = 5; i &gt; 0; i--) {
+		var d = new GlideDate();
+		d.subtract(1000 * 3600 * 24 * (i - 1));
+		data.dates.push(d.getDisplayValueInternal());
+	}
+
+	function isSubscribed(id) {
+		var subs = new GlideRecord("m2m_sp_status_subscription");
+		subs.addQuery("sys_user", gs.getUserID());
+		subs.addQuery("cmdb_ci_service", id);
+		subs.query();
+		return subs.hasNext();
+	}
+})();]]&gt;&lt;/script&gt;&lt;servicenow&gt;true&lt;/servicenow&gt;&lt;sys_class_name&gt;sp_widget&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2015-11-19 20:57:47&lt;/sys_created_on&gt;&lt;sys_id&gt;d37aaa42d7330200a9addd173e24d460&lt;/sys_id&gt;&lt;sys_mod_count&gt;624&lt;/sys_mod_count&gt;&lt;sys_name&gt;Business Services Status&lt;/sys_name&gt;&lt;sys_package display_value="Service Portal - Service Status" source="com.glide.service-portal.service-status"&gt;c866736181d31300aadba4a47c598ecf&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_scope display_value="Global"&gt;global&lt;/sys_scope&gt;&lt;sys_update_name&gt;sp_widget_d37aaa42d7330200a9addd173e24d460&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2017-08-10 20:32:20&lt;/sys_updated_on&gt;&lt;template&gt;&lt;![CDATA[&lt;div class="panel panel-default"&gt;
+  &lt;div class="panel-heading"&gt;&amp;nbsp;&lt;/div&gt;
+  &lt;div class="panel-body"&gt;
+    &lt;table class="tb"&gt;
+      &lt;thead&gt;
+        &lt;th scope="col"&gt;
+          &lt;h2 class="panel-title title"&gt;
+          ${Status History}
+          &lt;/h2&gt;&lt;/th&gt;
+        &lt;th scope="col" ng-repeat="date in ::data.dates" class="date-column"&gt;{{::date.month}} {{::date.day}}&lt;/th&gt;
+      &lt;/thead&gt;
+      &lt;tbody&gt;
+        &lt;tr ng-repeat-start="category in ::c.data.categories" aria-hidden="true"&gt;
+          &lt;th scope="col" colspan="6" title="{{::category.label}}"&gt;&lt;h3 class="title category" ng-bind-html="::category.label"&gt;&lt;/h3&gt;&lt;/th&gt;
+        &lt;/tr&gt;
+        &lt;tr ng-repeat-end ng-repeat="service in ::category.services"&gt;
+          &lt;td scope="row"&gt;
+            &lt;small ng-if="::service.subscribed" class="subscribed" title="${Subscribed to updates}" aria-label="${Subscribed to updates}"&gt;&lt;i class="fa fa-envelope"&gt;&lt;/i&gt;&lt;/small&gt;
+            &lt;a ng-href="?id=service_status&amp;service={{::service.sys_id}}" ng-bind-html="::service.name"&gt;&lt;/a&gt;
+          &lt;/td&gt;
+          &lt;td ng-repeat="n in [0,1,2,3,4] track by $index" class="outage-row"&gt;
+            &lt;span class="fa" ng-class="::service.outages[4-$index].icon" 
+                  sp-tooltip
+                 	aria-label="{{::data.dates[$index].month + ' ' + data.dates[$index].day + ' - ' + service.outages[4-$index].msg}}"
+									role="application" 
+                  tooltip-smart="true"
+                  tooltip-template="{{::service.outages[4-$index].msg + ' - ' + data.dates[$index].month + ' ' + data.dates[$index].day}}"&gt;
+            &lt;/span&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+&lt;/div&gt;]]&gt;&lt;/template&gt;&lt;/sp_widget&gt;</payload>
+        <sys_class_name>sp_rel_widget_clone</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-14 20:53:43</sys_created_on>
+        <sys_id>aa28c9994ff12300f006121f9310c7b6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>222841994ff12300f006121f9310c740</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_rel_widget_clone_aa28c9994ff12300f006121f9310c7b6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-14 20:53:43</sys_updated_on>
+    </sp_rel_widget_clone>
+</record_update>

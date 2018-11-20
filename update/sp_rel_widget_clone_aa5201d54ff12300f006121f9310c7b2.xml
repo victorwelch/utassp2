@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_rel_widget_clone">
+    <sp_rel_widget_clone action="INSERT_OR_UPDATE">
+        <child display_value="UTASSP Planned Maintenance Widget">665201d54ff12300f006121f9310c7b0</child>
+        <cloned>2018-11-14 20:28:19</cloned>
+        <last_validated>2018-11-14 20:28:19</last_validated>
+        <parent display_value="Planned Maintenance">065ce522d7001200a9addd173e24d46a</parent>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;sp_widget&gt;&lt;category&gt;other&lt;/category&gt;&lt;client_script/&gt;&lt;controller_as/&gt;&lt;css&gt;.bs-callout {
+  margin: 10px 0 !important;
+  padding: 20px !important;
+  border-left-style: solid;
+  border-left-width: 10px;
+  color: $gray-dark;
+}
+
+.bs-callout-outage {
+  background-color: lighten($danger, 40%);
+  border-color: $danger;
+}
+
+.bs-callout-degradation {
+  background-color: lighten($warning, 35%);
+  border-color: $warning;
+}
+
+.bs-callout-planned {
+  background-color: lighten($info, 35%);
+  border-color: $info;
+}
+
+.bs-callout-success {
+  background-color: lighten($success, 40%);
+  border-color: $success;
+}
+
+.tooltip-inner {
+    width: 150px;
+}&lt;/css&gt;&lt;data_table&gt;sp_instance&lt;/data_table&gt;&lt;demo_data/&gt;&lt;description/&gt;&lt;docs/&gt;&lt;field_list/&gt;&lt;has_preview&gt;false&lt;/has_preview&gt;&lt;id/&gt;&lt;internal&gt;false&lt;/internal&gt;&lt;link/&gt;&lt;name&gt;Planned Maintenance&lt;/name&gt;&lt;option_schema/&gt;&lt;public&gt;false&lt;/public&gt;&lt;roles/&gt;&lt;script&gt;&lt;![CDATA[// populate the 'data' object
+// e.g., data.table = $sp.getValue('table');
+var outage = new GlideRecord("cmdb_ci_outage");
+outage.addQuery("begin", "&lt;=", gs.daysAgoStart(-5));
+outage.addQuery("end", "&gt;=", gs.nowNoTZ());
+outage.addQuery("type", "planned");
+data.service = (input &amp;&amp; input.service) || $sp.getParameter("service");
+if (!GlideStringUtil.nil(data.service)) {
+  outage.addQuery("cmdb_ci", data.service);
+	var serviceGR = new GlideRecord("cmdb_ci_service");
+	if (serviceGR.get(data.service))
+		data.serviceDisplay = serviceGR.getDisplayValue();
+}
+outage.query();
+data.outages = [];
+data.outageIDs = "";
+while (outage.next()) {
+	var out = {};
+	out.typeDisplay = outage.type.getDisplayValue();
+	out.type = outage.getValue("type");
+	out.ci = outage.cmdb_ci.getDisplayValue();
+	out.begin = outage.begin.getDisplayValue();
+	out.end = outage.end.getDisplayValue();
+	out.serviceID = outage.getValue("cmdb_ci");
+	data.outages.push(out);
+	data.outageIDs += "," + outage.getUniqueValue();
+}]]&gt;&lt;/script&gt;&lt;servicenow&gt;true&lt;/servicenow&gt;&lt;sys_class_name&gt;sp_widget&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2015-12-03 15:58:33&lt;/sys_created_on&gt;&lt;sys_id&gt;065ce522d7001200a9addd173e24d46a&lt;/sys_id&gt;&lt;sys_mod_count&gt;33&lt;/sys_mod_count&gt;&lt;sys_name&gt;Planned Maintenance&lt;/sys_name&gt;&lt;sys_package display_value="Service Portal - Service Status" source="com.glide.service-portal.service-status"&gt;c866736181d31300aadba4a47c598ecf&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_scope display_value="Global"&gt;global&lt;/sys_scope&gt;&lt;sys_update_name&gt;sp_widget_065ce522d7001200a9addd173e24d46a&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2017-08-24 19:08:11&lt;/sys_updated_on&gt;&lt;template&gt;&lt;![CDATA[&lt;div ng-if="!data.service || data.outages.length &gt; 0" class="panel panel-{{options.color}} b"&gt;
+  &lt;div class="panel-heading"&gt;
+    &lt;h2 class="panel-title"&gt;${Planned Maintenance}&lt;span ng-if="data.serviceDisplay"&gt; - {{data.serviceDisplay}}&lt;/span&gt;&lt;/h2&gt;
+  &lt;/div&gt;
+
+  &lt;div class="panel-body"&gt;
+	&lt;div ng-if="!data.service"&gt;${We publish information on planned service availability below.} ${This includes events occuring over the next 5 days.}&lt;/div&gt;
+
+	&lt;div ng-if="data.outages.length == 0" class="col-xs-12 bs-callout bs-callout-success"&gt;
+		${No service maintenance is planned over the next 5 days}
+	&lt;/div&gt;
+	&lt;div ng-if="data.outages.length &gt; 0" ng-repeat="outage in data.outages" class="col-xs-12 bs-callout bs-callout-{{outage.type}}"&gt;
+		&lt;a ng-if="!data.service" style="color:inherit" ng-href="?id=service_status&amp;service={{outage.serviceID}}"&gt;${Planned maintenance} - {{outage.ci}}, ${service will be unavailable {{outage.begin}} to {{outage.end}}}&lt;/a&gt;
+		&lt;span ng-if="data.service" style="color:inherit"&gt;${Planned maintenance} - {{outage.ci}}, ${service will be unavailable {{outage.begin}} to {{outage.end}}}&lt;/span&gt;
+	&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;]]&gt;&lt;/template&gt;&lt;/sp_widget&gt;</payload>
+        <sys_class_name>sp_rel_widget_clone</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-14 20:28:19</sys_created_on>
+        <sys_id>aa5201d54ff12300f006121f9310c7b2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>665201d54ff12300f006121f9310c7b0</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_rel_widget_clone_aa5201d54ff12300f006121f9310c7b2</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-14 20:28:19</sys_updated_on>
+    </sp_rel_widget_clone>
+</record_update>

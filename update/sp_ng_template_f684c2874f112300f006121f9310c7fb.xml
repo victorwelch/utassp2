@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_ng_template">
+    <sp_ng_template action="INSERT_OR_UPDATE">
+        <id>utassp01_sp_typeahead_popup.html</id>
+        <sp_widget display_value="UTASSP Typeahead Search Widget 2">ce4ab23d4f7d2300f006121f9310c7ae</sp_widget>
+        <sys_class_name>sp_ng_template</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-10-26 15:15:58</sys_created_on>
+        <sys_id>f684c2874f112300f006121f9310c7fb</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>utassp01_sp_typeahead_popup.html</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_ng_template_f684c2874f112300f006121f9310c7fb</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-19 22:52:40</sys_updated_on>
+        <template><![CDATA[<ul class="dropdown-menu" ng-show="isOpen() && !moveInProgress" ng-style="{top: position().top+'px', left: position().left+'px'}" role="listbox" aria-hidden="{{!isOpen()}}">
+    <li role='option' aria-hidden='true' style='display: none'></li>    
+  	<li ng-repeat="match in matches track by $index" ng-class="{active: isActive($index) }" 
+        ng-mouseenter="selectActive($index)" 
+        ng-click="selectMatch($index, $event)" 
+        role="option" id="{{::match.id}}">
+        <div uib-typeahead-match index="$index" match="match" query="query" template-url="templateUrl"></div>
+    </li>
+</ul>]]></template>
+    </sp_ng_template>
+</record_update>

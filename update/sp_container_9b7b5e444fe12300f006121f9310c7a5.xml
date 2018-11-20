@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_container">
+    <sp_container action="INSERT_OR_UPDATE">
+        <background_color>#0064b1</background_color>
+        <background_image/>
+        <background_style>default</background_style>
+        <bootstrap_alt>false</bootstrap_alt>
+        <class_name>kb-featured-rated-etc</class_name>
+        <container_class_name/>
+        <name>UTASSP Service Portal - Container 4</name>
+        <order>4</order>
+        <sp_page display_value="utassp01_index">096b84224f512300f006121f9310c7a7</sp_page>
+        <subheader>false</subheader>
+        <sys_class_name>sp_container</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-10-29 19:29:41</sys_created_on>
+        <sys_id>9b7b5e444fe12300f006121f9310c7a5</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>UTASSP Service Portal - Container 4</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_container_9b7b5e444fe12300f006121f9310c7a5</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-09 22:41:19</sys_updated_on>
+        <title>Articles</title>
+        <width>container</width>
+    </sp_container>
+</record_update>

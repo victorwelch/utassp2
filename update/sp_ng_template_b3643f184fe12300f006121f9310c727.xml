@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_ng_template">
+    <sp_ng_template action="INSERT_OR_UPDATE">
+        <id>utassp01_empty-state-page-editor.html</id>
+        <sp_widget display_value="UTASSP Form Widget 2">89ae6a584f212300f006121f9310c79c</sp_widget>
+        <sys_class_name>sp_ng_template</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-10-30 20:37:05</sys_created_on>
+        <sys_id>b3643f184fe12300f006121f9310c727</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>utassp01_empty-state-page-editor.html</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_ng_template_b3643f184fe12300f006121f9310c727</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-10-30 20:37:05</sys_updated_on>
+        <template><![CDATA[<div class="empty-state">
+  <div class="empty-state-content">
+    <div class="empty-state-badge fa fa-file" style="background-color: #5cb85c;"></div>
+    <h3 class="empty-state-header">${Page Editor}</h3>
+    <p>${Select a page above to view a map of the hierarchical structure of any page.}</p>
+    <p>${From the map, you can select an element to expose it in a form below the page map.}</p>
+  </div>
+</div>]]></template>
+    </sp_ng_template>
+</record_update>

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function ($scope, spUtil) {
+  /* widget controller */
+  var c = this;
+  if ($scope.options.portal == true || $scope.options.portal == 'true') {
+    $scope.contentColClass = "col-xs-12";
+		$scope.options.portal = true;
+	} else {
+		$scope.options.portal = false;
+		$scope.contentColClass = "col-sm-9";
+	}
+
+	//*** pagination 
+  function get() {
+    spUtil.update($scope);
+  }
+	
+	$scope.previousPage = function() {
+		$scope.data.action='prev';
+		if ($scope.data.pagination.currentPage > 1)
+			$scope.data.pagination.currentPage = $scope.data.pagination.currentPage - 1;
+		else 
+			$scope.data.pagination.currentPage = 0;
+		get();
+	};
+
+	$scope.nextPage = function() {
+		$scope.data.action='next';
+		$scope.data.pagination.currentPage = $scope.data.pagination.currentPage+1;
+		get();
+	};
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* Link text */
+li &gt; a {
+  display: block;
+  width: 100%;
+  height: 100%; 
+  color:#3a3f51;
+  &amp;:hover {
+    color:#428bca;
+    text-decoration: underline;
+  }
+}
+
+li {
+  position:relative;
+}
+li .tooltiptext {
+	display: none;
+	background: #efefef; 
+	border: solid #BDBDBD 1px; 
+	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5)  ; 
+	-webkit-box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5)  ; 
+	-moz-box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5)  ; 
+	color: #000;
+	text-align: left;
+	text-decoration-line: none;
+	border-radius: 6px;
+	padding: 5px 5px;
+  
+	/* Position the tooltiptext */
+	position: absolute;
+	top:125%;
+	left: -10px;
+	z-index: 100;
+}
+li:hover .tooltiptext {
+  display: block;
+}
+
+.list-group {
+ 	border: 1px solid #eff0f1;
+	li:nth-child(odd)  { background: #efefef; }  
+	li:nth-child(even) { background: #dfdfdf; }
+	li:hover {background: #ffffff; }
+}
+.list-group-item {
+  padding: 1px 1px 1px 3px;
+  border: 1px solid #bbb;
+}
+.list-group-item &gt; a {
+	display: inline-block;
+}
+.panel-primary &gt; .panel-footer {
+	background-color: #428bca;
+	border-color: #428bca;	
+}
+.panel-heading
+{
+	background-image: url(utassp_accounts_access.png);
+	background-repeat: no-repeat;
+	background-size: contain;  	
+	padding-left: 50px;
+}
+.myItem {
+	background-image: url(utassp_catalog_item.png);
+	background-repeat: no-repeat;
+	background-size: auto; 
+	padding-left: 24px;
+}
+.myShadow {
+-webkit-box-shadow: 0px 0px 10px 4px rgba(158,158,158,0.6);
+-moz-box-shadow: 0px 0px 10px 4px rgba(158,158,158,0.6);
+box-shadow: 0px 0px 10px 4px rgba(158,158,158,0.6);
+}
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list>title,color</field_list>
+        <has_preview>false</has_preview>
+        <id>utassp01_accounts_and_access_widget</id>
+        <internal>false</internal>
+        <link/>
+        <name>UTASSP Accounts &amp; Access Widget</name>
+        <option_schema>[{"hint":"If false, buttons are stacked on the right; if true, they are side-by-side","name":"portal","label":"Buttons stacked side by side","type":"boolean"},{"hint":"Maximum number of elements that are shown in the list of approvals","name":"max_number_of_elements_shown_on_the_list","default_value":"10","label":"Max number of elements shown in the list (only positive numbers &gt; 0, 10 otherwise)","type":"integer"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function($sp, input, data, options, gs) {
+	//we get only a max number of elements to avoid to have a big list of it
+	var maxNumberOfItemsInTheList = options.max_number_of_elements_shown_on_the_list;
+	//set 10 if maxnumber is undefined, empty or negative value
+	maxNumberOfItemsInTheList = maxNumberOfItemsInTheList>0 ? maxNumberOfItemsInTheList : 10;
+	
+	data.pagination = {};
+		
+	var initRow = 0;
+	var lastRow =  parseInt(maxNumberOfItemsInTheList);
+	var currentPage = 0;
+	var isFirstTime = !input; //If no input, this is first time.  Not getting new page!
+		
+	if (!isFirstTime) {
+		// If we get here, then we ARE getting a new page!
+		//gs.info('*** vcw: input.pagination: '+input.pagination.currentPage);
+		currentPage = parseInt(input.pagination.currentPage);
+		initRow = (currentPage *  parseInt(maxNumberOfItemsInTheList));
+		lastRow =  parseInt(initRow) +  parseInt(maxNumberOfItemsInTheList);
+	}
+	else {
+		//gs.info('*** vcw: !input');
+	}		
+
+	var gr = new GlideRecord('sc_cat_item');
+	gr.chooseWindow(initRow, lastRow);
+	var thisQuery = 'active=true^category=ad6555296f942e0028232d65ad3ee4a1';
+	gr.addEncodedQuery(thisQuery);
+	gr.orderBy('order');
+	gr.query();
+	var rowCount = gr.getRowCount();
+	var selectionlist = [];
+		
+	while (gr.next()) {
+		var t = {};
+		t.sys_id=(gr.getUniqueValue());
+		t.name = gr.getValue('name');
+		t.short_description = gr.short_description.toString();
+		t.sys_class_name = gr.getValue('sys_class_name');
+		selectionlist.push(t);
+	}
+
+	data.selectionlist = selectionlist;
+			
+	// for pagination
+	data.pagination.hasNext = (selectionlist.length == (parseInt(lastRow) - parseInt(initRow)) && parseInt(lastRow) < parseInt(rowCount));
+	data.pagination.hasPrevious = parseInt(initRow) > 0;
+	data.pagination.showPagination = data.pagination.hasPrevious || data.pagination.hasNext;
+	data.pagination.currentPage = currentPage;
+})($sp, input, data, options, gs);]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-10-24 19:52:44</sys_created_on>
+        <sys_id>39df60e64f912300f006121f9310c7e4</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_name>UTASSP Accounts &amp; Access Widget</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_widget_39df60e64f912300f006121f9310c7e4</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-13 20:22:28</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-{{::options.color}} b myShadow">
+  <div class="panel-heading">
+    <h2 class="h4 panel-title">{{options.title}}</h2>
+  </div>
+  <div class="panel-body">
+    <div ng-if="data.selectionlist.length == 0 && data.pagination.of != 0">
+      ${Loading...}
+    </div>
+    <div ng-if="(data.selectionlist.length > 0)">
+      <ul class="list-group">
+        <li class="list-group-item" ng-repeat="selection in data.selectionlist">
+          <a ng-href="?id=utassp01_sc_cat_item&sys_id={{selection.sys_id}}">
+          <div class="myItem"><span>{{selection.name}}</span></div></a>
+          <span ng-if="selection.short_description.length>0" class="tooltiptext">{{selection.short_description}}</span>            
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-{{::options.color}} panel-footer clearfix" ng-if="data.pagination.showPagination">
+  	<a id="previous-btn" href="javascript:void(0)" ng-click="previousPage()" ng-show="data.pagination.hasPrevious" class="pull-left btn btn-sm btn-default" aria-label="${Pagination button Previous}">
+      <i class="fa fa-arrow-left m-r-sm" aria-hidden="true"></i>${Previous}</a>
+    <a id="next_btn" href="javascript:void(0)" ng-click="nextPage()" ng-show="data.pagination.hasNext" class="pull-right btn btn-sm btn-default " aria-label="${Pagination button Next}">
+      ${Next}<i class="fa fa-arrow-right m-r-sm col-md-offset-3" aria-hidden="true"></i></a>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

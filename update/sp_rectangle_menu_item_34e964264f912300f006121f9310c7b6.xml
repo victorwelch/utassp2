@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_rectangle_menu_item">
+    <sp_rectangle_menu_item action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <color>default</color>
+        <condition/>
+        <display_1/>
+        <display_2/>
+        <display_date/>
+        <filter/>
+        <glyph/>
+        <hint/>
+        <kb_article/>
+        <kb_category/>
+        <kb_topic/>
+        <label>Report An Issue</label>
+        <order>200</order>
+        <record_script/>
+        <sc_cat_item display_value="UTASSP INCIDENT: Something Broken">64f0215b4f2d2300f006121f9310c71e</sc_cat_item>
+        <sc_category/>
+        <short_description/>
+        <sp_page display_value="utassp01_sc_cat_item">60a964264f912300f006121f9310c71e</sp_page>
+        <sp_rectangle_menu display_value="UTASSP Header Menu Instance">39b8e8e24f912300f006121f9310c71f</sp_rectangle_menu>
+        <sp_rectangle_menu_item/>
+        <sys_class_name>sp_rectangle_menu_item</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-10-24 19:24:12</sys_created_on>
+        <sys_id>34e964264f912300f006121f9310c7b6</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>Report An Issue</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_rectangle_menu_item_34e964264f912300f006121f9310c7b6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-12 23:14:16</sys_updated_on>
+        <table/>
+        <type>sc_cat_item</type>
+        <url/>
+        <url_target/>
+    </sp_rectangle_menu_item>
+    <sys_translated_text action="delete_multiple" query="documentkey=34e964264f912300f006121f9310c7b6"/>
+</record_update>

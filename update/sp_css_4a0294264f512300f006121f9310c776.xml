@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_css">
+    <sp_css action="INSERT_OR_UPDATE">
+        <css>h4.ng-scope {&#13;
+ 	color: #fff; &#13;
+}&#13;
+&#13;
+body {&#13;
+	background: #0064b1;&#13;
+  	font-family: "Open Sans",sans-serif;&#13;
+}&#13;
+&#13;
+.homepage-quicklinks {&#13;
+ 	box-shadow: 0 0 15px -10px rgba(0,0,0,1) inset;&#13;
+  	padding: 15px 0;&#13;
+}&#13;
+&#13;
+.kb-featured-rated-etc {&#13;
+  padding-top:15px;&#13;
+}&#13;
+&#13;
+.body.padding-top[data-page-id]:not([data-page-id=""]) {&#13;
+	background: #fff; &#13;
+}&#13;
+&#13;
+@media only screen and (max-width: 768px) {&#13;
+  &#13;
+  .homepage-quicklinks .col-md-4 {&#13;
+    border-bottom: 1px solid #ddd;&#13;
+    box-shadow: 0 1px 0 0 rgba(255,255,255,0.7);&#13;
+  }&#13;
+ &#13;
+  .homepage-quicklinks .col-md-4:last-child {&#13;
+   	border-bottom: 0;&#13;
+    box-shadow: none;&#13;
+  }&#13;
+  &#13;
+  .homepage-quicklinks a {&#13;
+   	margin: auto -15px;&#13;
+    padding: 15px;&#13;
+  }&#13;
+  &#13;
+  .homepage-quicklinks a:hover,&#13;
+  .homepage-quicklinks a:active {&#13;
+    background: #fff;&#13;
+  }&#13;
+}&#13;
+&#13;
+&#13;
+.navbar-inverse .navbar-nav &gt; li &gt; a {&#13;
+  	text-shadow: 0 1px 0 rgba(0, 0, 0, .55) !important;&#13;
+}&#13;
+&#13;
+.navbar-inverse .navbar-nav &gt; li &gt; a:hover, &#13;
+.navbar-inverse .navbar-nav &gt; li &gt; a:focus {&#13;
+    color: #fff;&#13;
+}&#13;
+&#13;
+.panel-title {&#13;
+ 	font-weight: bold; &#13;
+}</css>
+        <name>utassp01.css</name>
+        <sys_class_name>sp_css</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-10-24 17:38:28</sys_created_on>
+        <sys_id>4a0294264f512300f006121f9310c776</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>utassp01.css</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_css_4a0294264f512300f006121f9310c776</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-09 22:24:55</sys_updated_on>
+    </sp_css>
+</record_update>

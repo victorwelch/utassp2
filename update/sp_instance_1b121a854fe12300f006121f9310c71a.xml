@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_instance">
+    <sp_instance action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <class_name/>
+        <color>default</color>
+        <css/>
+        <glyph/>
+        <id/>
+        <order>1</order>
+        <roles/>
+        <short_description/>
+        <size>md</size>
+        <sp_column display_value="1">e5c192054fe12300f006121f9310c7b7</sp_column>
+        <sp_widget display_value="UTASSP My Open Tickets Widget">426e70624fd12300f006121f9310c756</sp_widget>
+        <sys_class_name>sp_instance</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-01 21:22:38</sys_created_on>
+        <sys_id>1b121a854fe12300f006121f9310c71a</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>My Open Tickets</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_instance_1b121a854fe12300f006121f9310c71a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-01 21:25:22</sys_updated_on>
+        <title>My Open Tickets</title>
+        <url/>
+        <widget_parameters><![CDATA[{
+	"portal": {
+		"value": "",
+		"displayValue": ""
+	},
+	"max_number_of_elements_shown_on_the_list": {
+		"value": 10,
+		"displayValue": "10"
+	},
+	"ishidden": {
+		"value": "false",
+		"displayValue": "false"
+	},
+	"pageid": {
+		"value": "utassp01_view_tickets",
+		"displayValue": "tickets"
+	}
+}]]></widget_parameters>
+    </sp_instance>
+    <sys_translated_text action="delete_multiple" query="documentkey=1b121a854fe12300f006121f9310c71a"/>
+</record_update>
