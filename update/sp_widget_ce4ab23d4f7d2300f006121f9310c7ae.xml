@@ -3,7 +3,7 @@
         <category>standard</category>
         <client_script><![CDATA[function ($http, $filter, $location,spAriaUtil, $window, $scope, spAriaFocusManager) {
 	var c = this;
-
+/*
 	c.options.glyph = c.options.glyph || 'search';
 	c.options.title = c.options.title || c.data.searchMsg;
 	c.options.color = c.options.color || "default";
@@ -102,6 +102,7 @@
 			return '⌘';
 		return 'Control';
 	}
+*/
 }]]></client_script>
         <controller_as>c</controller_as>
         <css>div.input-group {&#13;
@@ -204,6 +205,7 @@ color: black;&#13;
         <public>true</public>
         <roles/>
         <script><![CDATA[(function() {
+/*	
 	var myGlobal = new global.u_utaglobalapi();
 	if (options.title) {
 		options.title = gs.getMessage(options.title);
@@ -249,6 +251,7 @@ color: black;&#13;
 		}
 		data.searchSourceConfiguration[source.id] = sourceTemplateConfiguration;
 	});
+*/
 })();]]></script>
         <servicenow>false</servicenow>
         <sys_class_name>sp_widget</sys_class_name>
@@ -256,15 +259,15 @@ color: black;&#13;
         <sys_created_on>2018-11-16 18:29:17</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>ce4ab23d4f7d2300f006121f9310c7ae</sys_id>
-        <sys_mod_count>19</sys_mod_count>
+        <sys_mod_count>20</sys_mod_count>
         <sys_name>UTASSP Typeahead Search Widget 2</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy/>
         <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sp_widget_ce4ab23d4f7d2300f006121f9310c7ae</sys_update_name>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-19 23:00:35</sys_updated_on>
+        <sys_updated_by>welchv</sys_updated_by>
+        <sys_updated_on>2018-11-20 19:01:49</sys_updated_on>
         <template><![CDATA[<form ng-submit="c.submitSearch()">
   <input type="hidden" name="id" value="search"/>
   <input type="hidden" name="t" value="{{c.searchType}}"/>
