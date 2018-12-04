@@ -7,7 +7,7 @@
   $scope.errorMessages = [];
   $scope.data.show_sql = false;
   $scope.saveButtonSuffix = spUtil.getAccelerator('s');
-  $scope.isPageReady = false;
+	$scope.isPageReady = false;
   $scope.adminMenu = {
     encodedPageUrl: encodeURIComponent($location.url()),
     getClientScriptCount: function() {
@@ -36,14 +36,14 @@
     } else {
       return $scope.data.f._ui_actions;
     }
-  };
+  }
 
   $scope.getPrimaryAction = function() {
     var primaryActions = $scope.data.f._ui_actions.filter(function(action) {
       return action.primary;
     });		
     return (primaryActions.length) ? primaryActions[0] : null;
-  };
+  }
 
   $scope.getUIActionContextMenu = function(event) {
     var menu = [];
@@ -67,7 +67,7 @@
     }]);
 
     return menu;
-  };
+  }
 
   function exportPDF(landscape) {
     $window.open("/" + $scope.data.f.table + ".do?PDF&landscape=" + landscape + "&sys_id=" + $scope.data.sys_id + "&sysparm_view=" + $scope.data.f.view);
@@ -80,7 +80,7 @@
       $scope.triggerUIAction(primaryAction);
   });
   $scope.$on('$destroy', function() {
-    deregister();
+    deregister()
   });
 
   $scope.triggerUIAction = function(action) {
@@ -104,7 +104,7 @@
 				}
       }
     });
-  };
+  }
 
   $scope.$on("spModel.uiActionComplete", function(evt, response) {
     $scope.submitting = false;
@@ -132,7 +132,7 @@
       $scope.status = message;
       spUtil.addTrivialMessage(message);
       $timeout(clearStatus, 2000);
-    };
+    }
   }
 
   var ctrl = this;
@@ -140,7 +140,7 @@
   var unregister = $scope.$on('$sp.list.click', onListClick);
   $scope.$on("$destroy", function() {
     unregister();
-  });
+  })
 	
 	function _save() {
 		var primaryAction = $scope.getPrimaryAction();
@@ -198,7 +198,7 @@
 			if (data.fieldToClear != "" && g_form.hasField(data.fieldToClear))
 				g_form.setValue(data.fieldToClear, "");
 		}
-	});
+	})
 
   // Show or hide related lists
   $scope.$watch('data.f._related_lists', function() {
@@ -259,7 +259,11 @@
   if ($scope.data.f.title) {
 	  $scope.$emit('sp.widget-modal.set-aria-label', $scope.data.f.title);
   }
-			
+	
+	//*** Fire breadcrumb event *** vcw 10/30/2018
+	$timeout(function() {
+		$rootScope.$broadcast('sp.update.breadcrumbs', $scope.data.breadcrumbs);
+	});		
 }]]></client_script>
         <controller_as>c</controller_as>
         <css>.btn-form-menu {
@@ -387,7 +391,6 @@
 (function($sp, input, data, options, gs) {
 	//*** use custom global for scoped app access to restricted global functionality *** vcw 10/30/2018
 	var myGlobal = new global.u_utaglobalapi();
-	var myU = new u_utassp();
 	
   /* "use strict"; -linter issues */
   // populate the 'data' variable
@@ -445,7 +448,6 @@
 	if (!data.sys_id)
 		return;
 
-
 	var rec = myGlobal.u_$sp.getRecord(data.table, data.sys_id);
 	data.isValid = rec.isValid() || data.sys_id == "-1";
 	if (!data.isValid)
@@ -464,14 +466,6 @@
 	var hasAttachmentAttribute = !myGlobal.u_GlideTableDescriptor_boolAttribute(data.table,'no_attachment');
 	data.canAttach = hasRecordAccess &&  hasAttachmentRole && hasAttachmentAttribute;
 	data.f = myGlobal.u_$sp.getForm(data.table, data.sys_id, data.query, data.view);
-	var myGr = new GlideRecord(data.table);
-	if (myGr.get(data.sys_id)) {
-		var myTitle = myGr.getDisplayValue('number');
-		if (myU.utilIsValueValid(myTitle))
-		{
-			data.f.title = myTitle;
-		}
-	}
 	
 	// Activity formatter is hardcoded to set specific options
 	for (var f in data.f._formatters) {
@@ -502,7 +496,7 @@
         <sys_created_on>2018-10-30 15:31:50</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>89ae6a584f212300f006121f9310c79c</sys_id>
-        <sys_mod_count>28</sys_mod_count>
+        <sys_mod_count>24</sys_mod_count>
         <sys_name>UTASSP Form Widget 2</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy/>
@@ -510,7 +504,7 @@
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sp_widget_89ae6a584f212300f006121f9310c79c</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-12-04 18:49:05</sys_updated_on>
+        <sys_updated_on>2018-11-01 19:08:28</sys_updated_on>
         <template><![CDATA[<div ng-if="::!data.isValid && !data.emptyStateTemplate" class="panel panel-default">
   <div class="panel-body wrapper-lg text-center">
     <span ng-if="!data.tableUnsupported">${Record not found}</span>

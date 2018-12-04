@@ -11,13 +11,13 @@
         <short_description/>
         <size>md</size>
         <sp_column display_value="1">3edef77c4ff12300f006121f9310c7e6</sp_column>
-        <sp_widget display_value="UTASSP KB Article Helpful Widget">3106ea5a4fce2300f006121f9310c784</sp_widget>
+        <sp_widget display_value="KB Article Helpful">69a638365b722200a9ad09ed5a62bceb</sp_widget>
         <sys_class_name>sp_instance</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-11-13 20:54:57</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>b6def77c4ff12300f006121f9310c7ea</sys_id>
-        <sys_mod_count>4</sys_mod_count>
+        <sys_mod_count>3</sys_mod_count>
         <sys_name>Helpful?</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy/>
@@ -25,7 +25,7 @@
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sp_instance_b6def77c4ff12300f006121f9310c7ea</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-30 16:34:26</sys_updated_on>
+        <sys_updated_on>2018-11-13 23:10:15</sys_updated_on>
         <title>Helpful?</title>
         <url/>
         <widget_parameters><![CDATA[{

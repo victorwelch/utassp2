@@ -262,8 +262,8 @@
 		$scope.server.get({
 			action: 'log_request',
 			itemDetails: {sys_id: $scope.data.sc_cat_item.sys_id, 
-						  name: $scope.data.sc_cat_item.name,
-						  sys_class_name: $scope.data.sc_cat_item.sys_class_name}
+										name: $scope.data.sc_cat_item.name,
+										sys_class_name: $scope.data.sc_cat_item.sys_class_name}
 		});
 
 		//Required to pass as payload for usage as embeddedWidget
@@ -324,14 +324,11 @@
 							$rootScope.$broadcast("$sp.service_catalog.cart.submitted", true);
 							spUtil.addInfoMessage($scope.m.requestSubmitted);
 							return;
-						} else {
-							//$location.search('id=sc_request&is_new_order=true&table=sc_request&sys_id=' + a.sys_id);
-							$location.search('id=utassp01_view_tickets&pageid=request');	
-						}
+						} else
+							$location.search('id=sc_request&is_new_order=true&table=sc_request&sys_id=' + a.sys_id);
 					});
 				}
-				else 
-				{
+				else {
 					spScUtil.orderNow($scope.data.sc_cat_item.sys_id, $scope.data.sc_cat_item.quantity, getVarData($scope.data.sc_cat_item._fields), $scope.data._generatedItemGUID, additionalParms).then(function(response) {
 							var a = response.data.result;
 
@@ -341,10 +338,8 @@
 								$rootScope.$broadcast("$sp.service_catalog.cart.submitted", true);
 								spUtil.addInfoMessage($scope.m.requestSubmitted);
 								return;
-							} else if (!$scope._atf) {
-								//$location.search('id=sc_request&is_new_order=true&table=sc_request&sys_id=' + a.sys_id);
-								$location.search('id=utassp01_view_tickets&pageid=request');							
-							}
+							} else if (!$scope._atf)
+								$location.search('id=sc_request&is_new_order=true&table=sc_request&sys_id=' + a.sys_id);
 					});
 				}
 			}
@@ -657,61 +652,19 @@
         <roles>snc_external,snc_internal</roles>
         <script><![CDATA[// populate the 'data' variable with catalog item, variables, and variable view
 (function($sp, input, data, options, gs) {
+	//gs.info('utassp03_sc_catalog_item_widget: Hello World');
 	/* *** removed following as Not Applicable, vcw 11/09/18 *** */
-	var embeddedWidgetOptions = ['auto_redirect', 'requested_for_id', 'requested_for_display'];
-	if (input && input.action == 'init_item') {
-		data._generatedItemGUID = gs.generateGUID();
-		return;
-	}
-	else if (input && input.action === "order_one_step") {
-		
-	}
-	else if (input && input.action === "order_item") {
-		//Minimum set of widget options supported for Embedded widget
-		embeddedWidgetOptions.forEach(function (embeddedWidgetOption) {
-			if (typeof input[embeddedWidgetOption] != 'undefined')
-				options[embeddedWidgetOption] = input[embeddedWidgetOption];
-		});
-		data.orderItemModal = $sp.getWidget('widget-modal', {
-			embeddedWidgetId: 'utassp01_sc_checkout_widget', 
-			embeddedWidgetOptions: {
-				cart: {name: input.cart}, 
-				action: 'order_now', 
-				item: input.itemDetails, 
-				requested_for: {id:options.requested_for_id, displayValue:options.requested_for_display},
-				auto_redirect: options.auto_redirect,
-				parentParams: input.workspaceParams
-			}, 
-			backdrop: 'static', 
-			keyboard: false, 
-			size: 'md'
-		});
-		return;
-	} else if (input && input.action == "order_wishlist_item") {
-		//Minimum set of widget options supported for Embedded widget
-		embeddedWidgetOptions.forEach(function (embeddedWidgetOption) {
-			if (typeof input[embeddedWidgetOption] != 'undefined')
-				options[embeddedWidgetOption] = input[embeddedWidgetOption];
-		});
-		data.orderItemModal = $sp.getWidget('widget-modal', {
-			embeddedWidgetId: 'utassp01_sc_checkout_widget', 
-			embeddedWidgetOptions: {
-				cart: {name: input.cart}, 
-				action: 'order_now_wishlisted_item', 
-				item: input.itemDetails, 
-				requested_for: {id:options.requested_for_id, displayValue:options.requested_for_display},
-				auto_redirect: options.auto_redirect,
-				parentParams: input.workspaceParams
-			}, 
-			backdrop: 'static', 
-			keyboard: false, 
-			size: 'md'
-		});
-		return;
-	} else if (input && input.action === 'log_request') {
-		 $sp.logStat('Cat Item Request', input.itemDetails.sys_class_name, input.itemDetails.sys_id, input.itemDetails.name);
-		 return;
-	}
+	//var embeddedWidgetOptions = ['auto_redirect', 'requested_for_id', 'requested_for_display'];
+	//if (input && input.action == 'init_item') {
+	//}
+	//else if (input && input.action === "order_one_step") {
+	//}
+	//else if (input && input.action === "order_item") {
+	//} 
+	//else if (input && input.action == "order_wishlist_item") {
+	//} 
+	//else if (input && input.action === 'log_request') {
+	//}
 
 	// portal can specify a catalog and catalog category home page
 	data.sc_catalog_page = $sp.getDisplayValue("sc_catalog_page") || "sc_home";
@@ -738,6 +691,7 @@
 	options.url = options.url || "id={page}&is_new_order=true&table={table}&sys_id={sys_id}";		
 
 	data.showPrices = $sp.showCatalogPrices();
+	//gs.info('utassp03_sc_catalog_item_widget data.showPrices:'+data.showPrices);	
 	var m = data.msgs = {};
 	m.submitMsg = gs.getMessage("Submit");
 	m.orderNowMsg = gs.getMessage("Order Now");
@@ -778,6 +732,7 @@
 	//if (edit_parm) {
 	//} else 
 	//{
+		//gs.info('utassp03_sc_catalog_item_widget A');
 
 		if (input)
 			data.sys_id = input.sys_id;
@@ -812,13 +767,16 @@
 		data.sc_cat_item = $sp.getCatalogItem(data.sys_id, true);
 		data.hideDeliveryTime = (options.hide_delivery_time == "true" || data.sc_cat_item.sys_class_name == 'sc_cat_item_producer' || data.sc_cat_item.sys_class_name == 'sc_cat_item_guide' || data.sc_cat_item.sys_class_name == 'std_change_record_producer');
 		if (data.sc_cat_item.category) {
+			//gs.info('1.data.sc_cat_item.category:'+data.sc_cat_item.category);
 			var categoryJS;
 			var categoryID = validatedItem.getFirstAccessibleCategoryForSearch(catalogID);
 			if ($sp.getParameter("sysparm_category")) {
+				//gs.info('1.1.sysparm_category:'+$sp.getParameter("sysparm_category"));
 				categoryJS = new sn_sc.CatCategory($sp.getParameter("sysparm_category") + "");
 				categoryID = $sp.getParameter("sysparm_category") + "";
 			}
 			else {
+				//gs.info('1.2.categoryID:'+categoryID);
 				categoryJS = new sn_sc.CatCategory(categoryID);
 			}
 			
@@ -858,7 +816,9 @@
 
 	var athTblName = 'sc_cart_item';
 	var className = data.sc_cat_item.sys_class_name;
+	//gs.info('utassp03_sc_catalog_item_widget className:'+className);
 	if (!new global.CatalogItemTypeProcessor().canCreateNormalCartItem(className)) {
+		//gs.info('utassp03_sc_catalog_item_widget B');
 		
 		if (className == 'sc_cat_item_producer' || className == 'std_change_record_producer') {
 				var gr2 = new GlideRecord(className);
@@ -870,7 +830,9 @@
 	data._attachmentTable = athTblName;
 
 	data.stdChg = {};
+	//gs.info('3: className: '+className);
 	if (className === 'std_change_record_producer') {
+		//gs.info('utassp03_sc_catalog_item_widget C');
 		//Populate scope with the porperty for two step
 		data.stdChg.twoStep = false;
 		var twoStepProp = new global.StdChangeUtils().getValue('two_step') + '';
@@ -920,7 +882,7 @@
         <sys_created_on>2018-11-09 15:13:59</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>997a86674f212300f006121f9310c7c8</sys_id>
-        <sys_mod_count>44</sys_mod_count>
+        <sys_mod_count>38</sys_mod_count>
         <sys_name>UTASSP Catalog Item Widget 3</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy/>
@@ -928,7 +890,7 @@
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sp_widget_997a86674f212300f006121f9310c7c8</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-30 19:51:21</sys_updated_on>
+        <sys_updated_on>2018-11-13 20:05:32</sys_updated_on>
         <template><![CDATA[<div id="sc_cat_item" ng-if="::data.recordFound">
   <sp-widget widget="c.orderItemModal" ng-if="c.orderItemModal"></sp-widget>
   <div class="row" ng-if="::data.sc_cat_item" >

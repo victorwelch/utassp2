@@ -17,7 +17,7 @@
         <size>md</size>
         <sp_column display_value="1">17b196854fe12300f006121f9310c7aa</sp_column>
         <sp_page/>
-        <sp_widget display_value="UTASSP Breadcrumbs Std Widget">76af300b4fa12300f006121f9310c79a</sp_widget>
+        <sp_widget display_value="UTASSP Breadcrumbs Gen Widget">76af300b4fa12300f006121f9310c79a</sp_widget>
         <sys_class_name>sp_instance_link</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-11-12 18:30:40</sys_created_on>

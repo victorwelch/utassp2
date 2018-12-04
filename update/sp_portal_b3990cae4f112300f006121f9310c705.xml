@@ -30,7 +30,7 @@ $text-muted: #979797;&#13;
         <logo>4fff00a24f512300f006121f9310c76e</logo>
         <notfound_page display_value="utassp01_404">233d64a64f912300f006121f9310c71e</notfound_page>
         <quick_start_config/>
-        <sc_catalog display_value="Technical Catalog">742ce428d7211100f2d224837e61036d</sc_catalog>
+        <sc_catalog display_value="Service Catalog">e0d08b13c3330100c8b837659bba8fb4</sc_catalog>
         <sc_catalog_page display_value="utassp01_sc_home">1a4f1c6e4f512300f006121f9310c787</sc_catalog_page>
         <sc_category_page/>
         <sp_chat_queue/>
@@ -41,7 +41,7 @@ $text-muted: #979797;&#13;
         <sys_created_on>2018-10-24 17:07:18</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>b3990cae4f112300f006121f9310c705</sys_id>
-        <sys_mod_count>17</sys_mod_count>
+        <sys_mod_count>16</sys_mod_count>
         <sys_name>UTA Self Service Portal (UTASSP)</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy/>
@@ -49,7 +49,7 @@ $text-muted: #979797;&#13;
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sp_portal_b3990cae4f112300f006121f9310c705</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-20 21:38:19</sys_updated_on>
+        <sys_updated_on>2018-10-29 16:55:03</sys_updated_on>
         <theme display_value="UTASSP Theme">9ce358664f512300f006121f9310c728</theme>
         <title>UTA Self Service Portal (UTASSP)</title>
         <url_suffix>utassp</url_suffix>

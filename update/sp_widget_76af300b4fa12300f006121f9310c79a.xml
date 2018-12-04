@@ -7,17 +7,19 @@
 	c.myLabel = function (_p) { return u_cutassp.fmtLabel(_p); };
 	//
 	var deregister = $rootScope.$on("sp.update.breadcrumbs", function (e, list) {
-		if ( (u_cutassp.utilIsValueValid(list)) ) 
+		if ( (typeof list != typeof myUndefined) && (Array.isArray(list)) ) 
 		{
-			$rootScope.bc=list;
-			c.breadcrumbs=list;				
+			if (list.length>0)
+			{
+				c.breadcrumbs=list;	
+				c.data.breadcrumbs=[];				
+			}
 		}
 	});
 	//
 	$scope.$on('$destroy', function () {
 		deregister();
 	});
-	//
 }
 ]]></client_script>
         <controller_as>c</controller_as>
@@ -30,15 +32,14 @@ margin-top: 10px;&#13;
         <docs/>
         <field_list>type,sc_category,url,kb_article,kb_topic,kb_category,sc_cat_item,sp_page</field_list>
         <has_preview>false</has_preview>
-        <id>utassp01_breadcrumbs_std_widget</id>
+        <id>utassp01_breadcrumbs_gen_widget</id>
         <internal>false</internal>
         <link/>
-        <name>UTASSP Breadcrumbs Std Widget</name>
+        <name>UTASSP Breadcrumbs Gen Widget</name>
         <option_schema/>
         <public>true</public>
         <roles/>
         <script><![CDATA[(function($sp, input, data, options, gs) {
-//
 //
 })($sp, input, data, options, gs);]]></script>
         <servicenow>false</servicenow>
@@ -47,21 +48,21 @@ margin-top: 10px;&#13;
         <sys_created_on>2018-11-07 20:30:17</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>76af300b4fa12300f006121f9310c79a</sys_id>
-        <sys_mod_count>73</sys_mod_count>
-        <sys_name>UTASSP Breadcrumbs Std Widget</sys_name>
+        <sys_mod_count>39</sys_mod_count>
+        <sys_name>UTASSP Breadcrumbs Gen Widget</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy/>
         <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sp_widget_76af300b4fa12300f006121f9310c79a</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-12-03 21:59:16</sys_updated_on>
+        <sys_updated_on>2018-11-13 18:50:43</sys_updated_on>
         <template><![CDATA[<ul class="nav nav-pills nav-sm" aria-label="${Navigation breadcrumbs}">
   <li><a ng-href="?id={{portal.homepage_dv}}">${Home}</a></li>
   <li aria-hidden="true"><i class="fa fa-chevron-right"></i></li>
-  <li ng-if="!c.breadcrumbs"><a href>{{c.myLabel(page.title)}}</a></li>
+  <li ng-if="!c.data.breadcrumbs"><a href>{{c.myLabel(page.title)}}</a></li>
   <li ng-repeat-start="item in c.breadcrumbs">
-    <a ng-href="{{item.url}}&level={{item.level}}">{{c.myLabel(item.label)}}</a> 
+    <a ng-href="{{item.url}}">{{c.myLabel(item.label)}}</a> 
   </li>
   <li aria-hidden="true" ng-if="!$last" ng-repeat-end>
     <i class="fa fa-chevron-right"></i>
