@@ -13,15 +13,15 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-11-13 20:31:46</sys_created_on>
         <sys_id>9789b7784ff12300f006121f9310c725</sys_id>
-        <sys_mod_count>3</sys_mod_count>
+        <sys_mod_count>4</sys_mod_count>
         <sys_name>utassp01_kb_business_affairs_knowledge</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy/>
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sp_page_9789b7784ff12300f006121f9310c725</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-20 02:13:48</sys_updated_on>
-        <title>UTASSP Business Affairs Knowledge</title>
+        <sys_updated_on>2018-12-03 18:09:38</sys_updated_on>
+        <title>UTASSP Business Affairs Knowledge Base</title>
     </sp_page>
     <sys_translated_text action="delete_multiple" query="documentkey=9789b7784ff12300f006121f9310c725"/>
 </record_update>

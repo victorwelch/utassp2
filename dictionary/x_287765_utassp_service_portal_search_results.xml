@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="UTASSP Service Portal Search Results" max_length="40" name="x_287765_utassp_service_portal_search_results" type="collection">
+        <element label="KB Reference" max_length="32" name="kb_reference" reference="kb_knowledge" type="reference"/>
+        <element label="Score" max_length="40" name="score" type="integer"/>
+        <element label="SC Reference" max_length="32" name="sc_reference" reference="sc_cat_item" type="reference"/>
+        <element label="Search ID" max_length="32" name="search_id" type="string"/>
+        <index name="index">
+            <element name="sc_reference"/>
+        </index>
+        <index name="index2">
+            <element name="kb_reference"/>
+        </index>
+    </element>
+</database>

@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function ($scope, spUtil, $sce, $rootScope, $timeout) 
+{
+	spUtil.setSearchPage($scope.data.t);
+	$scope.showScore = $scope.options.show_score == 'true' || $scope.options.show_score == true;
+	
+	$scope.getBGImage = function(item) 
+	{
+		return {"background-image": "url('" + item.picture + "')"};
+	};
+		
+	$scope.highlight = function(haystack, needle) 
+	{
+		if (!haystack)
+			return "";
+			
+		if (!needle)
+			return $sce.trustAsHtml(haystack);
+			
+		return $sce.trustAsHtml(haystack.replace(new RegExp(needle.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), "gi"), function(match) {
+			return '<span class="highlight mark">' + match + '</span>';
+		}));
+	};
+		
+	//*** breadcrumbs
+	//alert('mysearchbc');
+	//debugger;
+	spUtil.setSearchPage('kb');
+	$scope.data.text = $sce.trustAsHtml($scope.data.text);
+	$timeout(function() {
+		$rootScope.$broadcast('sp.update.breadcrumbs', $scope.data.breadcrumbs);
+	});			
+		
+	//*** pagination
+	function get() {
+		spUtil.update($scope);
+	}
+		
+	$scope.previousPage = function() {
+		//alert('prev')
+		$scope.data.action='page';
+		if ($scope.data.pagination.currentPage > 1)
+			$scope.data.pagination.currentPage = $scope.data.pagination.currentPage - 1;
+		else
+			$scope.data.pagination.currentPage = 0;
+		get();
+	};
+		
+	$scope.nextPage = function() {
+		//alert('next')
+		$scope.data.action='page';
+		$scope.data.pagination.currentPage = $scope.data.pagination.currentPage+1;
+		get();
+	};
+		
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>span.text-muted.ng-binding {&#13;
+  padding-left: 10px;&#13;
+}&#13;
+&#13;
+span.text-muted {&#13;
+  color: #000000;&#13;
+  font-size: 13px;&#13;
+}&#13;
+&#13;
+&#13;
+p {&#13;
+    margin: 0 0 5px 10px;&#13;
+    color: #000000;&#13;
+    font-size: 12px;&#13;
+}&#13;
+&#13;
+div.myContainer {&#13;
+	div.panel-body:nth-child(odd)  { background: #fff; }  &#13;
+	div.panel-body:nth-child(even) { background: #eee; }    &#13;
+}&#13;
+&#13;
+div.panel-body {&#13;
+	padding:1px 1px 1px 10px;&#13;
+}&#13;
+&#13;
+a:hover {&#13;
+   font-weight:bold;&#13;
+   color:#ffffff;&#13;
+   background:#428bca;;&#13;
+}&#13;
+&#13;
+a.m-b-sm {&#13;
+  margin:2px 0px 2px 0px !important;&#13;
+  border-bottom:1px solid #428bca;&#13;
+}&#13;
+&#13;
+i.fa {&#13;
+  color:#428bca;&#13;
+  font-size: 14px;&#13;
+}&#13;
+&#13;
+a.h4 {&#13;
+ font-weight:bold;  &#13;
+ color:#428bca;&#13;
+ font-size: 14px;&#13;
+ &amp;:hover {&#13;
+   font-weight:bold;&#13;
+   color:#ffffff;&#13;
+   background:#428bca;&#13;
+   i.fa {&#13;
+      color:#ffffff;&#13;
+      font-size: 14px;&#13;
+  	} &#13;
+ }&#13;
+} &#13;
+&#13;
+a.question-tag {&#13;
+    color: #39739d;&#13;
+    background-color: #e1ecf4;&#13;
+    border: 1px solid #e1ecf4;&#13;
+    display: inline-block;&#13;
+    margin: 4px 4px 4px 0;&#13;
+    border-radius: 0;&#13;
+    text-align: center;&#13;
+    line-height: 1;&#13;
+    padding: .4em .5em;&#13;
+}&#13;
+&#13;
+.panel-primary &gt; .panel-footer {&#13;
+    color: #fff;&#13;
+    background-color: #428bca;&#13;
+    border-color: #428bca;&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>utassp07_search_page_widget</id>
+        <internal>false</internal>
+        <link><![CDATA[function(scope) {
+	var lazyLoader = $injector.get("lazyLoader");
+	lazyLoader.putTemplates(scope.data.resultTemplates);
+}]]></link>
+        <name>UTASSP Search Page Widget 7</name>
+        <option_schema>[{"hint":"Show search result relative ranking","name":"show_score","label":"Show score","type":"boolean"},{"hint":"Maximum number of search results","name":"maxitems","label":"Max results for search","type":"integer"}]</option_schema>
+        <public>true</public>
+        <roles/>
+        <script><![CDATA[(function ($sp, input, data, options, gs) {
+	var myGlobal = new global.u_utaglobalapi();
+	if ((typeof input != typeof myUndefined) && (input.q)) {
+		data.q = input.q;
+	} else {
+		data.q = $sp.getParameter('q');
+	}
+	
+	if ((typeof input != typeof myUndefined) && (input.t)) {
+		data.t = input.t;
+	} else {
+		data.t = $sp.getParameter('t');
+	}
+	
+	//data.results = [];
+	//data.resultTemplates = {};
+
+	// *** Remove data limit	
+	// data.limit = options.max_all || 30;
+	// data.limit = -1;	
+
+	// *** Pagination init ***
+	var myMaxItems = options.maxitems;
+	myMaxItems = myMaxItems>0 ? myMaxItems : 20; 
+	var myFirstRow = 0;
+	var myLastRow =  parseInt(myMaxItems);
+	var myCurrentPage = 0;		
+
+	if (typeof data.pagination == typeof myUndefined) {
+		data.pagination = {};
+		data.pagination.currentPage = myCurrentPage;
+		data.pagination.hasNext = false;
+		data.pagination.hasPrevious = false;
+		data.showPagination = false;
+	}
+    // ***
+	
+	// *** Determine state of query/page combination
+	var isThisANewQuery = true;
+	var isThisAPageCmd = false;
+	if (typeof input == typeof myUndefined) {
+		isThisANewQuery = true;
+		isThisAPageCmd = false;
+	} else {
+		if (typeof input.action == typeof myUndefined) {
+			isThisANewQuery = true;
+			isThisAPageCmd = false;
+		} else if (input.action == 'new') {
+			isThisANewQuery = true;
+			isThisAPageCmd = false;
+		} else if (input.action == 'page') {
+			if (
+					(typeof input.queryresults != typeof myUndefined) && 
+					(Array.isArray(input.queryresults)) &&
+					(input.queryresults.length>0)
+			) {					
+					isThisANewQuery = false;
+					data.queryresults = input.queryresults;
+			} else {
+					isThisANewQuery = true;					
+			}
+			isThisAPageCmd = true;
+		}
+	}
+
+	if (isThisAPageCmd) {
+		if (input.pagination) {
+			myCurrentPage = parseInt(input.pagination.currentPage);
+			myFirstRow = (myCurrentPage *  parseInt(myMaxItems));
+			myLastRow =  parseInt(myFirstRow) +  parseInt(myMaxItems); 
+		}		
+	}	
+
+	// *** Query the data sources
+	if (isThisANewQuery)
+	{
+		data.searchlist = [];
+		data.resultTemplates = {};
+		//
+		var myResultList = [];
+		var myM2mGr = new GlideRecord("m2m_sp_portal_search_source");		
+		var myKbBaseGr = new GlideRecord('kb_knowledge_base');  
+		var myKbArtGr = new GlideRecord('kb_knowledge'); 	
+		var myScGr = new GlideRecord('sc_cat_item');
+		var myResultsGr = new GlideRecord('x_287765_utassp_service_portal_search_results');
+		var mySearchId = gs.generateGUID();
+		var isFirst = true;
+		var isKbIncluded = false;
+		var isScIncluded = false;
+		var myKbArtEncodedQuery = '';
+		var myKbSearchSourceIdList = {};
+		//
+		var pRec = $sp.getPortalRecord().getUniqueValue();
+		var pSearchSourceId = data.t || '';
+		var isSingleSearch = 
+			!(
+				(typeof pSearchSourceId == typeof myUndefined) || 
+				(pSearchSourceId == null) || 
+				(pSearchSourceId.toString().length<1)
+			);
+		var pQuery = data.q;
+		var parentPage = 'utassp01_search_results&q='+pQuery;	
+		if (isSingleSearch) { 
+			parentPage += '&t='+pSearchSourceId;
+		}				
+		//
+		myM2mGr.initialize();		
+		myM2mGr.addQuery("sp_portal", pRec);
+		if (isSingleSearch) {
+			myM2mGr.addQuery("sp_search_source.id", pSearchSourceId);
+		}
+		myM2mGr.query();
+		while (myM2mGr.next())
+		{
+			var l_mySearchGr = myM2mGr.getElement("sp_search_source").getRefRecord();			
+			var l_mySearchSysId = l_mySearchGr.getValue('sys_id');
+			var l_mySearchTitle = l_mySearchGr.name;
+			var l_mySearchId = l_mySearchGr.getValue("id");
+			var l_myTemplate = $sp.translateTemplate(l_mySearchGr.getValue("search_page_template"));
+			data.resultTemplates["sp-search-source-" + l_mySearchId + ".html"] = l_myTemplate;			
+			data.searchlist.push(l_mySearchTitle);
+			if (l_mySearchId != 'sc')
+			{
+				isKbIncluded = true;
+				myKbBaseGr.initialize();
+				myKbBaseGr.addActiveQuery();
+				myKbBaseGr.addQuery('title',l_mySearchTitle);
+				myKbBaseGr.query();
+				if (myKbBaseGr.next())
+				{					
+					var l_sys_id = myKbBaseGr.getValue('sys_id');
+					myKbSearchSourceIdList[l_sys_id]=l_mySearchId;
+					if (isFirst)
+					{
+						isFirst = false;
+						myKbArtEncodedQuery = 'kb_knowledge_base='+l_sys_id;
+					}
+					else
+					{
+						myKbArtEncodedQuery += '^ORkb_knowledge_base='+l_sys_id;
+					}
+				}
+			}
+			else
+			{
+				isScIncluded = true;
+			}
+		}
+		if (isKbIncluded)
+		{
+			var kbArtSysId = '';
+			myKbArtGr.initialize();
+			myKbArtGr.addQuery('workflow_state', 'published');
+			myKbArtGr.addQuery('valid_to', '>=', myGlobal.u_GlideDateGetLocalDate());
+			myKbArtGr.addQuery('123TEXTQUERY321', pQuery);			
+			myKbArtGr.addEncodedQuery(myKbArtEncodedQuery);
+			myKbArtGr.query();
+			while (myKbArtGr.next())
+			{
+				kbArtSysId =  myKbArtGr.getUniqueValue();
+				// Ignore if not allowed to read it!
+				if (!$sp.canReadRecord("kb_knowledge", kbArtSysId))
+					continue;	
+				//
+				myResultsGr.initialize();
+				myResultsGr.search_id = mySearchId;
+				myResultsGr.score = parseInt(myKbArtGr.ir_query_score.getDisplayValue());
+				myResultsGr.kb_reference = kbArtSysId;
+				myResultsGr.sc_reference = null;	
+				myResultsGr.insert();
+			}
+		}
+		if (isScIncluded)
+		{
+			myScGr.initialize();
+			myScGr.addActiveQuery();
+			myScGr.addQuery('123TEXTQUERY321',pQuery);
+			var myEncQ='sc_catalogsLIKE6ba2b82d6f542e0028232d65ad3ee4b6';
+			myEncQ+='^ORsc_catalogsLIKEd92ff8160f1dbe00c601419ce1050ea1';
+			myScGr.addEncodedQuery(myEncQ);
+			myScGr.query();
+			while (myScGr.next())
+			{
+				myResultsGr.initialize();
+				myResultsGr.search_id = mySearchId;
+				myResultsGr.score = parseInt(myScGr.ir_query_score.getDisplayValue());
+				myResultsGr.kb_reference = null;
+				myResultsGr.sc_reference = myScGr.getUniqueValue();			
+				myResultsGr.insert();
+			}			
+		}
+		//Get search results in score order
+		var kbSysId = {};
+		var scSysId = {};
+		var isKb =  {};
+		var kbBaseSysId = {};
+		var kbSearchSourceId = {};
+		var irScore = {};	
+		//
+		myResultsGr.initialize();	
+		myResultsGr.addQuery('search_id',mySearchId);		
+		myResultsGr.orderByDesc('score');	
+		myResultsGr.query();
+		//
+		while (myResultsGr.next())
+		{
+			kbSysId = myResultsGr.getValue('kb_reference');
+			scSysId = myResultsGr.getValue('sc_reference');
+			irScore = myResultsGr.getValue('score');
+		    isKb =  ((typeof kbSysId == typeof myUndefined) || (kbSysId == null)) ? false : true;	
+
+			if (isKb) {
+				myKbArtGr.initialize();
+				if (myKbArtGr.get(kbSysId))
+				{
+					kbBaseSysId = myKbArtGr.getValue('kb_knowledge_base');
+					kbSearchSourceId = myKbSearchSourceIdList[kbBaseSysId];
+					var l_art = {};
+					l_art.sys_id = myKbArtGr.getDisplayValue('sys_id');
+					l_art.number = myKbArtGr.getDisplayValue('number');
+					l_art.short_description = myKbArtGr.getDisplayValue('short_description');
+					l_art.published =myKbArtGr.getDisplayValue('published');
+					l_art.text = myKbArtGr.getDisplayValue('text');
+					l_art.publishedUTC =  myKbArtGr.getValue('published');
+					l_art.type = "kb";
+					if (!l_art.text) { l_art.text = ""; }
+					l_art.text = $sp.stripHTML(l_art.text) + "";
+					l_art.text = l_art.text.substring(0, 200);
+					l_art.score = irScore;
+					l_art.label = l_art.short_description;
+					l_art.primary = l_art.short_description;
+					l_art.url = '?id=utassp01_kb_article';
+					l_art.url += '&sys_id=' + kbSysId;
+					l_art.url += '&pageid='+parentPage;
+					gs.info('!!! l_art.url: '+l_art.url);
+					l_art.templateID = "sp-search-source-" + kbSearchSourceId + ".html";
+					//;
+					myResultList.push(l_art);
+				}
+			}
+			else
+			{
+				myScGr.initialize();
+				if (myScGr.get(scSysId))
+				{
+					var l_item = {};
+					//
+					l_item.type = "sc";
+					l_item.page = "utassp01_sc_cat_item";
+					//
+					l_item.name = myScGr.getDisplayValue('name');
+					l_item.short_description = myScGr.getDisplayValue('short_description');
+					//l_item.price = myScGr.getDisplayValue('price');
+					l_item.sys_id = myScGr.getDisplayValue('sys_id');
+					l_item.sys_class_name = myScGr.getDisplayValue('sys_class_name');		
+					l_item.score = irScore;	
+					//
+					//calculating URL
+					if (l_item.type == "sc") {
+						l_item.url = '?id=' + l_item.page ;
+						l_item.url += '&sys_id=' + l_item.sys_id;
+						l_item.url += '&pageid=' + parentPage;
+					}
+					//
+					l_item.templateID = "sp-search-source-sc.html";
+					//
+					myResultList.push(l_item);
+				}				
+			}
+		}		
+		
+		// Save results
+		data.queryresults = myResultList;
+		
+		// Clear search table
+		myResultsGr.initialize();
+		myResultsGr.addQuery('search_id',mySearchId);
+		myResultsGr.deleteMultiple();
+	}
+
+	// ****************************
+	// Arrange pagination results
+	//
+	var myRowCount = data.queryresults.length;
+	data.results = data.queryresults.slice(myFirstRow,myLastRow);
+	data.pagination.hasNext = 
+		(data.results.length == (parseInt(myLastRow) - parseInt(myFirstRow)) && parseInt(myLastRow) < parseInt(myRowCount));
+	data.pagination.hasPrevious = parseInt(myFirstRow) > 0;
+	data.pagination.showPagination = data.pagination.hasPrevious || data.pagination.hasNext;
+	data.pagination.currentPage = myCurrentPage;	
+	//
+	// ******************************
+
+
+})($sp, input, data, options, gs);
+]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-29 18:30:55</sys_created_on>
+        <sys_id>b457310a4f822300f006121f9310c771</sys_id>
+        <sys_mod_count>14</sys_mod_count>
+        <sys_name>UTASSP Search Page Widget 7</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_widget_b457310a4f822300f006121f9310c771</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-30 00:09:24</sys_updated_on>
+        <template><![CDATA[<div>
+  <div class="panel panel-primary">
+    
+    <div ng-if="data.results.length==0">
+      <div class="panel-heading"><h4 class="panel-title">${No results}</h4></div>
+      <div class="panel-body wrapper break-word">
+        <p>${Your search - <b>{{data.q}}</b> - did not match any documents}</p>
+        <p>${Suggestions}:</p>
+        <ul>
+          <li>${Make sure all words are spelled correctly}</li>
+          <li>${Try different, more general, or fewer keywords}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div ng-if="data.results.length>0" class="panel-heading break-word">
+      <h2 class="h4 panel-title">${Search results for '{{data.q}}'}</h2>
+    </div>
+
+    <div role="list" class="myContainer">
+      <div role="listitem" ng-repeat="item in data.results" class="panel-body b-b ">
+        <div ng-include="item.templateID"></div>
+      </div>
+    </div>
+    
+  <div class="panel-footer clearfix" ng-if="data.pagination.showPagination">
+  	<a id="previous-btn" href="javascript:void(0)" ng-click="previousPage()" ng-show="data.pagination.hasPrevious" class="pull-left btn btn-sm btn-default mybtn" aria-label="${Pagination button Previous}">
+      <i class="fa fa-arrow-left m-r-sm" aria-hidden="true"></i>${&nbsp;Previous}</a>
+    <a id="next_btn" href="javascript:void(0)" ng-click="nextPage()" ng-show="data.pagination.hasNext" class="pull-right btn btn-sm btn-default mybtn" aria-label="${Pagination button Next}">
+      ${Next&nbsp;}<i class="fa fa-arrow-right m-r-sm col-md-offset-3" aria-hidden="true"></i></a>
+  </div>
+
+  </div>  
+</div>]]></template>
+    </sp_widget>
+</record_update>
