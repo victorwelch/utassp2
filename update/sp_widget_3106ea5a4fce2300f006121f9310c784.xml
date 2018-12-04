@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>kb</category>
+        <client_script><![CDATA[function ($timeout) {
+	var c = this;	
+	c.hide = false;
+	c.submitted = false;
+	
+	c.action = function(state) {		
+		c.submitted = true;
+		c.data.state = state;
+		c.data.response = c.data.submittingMsg;
+		c.server.update().then(c.hideIt);		
+	}	
+	
+	c.hideIt = function() {
+		$timeout(function() {
+			c.hide = true;
+		}, 2000);
+	}
+	
+	c.showPercentHelpful = function() {
+		if (c.submitted)
+			return false;
+		
+		if (c.data.percent < 0)
+			return false;
+		
+		return c.options.hide_percent_helpful != true && c.options.hide_percent_helpful != "true";
+	}
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.sp-helpful-text {
+  padding-right: 8px;
+}
+
+.sp-helpful-percent, .sp-helpful-response {
+  padding-left: 8px;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list>title</field_list>
+        <has_preview>false</has_preview>
+        <id>utassp01_kb_article_helpful_widget</id>
+        <internal>false</internal>
+        <link/>
+        <name>UTASSP KB Article Helpful Widget</name>
+        <option_schema>[{"hint":"Hide percentage of people who found this article helpful","name":"hide_percent_helpful","section":"Presentation","label":"Hide percent helpful","type":"boolean"},{"hint":"Response to show once viewer has clicked Yes or No","name":"response","section":"Behavior","label":"Response","type":"string"}]</option_schema>
+        <public>true</public>
+        <roles/>
+        <script><![CDATA[(function ($sp, input, data, options, gs) {	
+	var myU = new u_utassp();
+	if (myU.utilIsValueValid(data))
+	{
+		var myGlobal = new global.u_utaglobalapi();
+		if (gs.getProperty("glide.knowman.show_yn_rating", "true") == "true" &&
+			gs.hasRole(gs.getProperty("glide.knowman.show_yn_rating.roles")) &&
+			gs.getProperty("glide.knowman.show_rating_options", "true") == "true" &&
+			gs.hasRole(gs.getProperty("glide.knowman.show_rating_options.roles"))) {
+				data.sys_id = $sp.getParameter('sys_id');
+				gs.info('b4: '+data.sys_id);
+				data.percent = myGlobal.u_GetKbArtPercentHelpful(data.sys_id);
+				gs.info('a4: '+data.sys_id);
+				data.title = options.title || gs.getMessage("Helpful?");
+				gs.info('a42: '+data.sys_id);
+				data.isValidArticle = isValidArticle(data.sys_id);
+				gs.info('a43: '+data.sys_id);
+				data.submittingMsg = gs.getMessage("Submitting");
+		}
+
+		if (input) {
+			data.response = options.response || gs.getMessage('Thank you');
+			var gr = new GlideRecord('kb_feedback');
+			gr.user = gs.getUserID();
+			if (input.state == "useful_yes")
+				gr.useful = 'yes';
+			else
+				gr.useful = 'no';
+			gr.article = input.sys_id;
+			gr.insert();
+		}		
+	}
+
+/* *** functionality moved to u_utaglobalapic, vcw 11/30/2018 *** */
+// 	function getPercent() {
+// 		var kbUseful = new GlideRecordCounter("kb_feedback");
+// 		kbUseful.addQuery("article", data.sys_id);
+// 		kbUseful.addQuery("useful", "yes").addOrCondition("useful", "no");
+// 		var all = kbUseful.getCount();
+// 		if (all == 0)
+// 			return -1;
+
+// 		kbUseful.initialize();
+// 		kbUseful.addQuery("article", data.sys_id);
+// 		kbUseful.addQuery("useful", "yes");
+// 		var yes = kbUseful.getCount();
+// 		return Math.round((yes / all) * 100);
+// 	}
+
+	function isValidArticle(_p) {
+		var recordIsValid = false;
+		var canReadArticle = false;
+		var articleGR = new GlideRecord("kb_knowledge");
+		if (articleGR.get(_p))
+		{
+			recordIsValid = articleGR.isValidRecord();
+			canReadArticle = articleGR.canRead();
+		}
+		return recordIsValid && canReadArticle;
+	}
+})($sp, input, data, options, gs);]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-30 16:33:26</sys_created_on>
+        <sys_id>3106ea5a4fce2300f006121f9310c784</sys_id>
+        <sys_mod_count>8</sys_mod_count>
+        <sys_name>UTASSP KB Article Helpful Widget</sys_name>
+        <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
+        <sys_update_name>sp_widget_3106ea5a4fce2300f006121f9310c784</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-12-03 19:17:42</sys_updated_on>
+        <template><![CDATA[<div ng-if="data.isValidArticle && !c.hide">
+  <span ng-if="!c.submitted" class="sp-helpful-text">{{::data.title}}</span>
+  <button type="button" ng-if="!c.submitted" name="useful_yes" class="btn btn-success btn-question" ng-click="c.action('useful_yes')">${Yes}</button>
+  <button type="button" ng-if="!c.submitted" name="useful_no" class="btn btn-default btn-question" ng-click="c.action('useful_no')">${No}</button>
+  <span ng-if="c.showPercentHelpful()" class="sp-helpful-percent">{{c.data.percent}}% found this helpful</span>
+  <span class="sp-helpful-response" ng-if="c.data.response">
+    {{c.data.response}}
+  </span>
+</div>]]></template>
+    </sp_widget>
+</record_update>

@@ -1,15 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
     <sp_widget action="INSERT_OR_UPDATE">
         <category>custom</category>
-        <client_script><![CDATA[function($scope,$rootScope,$timeout) {
+        <client_script><![CDATA[function($scope,$rootScope,$timeout,$location,u_cutassp) {
 	/* widget controller */
 	var c = this;
+	var paramList = $location.search();
+	var iLen=0;
+	var bcitem = {label: $scope.page.title, url: window.location.search, level: 1};
+	if (u_cutassp.utilIsValueValid($rootScope.bc)) {
+		var isSamePage = false;
+		var idx = $rootScope.bc.length - 1;
+		if (idx>-1)
+		{
+			if ($rootScope.bc[idx].label == bcitem.label)
+			{
+				isSamePage=true;
+			}
+		}
+		if (isSamePage) 
+		{
+			c.data.breadcrumbs = $rootScope.bc;	
+			c.data.breadcrumbs[idx].url = bcitem.url;
+		} 
+		else if (u_cutassp.utilIsValueValid(paramList.level))
+		{
+			iLen = parseInt(paramList.level);
+			c.data.breadcrumbs = $rootScope.bc.slice(0,iLen);
+		}
+		else
+		{
+			c.data.breadcrumbs = $rootScope.bc;	
+			bcitem.level = c.data.breadcrumbs.length+1;
+			c.data.breadcrumbs.push(bcitem);			
+		}
+	}
+	else
+	{
+		c.data.breadcrumbs = [ bcitem ];
+	}
+	
 	// *************************************************************************
 	// *** Make sure we fire 'sp.update.breadcrumbs' event
-	$timeout(function() {
-		$rootScope.$broadcast('sp.update.breadcrumbs', $scope.data.breadcrumbs);
-	});
-	//		
+	c.server.update().then(function(){
+		$scope.data.breadcrumbs = c.data.breadcrumbs;
+		$timeout(function() {
+			$rootScope.$broadcast("sp.update.breadcrumbs", $scope.data.breadcrumbs);
+		});	
+	});		
+	//				
 }]]></client_script>
         <controller_as>c</controller_as>
         <css/>
@@ -27,52 +65,7 @@
         <public>false</public>
         <roles/>
         <script><![CDATA[(function($sp, input, data, options, gs) {
-	/* populate the 'data' object */
-	/* e.g., data.table = $sp.getValue('table'); */
-	/* ***************************************** */
-	//	
-	//var myU = new u_utassp();	
-	var thisParent = {};
-	var thisPage = {};
-	thisPage.url='#';	
-	thisPage.label = 'My Tickets';
-	var myPageId = $sp.getParameter('pageid') || '';	
-	if (myPageId.indexOf('incident')!=-1) 
-	{
-		thisParent.label = 'INCIDENT: Something Broken';
-		thisParent.url = '?id=utassp01_sc_cat_item&sys_id=';
-		// Get sysid of incident form
-		var mySysId = '';
-		var myGr = new GlideRecord('sc_cat_item');
-		var myQuery = 'nameSTARTSWITHUTASSP INCIDENT';
-		myGr.addEncodedQuery(myQuery);
-		myGr.query();
-		if (myGr.next()) {
-			 mySysId=myGr.sys_id;
-		}	
-		thisParent.url += mySysId;
-		//
-		data.breadcrumbs = [				
-			{label: thisParent.label, url: thisParent.url},
-			{label: thisPage.label, url: thisPage.url}
-		];
-	}
-	else if (myPageId.indexOf('request')!=-1)
-	{
-		thisParent.label = 'Service Catalog';
-		thisParent.url = '?id=utassp01_sc_home';
-		//			
-		data.breadcrumbs = [
-			{label: thisParent.label, url: thisParent.url},
-			{label: thisPage.label, url: thisPage.url}
-		];		
-	}	
-	else 
-	{
-		data.breadcrumbs = [
-			{label: thisPage.label, url: thisPage.url}
-		];				
-	}
+//
 })($sp, input, data, options, gs);]]></script>
         <servicenow>false</servicenow>
         <sys_class_name>sp_widget</sys_class_name>
@@ -80,7 +73,7 @@
         <sys_created_on>2018-11-12 17:54:53</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>1b0c0a2c4f712300f006121f9310c762</sys_id>
-        <sys_mod_count>16</sys_mod_count>
+        <sys_mod_count>20</sys_mod_count>
         <sys_name>UTASSP View Tickets Bread Data Widget</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy/>
@@ -88,7 +81,7 @@
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sp_widget_1b0c0a2c4f712300f006121f9310c762</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-15 16:35:05</sys_updated_on>
+        <sys_updated_on>2018-12-04 15:45:58</sys_updated_on>
         <template><![CDATA[<!-- dummy widget template
 <div>
 </div>

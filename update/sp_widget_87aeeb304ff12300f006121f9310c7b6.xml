@@ -1,15 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
     <sp_widget action="INSERT_OR_UPDATE">
         <category>custom</category>
-        <client_script><![CDATA[function($scope,$rootScope,$timeout) {
+        <client_script><![CDATA[function($scope,$rootScope,$timeout,$location,u_cutassp) {
 	/* widget controller */
 	var c = this;
+	var paramList = $location.search();
+	var iLen=0;
+	var bcitem = {label: $scope.page.title, url: window.location.search, level: 1};
+	if (u_cutassp.utilIsValueValid($rootScope.bc)) {
+		var isSamePage = false;
+		var idx = $rootScope.bc.length - 1;
+		if (idx>-1)
+		{
+			if ($rootScope.bc[idx].label == bcitem.label)
+			{
+				isSamePage=true;
+			}
+		}
+		if (isSamePage) 
+		{
+			c.data.breadcrumbs = $rootScope.bc;	
+			c.data.breadcrumbs[idx].url = bcitem.url;
+		} 
+		else if (u_cutassp.utilIsValueValid(paramList.level))
+		{
+			iLen = parseInt(paramList.level);
+			c.data.breadcrumbs = $rootScope.bc.slice(0,iLen);
+		}
+		else
+		{
+			c.data.breadcrumbs = $rootScope.bc;	
+			bcitem.level = c.data.breadcrumbs.length+1;
+			c.data.breadcrumbs.push(bcitem);			
+		}
+	}
+	else
+	{
+		c.data.breadcrumbs = [ bcitem ];
+	}
+	
 	// *************************************************************************
 	// *** Make sure we fire 'sp.update.breadcrumbs' event
-	$timeout(function() {
-		$rootScope.$broadcast('sp.update.breadcrumbs', $scope.data.breadcrumbs);
-	});
-	//		
+	c.server.update().then(function(){
+		$scope.data.breadcrumbs = c.data.breadcrumbs;
+		$timeout(function() {
+			$rootScope.$broadcast("sp.update.breadcrumbs", $scope.data.breadcrumbs);
+		});	
+	});		
+	//				
 }]]></client_script>
         <controller_as>c</controller_as>
         <css/>
@@ -27,44 +65,7 @@
         <public>false</public>
         <roles/>
         <script><![CDATA[(function ($sp, input, data, options, gs) {
-	/* populate the 'data' object */
-	/* e.g., data.table = $sp.getValue('table'); */
-	/* ***************************************** */
-//gs.info('gs.action.getActionSysId(): '+gs.action.getActionSysId());
-//gs.info('gs.action.getCategory(): '+gs.action.getCategory());
-gs.info('gs.action.getGlideURI(): '+gs.action.getGlideURI());
-//gs.info('gs.action.getRedirectURL(): '+gs.action.getRedirectURL());
-gs.info('gs.action.getReturnURL(): '+gs.action.getReturnURL());	
-	//
-	var thisParent = {};
-	thisParent.url='?id=utassp01_kbs';
-	thisParent.label='Knowledge Bases';
-	var thisPage = {};
-	thisPage.url='#';	
-	thisPage.label = 'KB Category';
-	//
-	var urlId = $sp.getParameter('id');
-	if (urlId.indexOf('business_affairs_internal')!=-1)
-	{
-		thisPage.label='Business Affairs Internal';
-	}
-	else if (urlId.indexOf('business_affairs_knowledge')!=-1)
-	{
-		thisPage.label='Business Affairs Knowledge Base';		
-	}
-	else if (urlId.indexOf('oit_internal')!=-1)
-	{
-		thisPage.label='OIT Internal';		
-	}
-	else if (urlId.indexOf('oit_knowledge')!=-1)
-	{
-		thisPage.label='OIT Knowledge Base';				
-	}
-	//
-	data.breadcrumbs = [				
-		{label: thisParent.label, url: thisParent.url},
-		{label: thisPage.label, url: thisPage.url}
-	];	
+//
 })($sp, input, data, options, gs);]]></script>
         <servicenow>false</servicenow>
         <sys_class_name>sp_widget</sys_class_name>
@@ -72,7 +73,7 @@ gs.info('gs.action.getReturnURL(): '+gs.action.getReturnURL());
         <sys_created_on>2018-11-13 19:44:15</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>87aeeb304ff12300f006121f9310c7b6</sys_id>
-        <sys_mod_count>10</sys_mod_count>
+        <sys_mod_count>30</sys_mod_count>
         <sys_name>UTASSP KBCategory Bread Data Widget</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy/>
@@ -80,7 +81,7 @@ gs.info('gs.action.getReturnURL(): '+gs.action.getReturnURL());
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sp_widget_87aeeb304ff12300f006121f9310c7b6</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-15 17:26:22</sys_updated_on>
+        <sys_updated_on>2018-12-03 20:37:02</sys_updated_on>
         <template><![CDATA[<!-- dummy widget template
 <div>
 </div>

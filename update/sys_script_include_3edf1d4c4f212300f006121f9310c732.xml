@@ -193,9 +193,9 @@ u_utassp.prototype = {
 			var l_title = myGr.getValue('short_description');
 			var l_catSysId = myGr.getValue('kb_category');
 			myCatListStr = this.getKbCategoryTreeStr(l_catSysId);
-			myCatListStr = myCatListStr.replace(/ > /g,'>');
+			//myCatListStr = myCatListStr.replace(/ > /g,'>');
 			myCatListStr = myCatListStr.trim();
-			myCatListStr = (myCatListStr.length>0)?myCatListStr+': '+l_title:l_title;
+			myCatListStr = (myCatListStr.length>0)?myCatListStr+' > "'+l_title+'"':'"'+l_title+'"';
 		}
 		return myCatListStr;
 	},	
@@ -333,6 +333,60 @@ u_utassp.prototype = {
 		var myName = (myGr.name.toString()).toLowerCase();
 		return (myName.indexOf('incident')!=-1);
 	},
+	utilIsValueValid: function(_p) {
+		if ((typeof _p == typeof myUnknown) || (_p == null)) {
+			return false;			
+		} else if (Array.isArray(_p)) {
+			if (_p.length < 1) {
+				return false;
+			}					
+		} else if (_p.toString().length<1) {
+			return false;				
+		}
+		return true;
+	},
+	utilMakeValueValid: function(_p) {
+		if (this.utilIsValueValid(_p)) {
+			return _p;
+		} else {
+			if (Array.isArray(_p)) {
+				return [];
+			} else {
+				return '';				
+			}
+		}
+	},	
+	utilGetIsPageIdList: function(_p) {
+		var _pId = _p.split('&')[0];
+		var myRtnObj = {};
+		var mySpPackageSysId = {};
+		var mySpPageId = {};
+		var mySplit = [];
+		var myJoin = '';
+		var mySpGr = new GlideRecord('sp_page');
+		var mySaGr = new GlideRecord('sys_app');
+		mySaGr.addQuery('name','utassp');		
+		mySaGr.query();
+		if (mySaGr.next())
+		{
+			mySpPackageSysId = mySaGr.getValue('sys_id');
+			mySpGr.addQuery('sys_package',mySpPackageSysId);
+			mySpGr.query();
+			while (mySpGr.next())
+			{
+				mySpPageId = mySpGr.getDisplayValue('id');
+				mySplit = mySpPageId.split('_');
+				mySplit = mySplit.slice(1);
+				myJoin = mySplit.join('_');
+				myRtnObj[myJoin] = false;
+				if (_pId.indexOf(myJoin)>-1)
+				{
+					myRtnObj[myJoin] =true;
+				}
+			}
+		}
+		return myRtnObj;	
+	},
     type: 'u_utassp'
 };
 ]]></script>
@@ -341,7 +395,7 @@ u_utassp.prototype = {
         <sys_created_on>2018-10-29 15:10:11</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>3edf1d4c4f212300f006121f9310c732</sys_id>
-        <sys_mod_count>8</sys_mod_count>
+        <sys_mod_count>28</sys_mod_count>
         <sys_name>u_utassp</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy>read</sys_policy>
@@ -349,6 +403,6 @@ u_utassp.prototype = {
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sys_script_include_3edf1d4c4f212300f006121f9310c732</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-14 18:27:35</sys_updated_on>
+        <sys_updated_on>2018-12-04 17:50:31</sys_updated_on>
     </sys_script_include>
 </record_update>

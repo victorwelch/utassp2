@@ -1,15 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
     <sp_widget action="INSERT_OR_UPDATE">
         <category>custom</category>
-        <client_script><![CDATA[function($scope,$rootScope,$timeout) {
+        <client_script><![CDATA[function($scope,$rootScope,$timeout,$location,u_cutassp) {
 	/* widget controller */
 	var c = this;
+	var paramList = $location.search();
+	var iLen=0;
+	var bcitem = {label: $scope.page.title, url: window.location.search, level: 1};
+	if (u_cutassp.utilIsValueValid($rootScope.bc)) {
+		var isSamePage = false;
+		var idx = $rootScope.bc.length - 1;
+		if (idx>-1)
+		{
+			if ($rootScope.bc[idx].label == bcitem.label)
+			{
+				isSamePage=true;
+			}
+		}
+		if (isSamePage) 
+		{
+			c.data.breadcrumbs = $rootScope.bc;	
+			c.data.breadcrumbs[idx].url = bcitem.url;
+		} 
+		else if (u_cutassp.utilIsValueValid(paramList.level))
+		{
+			iLen = parseInt(paramList.level);
+			c.data.breadcrumbs = $rootScope.bc.slice(0,iLen);
+		}
+		else
+		{
+			c.data.breadcrumbs = $rootScope.bc;	
+			bcitem.level = c.data.breadcrumbs.length+1;
+			c.data.breadcrumbs.push(bcitem);			
+		}
+	}
+	else
+	{
+		c.data.breadcrumbs = [ bcitem ];
+	}
+	
 	// *************************************************************************
 	// *** Make sure we fire 'sp.update.breadcrumbs' event
-	$timeout(function() {
-		$rootScope.$broadcast('sp.update.breadcrumbs', $scope.data.breadcrumbs);
-	});
-	//		
+	c.server.update().then(function(){
+		$scope.data.breadcrumbs = c.data.breadcrumbs;
+		$timeout(function() {
+			$rootScope.$broadcast("sp.update.breadcrumbs", $scope.data.breadcrumbs);
+		});	
+	});		
+	//				
 }]]></client_script>
         <controller_as>c</controller_as>
         <css>.mySpacer {&#13;
@@ -32,74 +70,21 @@
 	/* populate the 'data' object */
 	/* e.g., data.table = $sp.getValue('table'); */
 	/* ***************************************** */
-	//
-	var myU = new u_utassp();	
-	var thisPage = {};	
-	var isKbsPageId = false;
-	var isIndexPageId = false;
-	thisPage.url = '#';
-	thisPage.label = '';
-	var myKbArtSysId = $sp.getParameter('sys_id');
-	thisPage.label = myU.getKbCategoryListForArticle(myKbArtSysId);
-	
-	var thisParent0 = {};	
-	thisParent0.url='?id=utassp01_kbs';
-	thisParent0.label='Knowledge Bases';
-	var thisParent1 = {};
-	//
-	var urlId = $sp.getParameter('pageid');
-	if (urlId.indexOf('business_affairs_internal')!=-1)
+	var myU = new u_utassp();
+	if (myU.utilIsValueValid(input))
 	{
-		thisParent1.url = '?id=utassp01_kb_business_affairs_internal';
-		thisParent1.label='Business Affairs Internal';
+		if (myU.utilIsValueValid(input.breadcrumbs))
+		{
+			var myKbArtSysId = $sp.getParameter('sys_id');
+			var myLabel = myU.getKbCategoryListForArticle(myKbArtSysId);
+			data.breadcrumbs = input.breadcrumbs;
+			var idx = data.breadcrumbs.length-1;
+			if (idx>-1)
+			{
+				data.breadcrumbs[idx].label = myLabel;							
+			}
+		}
 	}
-	else if (urlId.indexOf('business_affairs_knowledge')!=-1)
-	{
-		thisParent1.url = '?id=utassp01_kb_business_affairs_knowledge';
-		thisParent1.label='Business Affairs Knowledge Base';		
-	}
-	else if (urlId.indexOf('oit_internal')!=-1)
-	{
-		thisParent1.url = '?id=utassp01_kb_oit_internal';
-		thisParent1.label='OIT Internal';		
-	}
-	else if (urlId.indexOf('oit_knowledge')!=-1)
-	{
-		thisParent1.url = '?id=utassp01_kb_oit_knowledge';
-		thisParent1.label='OIT Knowledge Base';				
-	}
-	else if (urlId.indexOf('kbs')!=-1)
-	{
-		isKbsPageId = true;
-	}
-	else if (urlId.indexOf('index')!=-1)
-	{
-		isIndexPageId = true;
-	}
-	
-	//
-	if (isIndexPageId)
-	{
-		data.breadcrumbs = [				
-			{label: thisPage.label, url: thisPage.url}
-		];
-	}
-	else if (isKbsPageId)
-	{
-		data.breadcrumbs = [				
-			{label: thisParent0.label, url: thisParent0.url},
-			{label: thisPage.label, url: thisPage.url}
-		];			
-	}
-	else
-	{
-		data.breadcrumbs = [				
-			{label: thisParent0.label, url: thisParent0.url},
-			{label: thisParent1.label, url: thisParent1.url},
-			{label: thisPage.label, url: thisPage.url}
-		];	
-	}
-	
 })($sp, input, data, options, gs);]]></script>
         <servicenow>false</servicenow>
         <sys_class_name>sp_widget</sys_class_name>
@@ -107,7 +92,7 @@
         <sys_created_on>2018-11-13 21:19:18</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>5f640c014f352300f006121f9310c7e3</sys_id>
-        <sys_mod_count>11</sys_mod_count>
+        <sys_mod_count>38</sys_mod_count>
         <sys_name>UTASSP KBArticle Bread Data Widget</sys_name>
         <sys_package display_value="utassp" source="x_287765_utassp">2e58c8624f112300f006121f9310c726</sys_package>
         <sys_policy/>
@@ -115,7 +100,7 @@
         <sys_scope display_value="utassp">2e58c8624f112300f006121f9310c726</sys_scope>
         <sys_update_name>sp_widget_5f640c014f352300f006121f9310c7e3</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-15 16:34:11</sys_updated_on>
+        <sys_updated_on>2018-12-03 20:35:30</sys_updated_on>
         <template><![CDATA[<div class="mySpacer"><!-- dummy widget template --></div>
 ]]></template>
     </sp_widget>
